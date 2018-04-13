@@ -13,7 +13,7 @@ import {Actions} from 'react-native-router-flux';
 
 export default class signUp extends Component<{}> {
 
-    static goBack() {
+    goBack() {
         Actions.pop();
     }
 
