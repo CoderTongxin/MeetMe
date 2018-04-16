@@ -27,9 +27,8 @@ export default class Login extends Component {
     login() {
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
-                console.log('login'+loggedInUser.email);
                 this.setState({user:loggedInUser});
-                Actions.userProfile()
+                Actions.userProfile({user: this.state.user})
             })
             .catch(function(error) {
                 console.log('fail');

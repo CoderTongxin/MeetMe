@@ -28,7 +28,8 @@ export default class signUp extends Component {
         firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
                 this.setState({user:loggedInUser});
-                Actions.userProfile();
+                console.log(this.state.user);
+                Actions.userProfile({user: this.state.user});
             })
             .catch(function(error) {
                 // Handle Errors here.
