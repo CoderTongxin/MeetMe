@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    ActivityIndicator,
     StyleSheet,
     Text,
     View,
@@ -12,6 +11,7 @@ import {
 import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
+import Loader from '../components/Loader';
 import {Actions} from 'react-native-router-flux';
 
 export default class signUp extends Component {
@@ -19,26 +19,28 @@ export default class signUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            animating:false,
+            loading:false,
             email: '',
             password: '',
             isAuthenticated: false,
             user: null
         };
-        this.signup=this.signup.bind(this)
+        this.signup=this.signup.bind(this);
     }
     signup() {
-        this.setState({animating:true});
+        this.setState({loading:true});
         firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
+                this.setState({loading:false});
                 this.setState({user:loggedInUser});
-                console.log(this.state.user);
                 Actions.userProfile({user: this.state.user});
             })
             .catch(function(error) {
+                this.setState({loading:false});
                 Alert.alert(error.message);
-            });
+            }.bind(this));
     }
+
     _goBack() {
         Actions.pop();
     }
@@ -46,11 +48,7 @@ export default class signUp extends Component {
     render() {
         return(
             <View style={styles.container}>
-                <ActivityIndicator
-                    animating = {this.state.animating}
-                    color = '#bc2b78'
-                    size = "large"
-                    style = {styles.activityIndicator}/>
+               <Loader loading={this.state.loading}/>
                 <Logo/>
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.inputBox}
@@ -123,7 +121,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 80
+        height: 80,
     }
 
 });

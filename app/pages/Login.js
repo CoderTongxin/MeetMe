@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    ActivityIndicator,
     StyleSheet,
     Text,
     View,
@@ -9,7 +8,6 @@ import {
     Alert
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
-
 import Logo from '../components/Logo';
 import SubmitButton from '../components/SubmitButton';
 import {Actions} from 'react-native-router-flux';
