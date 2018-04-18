@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import {
+    ActivityIndicator,
     StyleSheet,
     Text,
     View,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 
-import Logo from '../components/Logo/Logo';
+import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
-
+import SubmitButton from '../components/SubmitButton';
 import {Actions} from 'react-native-router-flux';
 
 export default class signUp extends Component {
@@ -17,6 +19,7 @@ export default class signUp extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            animating:false,
             email: '',
             password: '',
             isAuthenticated: false,
@@ -25,6 +28,7 @@ export default class signUp extends Component {
         this.signup=this.signup.bind(this)
     }
     signup() {
+        this.setState({animating:true});
         firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
                 this.setState({user:loggedInUser});
@@ -32,18 +36,21 @@ export default class signUp extends Component {
                 Actions.userProfile({user: this.state.user});
             })
             .catch(function(error) {
-                // Handle Errors here.
-                let errorCode = error.code;
-                let errorMessage = error.message;
+                Alert.alert(error.message);
             });
     }
-    goBack() {
+    _goBack() {
         Actions.pop();
     }
 
     render() {
         return(
             <View style={styles.container}>
+                <ActivityIndicator
+                    animating = {this.state.animating}
+                    color = '#bc2b78'
+                    size = "large"
+                    style = {styles.activityIndicator}/>
                 <Logo/>
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.inputBox}
@@ -63,13 +70,11 @@ export default class signUp extends Component {
                                value={this.state.password}
                                onChangeText={(text) => this.setState({password:text})}
                     />
-                    <TouchableOpacity style={styles.button} onPress={this.signup}>
-                        <Text style={styles.buttonText}>Sign up</Text>
-                    </TouchableOpacity>
+                    <SubmitButton onPress={() => this.signup()} type='Sign up'/>
                 </View>
-                <View style={styles.signUpTextCont}>
-                    <Text style={styles.signUpText}>Already have an account?</Text>
-                    <TouchableOpacity onPress={this.goBack}><Text style={styles.signUpButton}> Login</Text></TouchableOpacity>
+                <View style={styles.textContent}>
+                    <Text style={styles.text}>Already have an account?</Text>
+                    <TouchableOpacity onPress={this._goBack}><Text style={styles.textLInk}> Login</Text></TouchableOpacity>
                 </View>
             </View>
         )
@@ -83,18 +88,18 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent :'center'
     },
-    signUpTextCont : {
+    textContent : {
         flexGrow: 1,
         alignItems:'flex-end',
         justifyContent :'center',
         paddingVertical:16,
         flexDirection:'row'
     },
-    signUpText: {
+    text: {
         color:'rgba(255,255,255,0.6)',
         fontSize:16
     },
-    signUpButton: {
+    textLInk: {
         color:'#ffffff',
         fontSize:16,
         fontWeight:'500'
@@ -114,18 +119,11 @@ const styles = StyleSheet.create({
         color:'#ffffff',
         marginVertical: 10
     },
-    button: {
-        width:300,
-        backgroundColor:'#1c313a',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 13
-    },
-    buttonText: {
-        fontSize:16,
-        fontWeight:'500',
-        color:'#ffffff',
-        textAlign:'center'
+    activityIndicator: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 80
     }
 
 });

@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import {
+    ActivityIndicator,
     StyleSheet,
     Text,
     View,
     TextInput,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 
-import Logo from '../components/Logo/Logo';
-
+import Logo from '../components/Logo';
+import SubmitButton from '../components/SubmitButton';
 import {Actions} from 'react-native-router-flux';
 
 export default class Login extends Component {
@@ -23,6 +25,7 @@ export default class Login extends Component {
             isAuthenticated: false,
             user: null
         };
+        this.login=this.login.bind(this)
     }
     login() {
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -31,15 +34,11 @@ export default class Login extends Component {
                 Actions.userProfile({user: this.state.user})
             })
             .catch(function(error) {
-                console.log('fail');
-                // Handle Errors here.
-                let errorCode = error.code;
-                let errorMessage = error.message;
-                // ...
+                Alert.alert(error.message)
             });
     }
 
-    goToSignUp() {
+    _goToSignUp() {
         Actions.signUp()
     }
 
@@ -63,13 +62,11 @@ export default class Login extends Component {
                                placeholderTextColor = "#ffffff"
                         onChangeText={(text) => this.setState({password:text})}
                     />
-                    <TouchableOpacity style={styles.button} onPress={() => this.login}>
-                        <Text style={styles.buttonText}>Login</Text>
-                    </TouchableOpacity>
+                    <SubmitButton onPress={()=> this.login()} type='Login'/>
                 </View>
-                <View style={styles.signUpTextCont}>
-                    <Text style={styles.signUpText}>Don't have an account yet?</Text>
-                    <TouchableOpacity onPress={this.goToSignUp}><Text style={styles.signUpButton}>Sign up</Text></TouchableOpacity>
+                <View style={styles.textContent}>
+                    <Text style={styles.text}>Don't have an account yet?</Text>
+                    <TouchableOpacity onPress={this._goToSignUp}><Text style={styles.textLInk}> Signup</Text></TouchableOpacity>
                 </View>
             </View>
         )
@@ -82,18 +79,18 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent :'center'
     },
-    signUpTextCont : {
+    textContent : {
         flexGrow: 1,
         alignItems:'flex-end',
         justifyContent :'center',
         paddingVertical:16,
         flexDirection:'row'
     },
-    signUpText: {
+    text: {
         color:'rgba(255,255,255,0.6)',
         fontSize:16
     },
-    signUpButton: {
+    textLInk: {
         color:'#ffffff',
         fontSize:16,
         fontWeight:'500'
@@ -105,25 +102,12 @@ const styles = StyleSheet.create({
     },
 
     inputBox: {
-        width:300,
-        backgroundColor:'rgba(255, 255,255,0.2)',
+        width: 300,
+        backgroundColor: 'rgba(255, 255,255,0.2)',
         borderRadius: 25,
-        paddingHorizontal:16,
-        fontSize:16,
-        color:'#ffffff',
+        paddingHorizontal: 16,
+        fontSize: 16,
+        color: '#ffffff',
         marginVertical: 10
-    },
-    button: {
-        width:300,
-        backgroundColor:'#1c313a',
-        borderRadius: 25,
-        marginVertical: 10,
-        paddingVertical: 13
-    },
-    buttonText: {
-        fontSize:16,
-        fontWeight:'500',
-        color:'#ffffff',
-        textAlign:'center'
     }
 });

@@ -3,14 +3,23 @@ import {
     StyleSheet,
     Text,
     View,
+    Button
 } from 'react-native';
-import {firebaseRef} from '../servers/Firebase'
+import {firebaseRef} from '../servers/Firebase';
+import {Actions} from 'react-native-router-flux';
 
-export default class userProfile extends Component<{}> {
+export default class userProfile extends Component {
+
+
+    goback(){
+        Actions.signUp()
+    }
     render() {
         return(
             <View style={styles.container}>
                 <Text style={styles.text}>Hello {this.props.user.email}</Text>
+                <Button title='back' color="#841584" onPress={this.goback}/>
+
             </View>
         )
     }
