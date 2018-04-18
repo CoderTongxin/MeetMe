@@ -42,7 +42,7 @@ export default class signUp extends Component {
     }
 
     _goBack() {
-        Actions.pop();
+        Actions.login();
     }
 
     render() {
@@ -58,14 +58,14 @@ export default class signUp extends Component {
                                selectionColor="#fff"
                                keyboardType="email-address"
                                onChangeText={(text) => this.setState({email:text})}
-                               value={this.state.email}
+                               // value={this.state.email}
                     />
                     <TextInput style={styles.inputBox}
                                underlineColorAndroid='rgba(0,0,0,0)'
                                placeholder="Password"
                                secureTextEntry={true}
                                placeholderTextColor = "#ffffff"
-                               value={this.state.password}
+                               // value={this.state.password}
                                onChangeText={(text) => this.setState({password:text})}
                     />
                     <SubmitButton onPress={() => this.signup()} type='Sign up'/>
@@ -116,12 +116,6 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:'#ffffff',
         marginVertical: 10
-    },
-    activityIndicator: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 80,
     }
 
 });

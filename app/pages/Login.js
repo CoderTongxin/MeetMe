@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Logo from '../components/Logo';
+import Loader from '../components/Loader';
 import SubmitButton from '../components/SubmitButton';
 import {Actions} from 'react-native-router-flux';
 
@@ -18,6 +19,7 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading:false,
             email: '',
             password: '',
             isAuthenticated: false,
@@ -27,14 +29,17 @@ export default class Login extends Component {
         console.disableYellowBox = true;
     }
     login() {
+        this.setState({loading:true});
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
+                this.setState({loading:false});
                 this.setState({user:loggedInUser});
                 Actions.userProfile({user: this.state.user})
             })
             .catch(function(error) {
+                this.setState({loading:false});
                 Alert.alert(error.message)
-            });
+            }.bind(this));
     }
 
     _goToSignUp() {
@@ -44,6 +49,7 @@ export default class Login extends Component {
     render() {
         return(
             <View style={styles.container}>
+                <Loader loading={this.state.loading}/>
                 <Logo/>
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.inputBox}
@@ -65,7 +71,7 @@ export default class Login extends Component {
                 </View>
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Don't have an account yet?</Text>
-                    <TouchableOpacity onPress={this._goToSignUp}><Text style={styles.textLInk}> Signup</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this._goToSignUp}><Text style={styles.textLink}> Signup</Text></TouchableOpacity>
                 </View>
             </View>
         )
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
         color:'rgba(255,255,255,0.6)',
         fontSize:16
     },
-    textLInk: {
+    textLink: {
         color:'#ffffff',
         fontSize:16,
         fontWeight:'500'
