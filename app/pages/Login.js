@@ -23,7 +23,8 @@ export default class Login extends Component {
             isAuthenticated: false,
             user: null
         };
-        this.login=this.login.bind(this)
+        this.login=this.login.bind(this);
+        console.disableYellowBox = true;
     }
     login() {
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
