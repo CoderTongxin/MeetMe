@@ -4,27 +4,30 @@ This project is for COMPSCI 732 Andrew's crossplatform application, which helps 
 
 ## Getting Started
 Download the project
-'git clone git@gitlab.nectar.auckland.ac.nz:the-sudden-spiders/qleetbugs.git'
+`git clone git@gitlab.nectar.auckland.ac.nz:the-sudden-spiders/qleetbugs.git`
 Open the project
-'cd Jqleetbugs'
+`cd Jqleetbugs`
 Install dependencies
-'npm install or yarn install'
+`npm install`
+or
+`yarn install`
 Start the project
-'npm start or yarn start'
+`npm start or yarn start
 
 
 ## Running the tests
 
 Install the react-devtools package globally:
 
-'yarn global add react-devtools'
+`yarn global add react-devtools`
+
 or 
 
-'npm install -g react-devtools'
+`npm install -g react-devtools`
     
 Now run react-devtools from the terminal to launch the standalone DevTools app:
 
-'react-devtools'
+`react-devtools`
 
 
 ## Built With
