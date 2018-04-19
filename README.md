@@ -3,15 +3,25 @@
 This project is for COMPSCI 732 Andrew's crossplatform application, which helps users find nearby like-minded people to participate in activities together.
 
 ## Getting Started
+
 Download the project
+
 `git clone git@gitlab.nectar.auckland.ac.nz:the-sudden-spiders/qleetbugs.git`
+
 Open the project
+
 `cd Jqleetbugs`
+
 Install dependencies
+
 `npm install`
+
 or
+
 `yarn install`
+
 Start the project
+
 `npm start or yarn start
 
 
