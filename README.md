@@ -10,7 +10,7 @@ Download the project
 
 Open the project
 
-`cd Jqleetbugs`
+`cd qleetbugs`
 
 Install dependencies
 
