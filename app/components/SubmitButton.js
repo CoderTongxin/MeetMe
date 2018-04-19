@@ -23,16 +23,15 @@ export default class SubmitButton extends Component {
 
 const styles = StyleSheet.create({
 
-
     button: {
-        width:300,
-        backgroundColor:'#1c313a',
+        width:280,
+        backgroundColor:'#006064',
         borderRadius: 25,
         marginVertical: 10,
         paddingVertical: 13
     },
     buttonText: {
-        fontSize:16,
+        fontSize:18,
         fontWeight:'500',
         color:'#ffffff',
         textAlign:'center'

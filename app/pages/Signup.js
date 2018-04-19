@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import {
-    ActivityIndicator,
-    StyleSheet,
     Text,
     View,
     TextInput,
@@ -12,118 +10,103 @@ import {
 import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
+import Loader from '../components/Loader';
 import {Actions} from 'react-native-router-flux';
+import {styles} from "../const/styles";
 
 export default class signUp extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            animating:false,
+            loading:false,
             email: '',
+            username:'',
+            gender:'',
+            age: '',
             password: '',
             isAuthenticated: false,
-            user: null
         };
-        this.signup=this.signup.bind(this)
+        this.signup=this.signup.bind(this);
     }
     signup() {
-        this.setState({animating:true});
+        this.setState({loading:true});
         firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
-                this.setState({user:loggedInUser});
-                console.log(this.state.user);
-                Actions.userProfile({user: this.state.user});
+                    firebaseRef.database().ref('users/' + loggedInUser.uid).set({
+                        username: this.state.username,
+                        email: this.state.email,
+                        gender:this.state.gender,
+                        age:this.state.age
+                    }).then( ()=>{
+                        let user= {id:loggedInUser.uid, email:this.state.email, username:this.state.username,gender:this.state.gender,age:this.state.age};
+                        this.setState({loading:false});
+                        Actions.userProfile({user: user});
+                        }
+                    );
+
             })
             .catch(function(error) {
+                this.setState({loading:false});
                 Alert.alert(error.message);
-            });
+            }.bind(this));
     }
+
     _goBack() {
-        Actions.pop();
+        Actions.login();
     }
 
     render() {
         return(
             <View style={styles.container}>
-                <ActivityIndicator
-                    animating = {this.state.animating}
-                    color = '#bc2b78'
-                    size = "large"
-                    style = {styles.activityIndicator}/>
+               <Loader loading={this.state.loading}/>
                 <Logo/>
                 <View style={styles.inputContainer}>
                     <TextInput style={styles.inputBox}
                                underlineColorAndroid='rgba(0,0,0,0)'
                                placeholder="Email"
-                               placeholderTextColor = "#ffffff"
-                               selectionColor="#fff"
+                               placeholderTextColor = "#000000"
+                               selectionColor="#000"
                                keyboardType="email-address"
                                onChangeText={(text) => this.setState({email:text})}
-                               value={this.state.email}
                     />
                     <TextInput style={styles.inputBox}
                                underlineColorAndroid='rgba(0,0,0,0)'
+                               placeholder="Username"
+                               placeholderTextColor = "#000000"
+                               selectionColor="#000"
+                               onChangeText={(text) => this.setState({username:text})}
+                    />
+                    <TextInput style={styles.inputBox}
+                               underlineColorAndroid='rgba(0,0,0,0)'
+                               placeholder="Age"
+                               placeholderTextColor = "#000000"
+                               selectionColor="#000"
+                               onChangeText={(text) => this.setState({age:text})}
+                    />
+                    <TextInput style={styles.inputBox}
+                               underlineColorAndroid='rgba(0,0,0,0)'
+                               placeholder="Gender"
+                               placeholderTextColor = "#000000"
+                               selectionColor="#000"
+                               onChangeText={(text) => this.setState({gender:text})}
+                    />
+
+                    <TextInput style={styles.inputBox}
+                               underlineColorAndroid='rgba(0,0,0,0)'
                                placeholder="Password"
+                               selectionColor="#000"
                                secureTextEntry={true}
-                               placeholderTextColor = "#ffffff"
-                               value={this.state.password}
+                               placeholderTextColor = "#000000"
                                onChangeText={(text) => this.setState({password:text})}
                     />
                     <SubmitButton onPress={() => this.signup()} type='Sign up'/>
                 </View>
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Already have an account?</Text>
-                    <TouchableOpacity onPress={this._goBack}><Text style={styles.textLInk}> Login</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this._goBack}><Text style={styles.textLink}> Login</Text></TouchableOpacity>
                 </View>
             </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container : {
-        backgroundColor:'#455a64',
-        flex: 1,
-        alignItems:'center',
-        justifyContent :'center'
-    },
-    textContent : {
-        flexGrow: 1,
-        alignItems:'flex-end',
-        justifyContent :'center',
-        paddingVertical:16,
-        flexDirection:'row'
-    },
-    text: {
-        color:'rgba(255,255,255,0.6)',
-        fontSize:16
-    },
-    textLInk: {
-        color:'#ffffff',
-        fontSize:16,
-        fontWeight:'500'
-    },
-    inputContainer : {
-        flexGrow: 1,
-        justifyContent:'center',
-        alignItems: 'center'
-    },
-
-    inputBox: {
-        width:300,
-        backgroundColor:'rgba(255, 255,255,0.2)',
-        borderRadius: 25,
-        paddingHorizontal:16,
-        fontSize:16,
-        color:'#ffffff',
-        marginVertical: 10
-    },
-    activityIndicator: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 80
-    }
-
-});
