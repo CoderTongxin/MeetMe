@@ -1,12 +1,65 @@
 import React from 'react';
-import {StyleSheet, View, Image, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, View, Image, TouchableOpacity, Text, Button} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-
+import FetchLocation from '../components/FetchLocation';
+import UsersMap from '../components/Map'
 
 export default class Home extends React.Component {
+
+    state = {
+        userLocation: null,
+        usersPlaces: [],
+    };
+
+    getUserLocationHandler = () => {
+
+        navigator.geolocation.getCurrentPosition(position => {
+                this.setState({
+                    userLocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421,
+                    }
+                });
+                fetch('https://compsci-732-project.firebaseio.com/place.json', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    })
+                })
+                    .then(res => console.log(res))
+                    .catch(err => console.log(err));
+            },
+            err => console.log(err)
+        );
+
+    };
+
+    getUserPlacesHandler = () => {
+        fetch('https://compsci-732-project.firebaseio.com/place.json')
+            .then(res => res.json())
+            .then(parsedRes => {
+                const placesArray = [];
+                for (const key in parsedRes) {
+                    placesArray.push({
+                        latitude: parsedRes[key].latitude,
+                        longitude: parsedRes[key].longitude,
+                        id: key
+                    });
+                }
+                this.setState({
+                    usersPlaces: placesArray
+                });
+            })
+            .catch(err => console.log(err));
+    };
+
     render() {
         return (
             <View style={styles.container}>
+                {/*This is the top navigation bar*/}
                 <View style={styles.topNavBar}>
                     <Image
                         style={{width: 24, height: 24}}
@@ -19,9 +72,20 @@ export default class Home extends React.Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.body}>
 
+                {/*This is the body in the home view*/}
+                <View style={styles.body}>
+                    <View>
+                        <Button title="Get Users Places" onPress={this.getUserPlacesHandler}/>
+                    </View>
+                    <FetchLocation onGetLocation={this.getUserLocationHandler}/>
+                    <UsersMap
+                        userLocation={this.state.userLocation}
+                        usersPlaces={this.state.usersPlaces}
+                    />
                 </View>
+
+                {/*This is the tap bar*/}
                 <View style={styles.tabBar}>
 
                     <TouchableOpacity style={styles.tabItem}>
@@ -50,18 +114,18 @@ const styles = StyleSheet.create({
     },
 
     topNavBar: {
-        height: 55,
+        height: 60,
         backgroundColor: 'white',
         borderBottomWidth: 1,
         borderBottomColor: '#E5E5E5',
-        paddingTop: 15,
+        paddingTop: 25,
         paddingHorizontal: 10,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'
     },
 
-    topNavText:{
+    topNavText: {
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 18,
@@ -72,9 +136,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    navItem: {
-
-    },
+    navItem: {},
 
     body: {
         flex: 1,
