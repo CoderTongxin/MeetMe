@@ -11,7 +11,7 @@ export default class Logo extends Component {
         return(
             <View style={styles.container}>
                 <Image  style={{width:70, height: 70}}
-                        source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}/>
+                        source={require('../images/MeetMe.png')}/>
                 <Text style={styles.logoText}>Welcome to Meet Me</Text>
             </View>
         )
