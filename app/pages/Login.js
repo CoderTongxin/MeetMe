@@ -34,7 +34,7 @@ export default class Login extends Component {
             .then((loggedInUser)=>{
                 this.setState({loading:false});
                 this.setState({user:loggedInUser});
-                Actions.userProfile({user: this.state.user})
+                Actions.home({user: this.state.user})
             })
             .catch(function(error) {
                 this.setState({loading:false});

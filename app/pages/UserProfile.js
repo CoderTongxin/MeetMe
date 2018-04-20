@@ -22,12 +22,7 @@ export default class userProfile extends Component {
                 <Text style={styles.text}> {this.props.user.id}</Text>
                 <Text style={styles.text}> {this.props.user.username}</Text>
                 <Button title='back' color="#841584" onPress={this.goback}/>
-                {/*<Picker*/}
-                    {/*style={{ height: 50, width: 100,backgroundColor: '#c1c1c1', borderRadius: 20 }}*/}
-                    {/*onValueChange={(itemValue, itemIndex) => this.setState({gender: itemValue})}>*/}
-                    {/*<Picker.Item label="Java" value="java" />*/}
-                    {/*<Picker.Item label="JavaScript" value="js" />*/}
-                {/*</Picker>*/}
+
 
             </View>
         )

@@ -11,9 +11,10 @@ import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
+import ModalDropdown from 'react-native-modal-dropdown'
 import {Actions} from 'react-native-router-flux';
 import {styles} from "../const/styles";
-
+const GENDER_OPTIONS = ['female', 'male', 'other'];
 export default class signUp extends Component {
 
     constructor(props) {
@@ -26,6 +27,7 @@ export default class signUp extends Component {
             age: '',
             password: '',
             isAuthenticated: false,
+            genders:['female','male','other']
         };
         this.signup=this.signup.bind(this);
     }
@@ -41,7 +43,7 @@ export default class signUp extends Component {
                     }).then( ()=>{
                         let user= {id:loggedInUser.uid, email:this.state.email, username:this.state.username,gender:this.state.gender,age:this.state.age};
                         this.setState({loading:false});
-                        Actions.userProfile({user: user});
+                        Actions.home({user: user});
                         }
                     );
 
@@ -84,14 +86,14 @@ export default class signUp extends Component {
                                selectionColor="#000"
                                onChangeText={(text) => this.setState({age:text})}
                     />
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               placeholder="Gender"
-                               placeholderTextColor = "#000000"
-                               selectionColor="#000"
-                               onChangeText={(text) => this.setState({gender:text})}
-                    />
-
+                    <ModalDropdown style={styles.dropdown}
+                                   textStyle={styles.dropdown_text}
+                                   dropdownStyle={styles.dropdown_dropdown}
+                                   dropdownTextStyle={styles.dropdown_dropdownText}
+                                   defaultValue='Select gender'
+                                   options={GENDER_OPTIONS}
+                                   onSelect={(idx, value) => this.setState({gender:value})}
+                        />
                     <TextInput style={styles.inputBox}
                                underlineColorAndroid='rgba(0,0,0,0)'
                                placeholder="Password"
@@ -100,6 +102,7 @@ export default class signUp extends Component {
                                placeholderTextColor = "#000000"
                                onChangeText={(text) => this.setState({password:text})}
                     />
+
                     <SubmitButton onPress={() => this.signup()} type='Sign up'/>
                 </View>
                 <View style={styles.textContent}>

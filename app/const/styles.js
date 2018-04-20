@@ -38,6 +38,27 @@ export const styles = StyleSheet.create({
         color: '#000000',
         marginVertical: 10,
         height: 25
+    },
+    dropdown: {
+        width: 280,
+        backgroundColor: '#c1c1c1',
+        borderRadius: 20,
+        paddingHorizontal: 16,
+        marginVertical: 10,
+        height: 25
+    },
+    dropdown_text: {
+        fontSize: 18,
+        color: '#000000'
+    },
+    dropdown_dropdown:{
+        width: 250,
+        marginTop:3,
+        height:100
+    },
+    dropdown_dropdownText: {
+        fontSize: 18,
+        color: '#000000'
     }
 
 });
