@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Logo from '../components/Logo';
-import {firebaseRef} from '../servers/Firebase'
+import {firebaseRef,facebook} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown'

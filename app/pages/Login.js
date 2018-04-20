@@ -28,8 +28,18 @@ export default class Login extends Component {
         this.login=this.login.bind(this);
         console.disableYellowBox = true;
     }
+    componentDidMount() {
+        this.checkLoginStatus();
+    }
+    checkLoginStatus(){
+        firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
+            if(loggedInUser!=null)
+            Actions.userProfile({user:loggedInUser})
+        })
+    }
     login() {
         this.setState({loading:true});
+
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
                 this.setState({loading:false});
@@ -42,6 +52,24 @@ export default class Login extends Component {
             }.bind(this));
     }
 
+    async loginWithFacebook() {
+        const {type,token} =await Expo.Facebook.
+        logInWithReadPermissionsAsync('233859937160350',{permissions:['public_profile']});
+        if(type === 'success') {
+            const response = await fetch(
+                `https://graph.facebook.com/me?access_token=${token}&fields=email,gender,age_range`);
+                const user = await response.json();
+                console.log(user);
+
+            const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
+            firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
+                console.log(loggedInUser);
+                Actions.userProfile({user: loggedInUser})
+            }).catch((error)=> {
+                Alert.alert(error.message)
+            })
+        }
+    }
     _goToSignUp() {
         Actions.signUp()
     }
@@ -69,6 +97,7 @@ export default class Login extends Component {
                         onChangeText={(text) => this.setState({password:text})}
                     />
                     <SubmitButton onPress={()=> this.login()} type='Login'/>
+                    <SubmitButton onPress={()=> this.loginWithFacebook()} type='Facebook'/>
                 </View>
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Don't have an account yet?</Text>

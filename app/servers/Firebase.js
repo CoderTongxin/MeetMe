@@ -7,5 +7,5 @@ const config = {
     storageBucket: "compsci-732-project.appspot.com",
     messagingSenderId: "329451042596"
 };
-
-export const firebaseRef = firebase.initializeApp(config);
+firebase.initializeApp(config);
+export const firebaseRef = firebase;
