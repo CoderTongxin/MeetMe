@@ -1,5 +1,12 @@
 {
   "expo": {
     "sdkVersion": "26.0.0"
+  },
+  "android": {
+    "config": {
+      "googleMaps": {
+        "apiKey": "AIzaSyCYVn6A1vLHvfojDXEfW3Tby9CCS1O_TLI"
+      }
+    }
   }
 }
