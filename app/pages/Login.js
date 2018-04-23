@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {Input, Button} from 'react-native-elements';
+import { Font } from 'expo';
 import {
     Text,
     View,
-    TextInput,
-    TouchableOpacity,
-    Alert
+    StyleSheet,
+    ImageBackground,
+    Alert,
+    Dimensions
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
-import Logo from '../components/Logo';
-import Loader from '../components/Loader';
-import SubmitButton from '../components/SubmitButton';
 import {Actions} from 'react-native-router-flux';
-import {styles} from "../const/styles";
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+
+const BG_IMAGE = require('../images/bg.jpg');
 
 export default class Login extends Component {
 
@@ -20,26 +25,52 @@ export default class Login extends Component {
         super(props);
         this.state = {
             loading:false,
+            user: null,
+            fontLoaded: false,
             email: '',
+            email_valid: true,
             password: '',
-            isAuthenticated: false,
-            user: null
+            login_failed: false,
+            showLoading: false,
+            password_valid:true
         };
         this.login=this.login.bind(this);
         console.disableYellowBox = true;
     }
-    componentDidMount() {
+    async componentDidMount() {
         this.checkLoginStatus();
+        await Font.loadAsync({
+            'georgia': require('../../assets/fonts/Georgia.ttf'),
+            'regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
+            'light': require('../../assets/fonts/Montserrat-Light.ttf'),
+            'bold': require('../../assets/fonts/Montserrat-Bold.ttf'),
+        });
+        this.setState({ fontLoaded: true });
     }
+
+
+    validateEmail(email) {
+
+        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        return re.test(email);
+    }
+
+    validatePassword(password) {
+
+        return password.length >= 8;
+    }
+
+
     checkLoginStatus(){
         firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
             if(loggedInUser!=null)
             Actions.userProfile({user:loggedInUser})
         })
     }
+
     login() {
         this.setState({loading:true});
-
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
                 this.setState({loading:false});
@@ -53,23 +84,25 @@ export default class Login extends Component {
     }
 
     async loginWithFacebook() {
+
         const {type,token} =await Expo.Facebook.
         logInWithReadPermissionsAsync('233859937160350',{permissions:['public_profile']});
         if(type === 'success') {
             const response = await fetch(
                 `https://graph.facebook.com/me?access_token=${token}&fields=email,gender,age_range`);
-                const user = await response.json();
-                console.log(user);
+                const user_info = await response.json();
+                const user_gender=user_info.gender;
 
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
-                console.log(loggedInUser);
+                loggedInUser['gender']=user_gender;
                 Actions.userProfile({user: loggedInUser})
             }).catch((error)=> {
                 Alert.alert(error.message)
             })
         }
     }
+
     _goToSignUp() {
         Actions.signUp()
     }
@@ -77,33 +110,202 @@ export default class Login extends Component {
     render() {
         return(
             <View style={styles.container}>
-                <Loader loading={this.state.loading}/>
-                <Logo/>
-                <View style={styles.inputContainer}>
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               placeholder="Email"
-                               placeholderTextColor = "#000000"
-                               selectionColor="#000"
-                               keyboardType="email-address"
-                        onChangeText={(text) => this.setState({email:text})}
-                    />
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               selectionColor="#000"
-                               placeholder="Password"
-                               secureTextEntry={true}
-                               placeholderTextColor = "#000000"
-                        onChangeText={(text) => this.setState({password:text})}
-                    />
-                    <SubmitButton onPress={()=> this.login()} type='Login'/>
-                    <SubmitButton onPress={()=> this.loginWithFacebook()} type='Facebook'/>
-                </View>
-                <View style={styles.textContent}>
-                    <Text style={styles.text}>Don't have an account yet?</Text>
-                    <TouchableOpacity onPress={this._goToSignUp}><Text style={styles.textLink}>  Signup</Text></TouchableOpacity>
-                </View>
+                <ImageBackground
+                    source={BG_IMAGE}
+                    style={styles.bgImage}
+                >
+                    { this.state.fontLoaded ?
+                        <View style={styles.loginView}>
+                            <View style={styles.loginTitle}>
+                                <View style={{flexDirection: 'row'}}>
+                                    <Text style={styles.travelText}>Meet Me</Text>
+                                </View>
+                            </View>
+                            <View style={styles.loginInput}>
+                                <Input
+                                    leftIcon={
+                                        <Icon
+                                            name='user-o'
+                                            color='rgba(171, 189, 219, 1)'
+                                            size={25}
+                                        />
+                                    }
+                                    containerStyle={{marginVertical: 10}}
+                                    onChangeText={(text) => this.setState({email_valid:true, email:text})}
+                                    inputStyle={{marginLeft: 10, color: 'white'}}
+                                    keyboardAppearance="light"
+                                    placeholder="Email"
+                                    value={this.state.email}
+                                    keyboardType="email-address"
+                                    returnKeyType="next"
+                                    onSubmitEditing={(event) => {
+                                        this.setState({email_valid: this.validateEmail(event.nativeEvent.text)});
+                                        this.passwordInput.focus();
+                                    }}
+                                    onBlur={(event)=>{
+                                        this.setState({email_valid: this.validateEmail(event.nativeEvent.text)});
+                                    }}
+                                    placeholderTextColor="white"
+                                    errorStyle={{textAlign: 'center', fontSize: 12}}
+                                    errorMessage={this.state.email_valid ? null : "Please enter a valid email address"}
+                                />
+                                <Input
+                                    leftIcon={
+                                        <Icon
+                                            name='lock'
+                                            color='rgba(171, 189, 219, 1)'
+                                            size={25}
+                                        />
+                                    }
+                                    containerStyle={{marginVertical: 10}}
+                                    onChangeText={(text) => this.setState({password_valid:true,password:text})}
+                                    inputStyle={{marginLeft: 10, color: 'white'}}
+                                    secureTextEntry={true}
+                                    keyboardAppearance="light"
+                                    placeholder="Password"
+                                    returnKeyType="done"
+                                    ref={ input => this.passwordInput = input}
+                                    onSubmitEditing={(event) => {
+                                        this.setState({
+                                            password_valid: this.validatePassword(event.nativeEvent.text)});
+                                    }}
+                                    placeholderTextColor="white"
+                                    errorStyle={{textAlign: 'center', fontSize: 12}}
+                                    errorMessage={this.state.password_valid ? null : "Password should have at least 8 characters"}
+                                />
+                            </View>
+                            <View style={styles.buttonGroup}>
+                                <Button
+                                    title='Log in'
+                                    activeOpacity={1}
+                                    underlayColor="transparent"
+                                    onPress={() =>this.login()}
+                                    loading={this.state.loading}
+                                    loadingProps={{size: 'small', color: 'white'}}
+                                    disabled={ !this.state.email_valid || this.state.password.length < 8}
+                                    containerStyle={{marginVertical: 10}}
+                                    buttonStyle={styles.buttonStyle}
+                                    titleStyle={styles.buttonTitle}
+                                    disabledStyle={styles.disabledButtonStyle}
+                                    disabledTitleStyle={styles.disabledTitleStyle}
+                                />
+                                <Button
+                                    icon={
+                                        <Icon
+                                            name='facebook-square'
+                                            size={20}
+                                            color='white'
+                                        />
+                                    }
+                                    title='Login with Facebook'
+                                    activeOpacity={1}
+                                    underlayColor="transparent"
+                                    onPress={() =>this.loginWithFacebook()}
+                                    loading={this.state.loading}
+                                    loadingProps={{size: 'small', color: 'white'}}
+                                    buttonStyle={styles.buttonStyle}
+                                    titleStyle={styles.buttonTitle}
+                                    disabledStyle={styles.disabledButtonStyle}
+                                    disabledTitleStyle={styles.disabledTitleStyle}
+                                />
+                            </View>
+
+                            <View style={styles.footerView}>
+                                <Text style={{color: 'grey'}}>
+                                    Don't have an account?
+                                </Text>
+                                <Button
+                                    title="Sign up"
+                                    clear
+                                    activeOpacity={0.5}
+                                    titleStyle={{color: 'white', fontSize: 15}}
+                                    containerStyle={{marginTop: -10}}
+                                    onPress={() => this._goToSignUp()}
+                                />
+                            </View>
+                        </View> :
+                        <Text>Loading...</Text>
+                    }
+                </ImageBackground>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        alignItems:'center',
+        justifyContent :'center'
+    },
+    bgImage: {
+        flex: 1,
+        top: 0,
+        left: 0,
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    loginView: {
+        flex:1,
+        marginTop: 100,
+        backgroundColor: 'transparent',
+        width: 250,
+        height: 400,
+    },
+    loginTitle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    travelText: {
+        color: 'white',
+        fontSize: 30,
+        fontFamily: 'bold'
+    },
+    plusText: {
+        color: 'white',
+        fontSize: 30,
+        fontFamily: 'regular'
+    },
+    loginInput: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    footerView: {
+        marginTop: 20,
+        flex: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonGroup:{
+        flex: 1,
+        marginTop:20
+    },
+    buttonStyle:{
+        height: 50,
+        width: 250,
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 30
+    },
+    disabledButtonStyle:{
+        height: 50,
+        width: 250,
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: 'grey',
+        borderRadius: 30
+    },
+    disabledTitleStyle:{
+        fontWeight: 'bold',
+        color: 'grey'
+    },
+    buttonTitle: {
+        fontWeight: 'bold',
+        color: 'white'
+    }
+})
