@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import Logo from '../components/Logo';
-import {firebaseRef} from '../servers/Firebase'
+import {firebase} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
 import {Actions} from 'react-native-router-flux';
@@ -31,9 +31,9 @@ export default class signUp extends Component {
     }
     signup() {
         this.setState({loading:true});
-        firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
-                    firebaseRef.database().ref('users/' + loggedInUser.uid).set({
+                    firebase.database().ref('users/' + loggedInUser.uid).set({
                         username: this.state.username,
                         email: this.state.email,
                         gender:this.state.gender,

@@ -1,15 +1,12 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
+import Map from '../components/Map'
 
-import {Root} from './app/config/Router';
-
-console.disableYellowBox = true;
-
-export default class App extends React.Component {
+export default class Schedule extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <Root/>
+                <Map/>
             </View>
         );
     }

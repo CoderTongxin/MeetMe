@@ -1,10 +1,10 @@
 import React from 'react';
 import {Router, Stack, Scene} from 'react-native-router-flux';
 
-import Login from './pages/Login';
-import SignUp from './pages/Signup';
-import userProfile from './pages/UserProfile'
-import home from './pages/Home'
+import Login from './screens/Login';
+import SignUp from './screens/Signup';
+import userProfile from './screens/UserProfile'
+import home from './screens/Home'
 
 export default class Routs extends React.Component {
     render() {
@@ -14,8 +14,7 @@ export default class Routs extends React.Component {
                     <Scene key="login" component={Login} title="Login"/>
                     <Scene key="signUp" component={SignUp} title="Register"/>
                     <Scene key="userProfile" component={userProfile} title="UserProfile"/>
-                    <Scene key="userProfile" component={userProfile} title="UserProfile"/>
-                    <Scene key="home" component={home} title="UserProfile" initial={true}/>
+                    <Scene key="home" component={home} title="Home" initial={true}/>
                 </Stack>
             </Router>
         )

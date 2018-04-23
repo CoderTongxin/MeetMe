@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import * as database from 'firebase';
 const config = {
     apiKey: "AIzaSyCJYKM8YAGN63AI7jMK1SCsDuduU4e8GRA",
     authDomain: "compsci-732-project.firebaseapp.com",
@@ -8,4 +8,4 @@ const config = {
     messagingSenderId: "329451042596"
 };
 
-export const firebaseRef = firebase.initializeApp(config);
+export const firebase = database.initializeApp(config);

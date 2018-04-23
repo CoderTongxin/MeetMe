@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     Alert
 } from 'react-native';
-import {firebaseRef} from '../servers/Firebase'
+import {firebase} from '../servers/Firebase'
 import Logo from '../components/Logo';
 import Loader from '../components/Loader';
 import SubmitButton from '../components/SubmitButton';
@@ -30,7 +30,7 @@ export default class Login extends Component {
     }
     login() {
         this.setState({loading:true});
-        firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
                 this.setState({loading:false});
                 this.setState({user:loggedInUser});
