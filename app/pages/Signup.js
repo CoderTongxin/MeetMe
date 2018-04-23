@@ -79,13 +79,7 @@ export default class signUp extends Component {
                                selectionColor="#000"
                                onChangeText={(text) => this.setState({username:text})}
                     />
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               placeholder="Age"
-                               placeholderTextColor = "#000000"
-                               selectionColor="#000"
-                               onChangeText={(text) => this.setState({age:text})}
-                    />
+
                     <ModalDropdown style={styles.dropdown}
                                    textStyle={styles.dropdown_text}
                                    dropdownStyle={styles.dropdown_dropdown}

@@ -30,7 +30,6 @@ export default class userProfile extends Component {
                 <Text style={styles.text}>Hello {this.props.user.displayName}</Text>
                 <Text style={styles.text}> {this.props.user.uid}</Text>
                 <Text style={styles.text}> {this.props.user.gender}</Text>
-                <Text style={styles.text}> {this.props.user.age_range}</Text>
                 <Button title='home' color="#841584" onPress={this.goHome}/>
                 <Button title='logout' color="#841584" onPress={this.logout}/>
             </View>
