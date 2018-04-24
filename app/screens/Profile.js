@@ -7,6 +7,7 @@ export default class Profile extends React.Component {
     render() {
         return (
             <View style={{flex: 1}}>
+                {/*The key part to rewrite Header and make a icon to close the modal screen*/}
                 <Header
                     scene={{index: 0}}
                     scenes={[{index: 0, isActive: true}]}
@@ -26,6 +27,8 @@ export default class Profile extends React.Component {
                         }
                     })}
                 />
+
+                {/*Edit here to add any functions*/}
                 <View style={styles.container}>
                     <Text>
                         Welcome to Profile screen!
