@@ -1,10 +1,13 @@
 import React from 'react';
-import {Button} from 'react-native';
 
+import {Button} from 'react-native-elements'
 
-const fetchLocation = props=>{
+const fetchLocation = (props) => {
     return (
-        <Button title="Get Location" onPress={props.onGetLocation}/>
+        <Button
+            title="Get Location"
+            onPress={props.onGetLocation}
+        />
     );
 
 };
