@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View, Button} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
 import Activities from '../pages/Activities';
@@ -8,40 +8,20 @@ import Schedule from '../pages/Schedule';
 import ActivityDetail from '../pages/ActivityDetail';
 import Settings from '../pages/Settings';
 import MapView from '../pages/MapView';
+import Profile from '../pages/Profile';
+
 
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Initiate',
-            headerLeft: (<View></View>),
-            headerRight:
-                <View style={{paddingRight: 10}}>
-                    <TouchableOpacity>
-                        <Icon name="account-circle" size={25} color="#808080"/>
-                    </TouchableOpacity>
-                </View>
-            ,
-        }
     },
 });
+
 
 
 export const ActivitiesStack = StackNavigator({
     Activities: {
         screen: Activities,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Activities',
-            headerLeft: (<View></View>),
-            headerRight:
-                <View style={{paddingRight: 10}}>
-                    <TouchableOpacity>
-                        <Icon name="account-circle" size={25} color="#808080"/>
-                    </TouchableOpacity>
-                </View>,
-        }
     },
     ActivityDetail: {
         screen: ActivityDetail,
@@ -52,22 +32,25 @@ export const ActivitiesStack = StackNavigator({
 export const ScheduleStack = StackNavigator({
     Schedule: {
         screen: Schedule,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Schedule',
-            headerLeft: (<View></View>),
-            headerRight:
-                <View style={{paddingRight: 10}}>
-                    <TouchableOpacity>
-                        <Icon name="account-circle" size={25} color="#808080"/>
-                    </TouchableOpacity>
-                </View>,
-        }
     },
     ActivityDetail: {
         screen: ActivityDetail,
     }
 });
+
+
+export const ProfileStack = StackNavigator({
+    Settings: {
+        screen: Profile,
+        navigationOptions: {
+            headerTitleStyle: {textAlign: "center", flex: 1},
+            title: 'Profile',
+            headerLeft: (<View></View>),
+            headerRight: (<View></View>),
+        }
+    },
+});
+
 
 export const SettingsStack = StackNavigator({
     Settings: {
@@ -87,7 +70,7 @@ export const MapViewStack = StackNavigator({
         screen: MapView,
         navigationOptions: {
             headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'MapViewStack',
+            title: 'Map View',
             headerLeft: (<View></View>),
             headerRight: (<View></View>),
         }
@@ -133,6 +116,12 @@ export const Root = StackNavigator({
     },
     MapView: {
         screen: MapViewStack,
+    },
+    Profile: {
+        screen: ProfileStack,
+    },
+    Settings: {
+        screen: SettingsStack,
     }
 }, {
     mode: 'modal',
