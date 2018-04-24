@@ -10,8 +10,6 @@ import Settings from '../pages/Settings';
 import MapView from '../pages/MapView';
 import Profile from '../pages/Profile';
 
-
-
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,
@@ -69,12 +67,6 @@ export const SettingsStack = StackNavigator({
 export const MapViewStack = StackNavigator({
     MapViewStack: {
         screen: MapView,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Map View',
-            headerLeft: (<View></View>),
-            headerRight: (<View></View>),
-        }
     },
 });
 

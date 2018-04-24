@@ -4,6 +4,21 @@ import Map from '../components/Map'
 import Header from "react-native-elements/src/header/Header";
 
 export default class MapView extends React.Component {
+    constructor(props) {
+        super(props);
+    };
+
+    static navigationOptions = (navigation) => ({
+        headerTitleStyle: {textAlign: "center", flex: 1},
+        title: 'Map View',
+        headerLeft: (<View></View>),
+        headerRight:
+            <Button
+                title="Close"
+                onPress={() => navigation.goBack}
+            />,
+    });
+
     render() {
         return (
             <View style={styles.container}>

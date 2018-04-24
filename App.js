@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet,  View } from 'react-native';
 import {Home} from './app/Home';
+import {Root} from './app/config/HomeRouter';
 
 console.disableYellowBox = true;
 export default class App extends React.Component {
@@ -8,12 +9,11 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
           {/*<Routes/>*/}
-          <Home/>
+          <Root/>
       </View>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
     container: {
