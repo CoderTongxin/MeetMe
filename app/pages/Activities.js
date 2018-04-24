@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
-
+import {StyleSheet, View, Text,TouchableOpacity} from 'react-native';
+import {Icon} from 'react-native-elements';
 
 export default class Activities extends React.Component {
     render() {
@@ -13,6 +13,18 @@ export default class Activities extends React.Component {
         );
     }
 }
+
+Activities.navigationOptions = ({navigation}) => ({
+    title: 'Activities',
+    headerTitleStyle: {textAlign: "center", flex: 1},
+    headerLeft: (<View></View>),
+    headerRight:
+        <View style={{paddingRight: 10}}>
+            <TouchableOpacity>
+                <Icon name="account-circle" size={25} color="#808080" onPress={() => navigation.navigate('Profile')}/>
+            </TouchableOpacity>
+        </View>,
+});
 
 const styles = StyleSheet.create({
     container: {

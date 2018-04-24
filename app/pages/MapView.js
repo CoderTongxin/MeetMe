@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Button} from 'react-native';
 import Map from '../components/Map'
+import Header from "react-native-elements/src/header/Header";
 
-export default class Schedule extends React.Component {
+export default class MapView extends React.Component {
     render() {
         return (
             <View style={styles.container}>
@@ -12,9 +13,10 @@ export default class Schedule extends React.Component {
     }
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });
