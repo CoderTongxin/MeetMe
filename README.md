@@ -48,8 +48,8 @@ Now run react-devtools from the terminal to launch the standalone DevTools app:
 
 ## Authors
 
-Tongxie Xie (txie936)
-Qian Pen (qpen754)
+CoderTongxin
+QP
 
 ## License
 
