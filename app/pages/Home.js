@@ -1,4 +1,4 @@
-import React,{Component}from 'react';
+import React from 'react';
 import {StyleSheet, View, Image, TouchableOpacity, Text, Button} from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FetchLocation from '../components/FetchLocation';
@@ -24,7 +24,7 @@ let activityInfo = {
 
 };
 
-export default class Home extends Component {
+export default class Home extends React.Component {
 
     state = {
         userLocation: null,

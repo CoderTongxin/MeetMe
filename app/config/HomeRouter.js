@@ -9,6 +9,7 @@ import ActivityDetail from '../pages/ActivityDetail';
 import Settings from '../pages/Settings';
 import MapView from '../pages/MapView';
 
+
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,
@@ -138,3 +139,5 @@ export const Root = StackNavigator({
     mode: 'modal',
     headerMode: 'none',
 });
+
+

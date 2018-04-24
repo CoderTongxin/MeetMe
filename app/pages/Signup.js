@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import {
     Text,
     View,
@@ -12,10 +12,9 @@ import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown'
-import {Actions} from 'react-native-router-flux';
 import {styles} from "../const/styles";
 const GENDER_OPTIONS = ['female', 'male', 'other'];
-export default class signUp extends Component {
+export default class signUp extends React.Component {
 
     constructor(props) {
         super(props);
@@ -43,7 +42,9 @@ export default class signUp extends Component {
                     }).then( ()=>{
                         let user= {id:loggedInUser.uid, email:this.state.email, username:this.state.username,gender:this.state.gender,age:this.state.age};
                         this.setState({loading:false});
-                        Actions.home({user: user});
+                        this.props.navigation.navigate('mainMenu',{
+                            user:user
+                        });
                         }
                     );
 
@@ -55,7 +56,7 @@ export default class signUp extends Component {
     }
 
     _goBack() {
-        Actions.login();
+        this.props.navigation.navigate('login');
     }
 
     render() {

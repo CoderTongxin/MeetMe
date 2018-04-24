@@ -17,6 +17,7 @@ import Loader from '../components/Loader'
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
+
 const BG_IMAGE = require('../images/bg.jpg');
 
 export default class Login extends Component {
@@ -66,7 +67,9 @@ export default class Login extends Component {
     checkLoginStatus(){
         firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
             if(loggedInUser!=null)
-            Actions.userProfile({user:loggedInUser})
+                this.props.navigation.navigate('userProfile',{
+                     user:loggedInUser
+                });
         })
     }
 
@@ -76,7 +79,9 @@ export default class Login extends Component {
             .then((loggedInUser)=>{
                 this.setState({loading:false});
                 this.setState({user:loggedInUser});
-                Actions.home({user: this.state.user})
+                this.props.navigation.navigate('userProfile',{
+                    user:this.state.user
+                });
             })
             .catch(function(error) {
                 this.setState({loading:false});
@@ -106,10 +111,11 @@ export default class Login extends Component {
     }
 
     _goToSignUp() {
-        Actions.signUp()
+        this.props.navigation.navigate('signup');
     }
 
     render() {
+
         return(
             <View style={styles.container}>
                 <Loader loading={this.state.showLoading}/>

@@ -1,15 +1,14 @@
-import React,{Component}from 'react';
+import React from 'react';
 import { StyleSheet,  View } from 'react-native';
-import Routes from './app/Routes';
-import {Root} from './app/config/HomeRouter';
+import {Home} from './app/Home';
 
 console.disableYellowBox = true;
-export default class App extends Component {
+export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
           {/*<Routes/>*/}
-          <Root/>
+          <Home/>
       </View>
     );
   }
