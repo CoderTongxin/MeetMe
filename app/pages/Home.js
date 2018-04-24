@@ -5,7 +5,7 @@ import FetchLocation from '../components/FetchLocation';
 import UsersMap from '../components/Map'
 import {firebaseRef} from "../servers/Firebase";
 
-const database = firebase.database();
+const database = firebaseRef.database();
 
 let activityInfo = {
     title: 'Yo Sushi',
@@ -32,7 +32,7 @@ export default class Home extends Component {
     };
 
     createActivity(activity) {
-        firebase.database().ref('activities').push().set(activity).then(() => {
+        firebaseRef.database().ref('activities').push().set(activity).then(() => {
             console.log('adding location');
         }).catch((error) => {
             console.log(error);
@@ -40,7 +40,7 @@ export default class Home extends Component {
     };
 
     updateActivity(activity) {
-        firebase.database().ref('activities').update(activity).then(() => {
+        firebaseRef.database().ref('activities').update(activity).then(() => {
             console.log('adding location');
         }).catch((error) => {
             console.log(error);
