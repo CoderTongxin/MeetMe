@@ -7,7 +7,7 @@ import {
     Image,
     Alert
 } from 'react-native';
-import {firebase} from '../servers/Firebase';
+import {firebaseRef} from '../servers/Firebase';
 import {Actions} from 'react-native-router-flux';
 
 

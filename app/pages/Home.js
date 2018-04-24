@@ -3,7 +3,7 @@ import {StyleSheet, View, Image, TouchableOpacity, Text, Button} from 'react-nat
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FetchLocation from '../components/FetchLocation';
 import UsersMap from '../components/Map'
-import {firebase} from "../servers/Firebase";
+import {firebaseRef} from "../servers/Firebase";
 
 const database = firebase.database();
 

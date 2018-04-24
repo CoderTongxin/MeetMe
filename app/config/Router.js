@@ -2,12 +2,12 @@ import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
-import Activities from '../screens/Activities';
-import Initiate from '../screens/Initiate';
-import Schedule from '../screens/Schedule';
-import ActivityDetail from '../screens/ActivityDetail';
-import Settings from '../screens/Settings';
-import MapView from '../screens/MapView';
+import Activities from '../pages/Activities';
+import Initiate from '../pages/Initiate';
+import Schedule from '../pages/Schedule';
+import ActivityDetail from '../pages/ActivityDetail';
+import Settings from '../pages/Settings';
+import MapView from '../pages/MapView';
 
 export const InitiateStack = StackNavigator({
     Initiate: {
