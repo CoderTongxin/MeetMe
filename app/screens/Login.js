@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
+import {HomeScreenRoot} from "../config/Route";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -38,7 +39,7 @@ export default class Login extends React.Component {
         this.login=this.login.bind(this);
     }
     async componentDidMount() {
-        this.checkLoginStatus();
+        // this.checkLoginStatus();
         await Font.loadAsync({
             'georgia': require('../../assets/fonts/Georgia.ttf'),
             'regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
@@ -65,7 +66,7 @@ export default class Login extends React.Component {
     checkLoginStatus(){
         firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
             if(loggedInUser!=null)
-                this.props.navigation.navigate('userProfile',{
+                this.props.navigation.navigate('HomeScreenRoot',{
                      user:loggedInUser
                 });
         })
@@ -77,7 +78,7 @@ export default class Login extends React.Component {
             .then((loggedInUser)=>{
                 this.setState({loading:false});
                 this.setState({user:loggedInUser});
-                this.props.navigation.navigate('userProfile',{
+                this.props.navigation.navigate('HomeScreenRoot',{
                     user:this.state.user
                 });
             })
@@ -120,7 +121,7 @@ export default class Login extends React.Component {
     }
 
     _goToSignUp() {
-        this.props.navigation.navigate('signup');
+        this.props.navigation.navigate('Signup');
     }
 
     render() {

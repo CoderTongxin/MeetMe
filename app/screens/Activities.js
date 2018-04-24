@@ -1,13 +1,14 @@
 import React from 'react';
-import {StyleSheet, View, Image, TouchableOpacity, Text, Button} from 'react-native';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import {StyleSheet, View, Text, TouchableOpacity, Button} from 'react-native';
+import {Icon} from 'react-native-elements';
+
+
 import FetchLocation from '../components/FetchLocation';
 import UsersMap from '../components/Map'
-import {firebaseRef} from "../servers/Firebase";
-
-const database = firebaseRef.database();
+//import {firebaseRef} from "../servers/Firebase";
 
 let activityInfo = {
+    category: 'food',
     title: 'Yo Sushi',
     description: 'eating',
     time: {
@@ -21,31 +22,29 @@ let activityInfo = {
     owner: 'djflksdjdltj',
     participants: {},
     status: 'open',
-
 };
 
-export default class Home extends React.Component {
-
+export default class Activities extends React.Component {
     state = {
         userLocation: null,
         usersPlaces: [],
     };
 
-    createActivity(activity) {
-        firebaseRef.database().ref('activities').push().set(activity).then(() => {
-            console.log('adding location');
-        }).catch((error) => {
-            console.log(error);
-        });
-    };
-
-    updateActivity(activity) {
-        firebaseRef.database().ref('activities').update(activity).then(() => {
-            console.log('adding location');
-        }).catch((error) => {
-            console.log(error);
-        });
-    };
+    // createActivity(activity) {
+    //     firebaseRef.database().ref('activities').push().set(activity).then(() => {
+    //         console.log('adding location');
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     });
+    // };
+    //
+    // updateActivity(activity) {
+    //     firebaseRef.database().ref('activities').update(activity).then(() => {
+    //         console.log('adding location');
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     });
+    // };
 
     getUserLocationHandler = () => {
 
@@ -59,8 +58,8 @@ export default class Home extends React.Component {
                     }
                 });
 
+                //this.createActivity(activityInfo);
 
-                this.createActivity(activityInfo);
                 // fetch('https://compsci-732-project.firebaseio.com/place.json', {
                 //     method: 'POST',
                 //     body: JSON.stringify({
@@ -76,7 +75,7 @@ export default class Home extends React.Component {
 
     };
 
-    getActivitiesPlacesHandler = () => {
+    getUsersPlacesHandler = () => {
         fetch('https://compsci-732-project.firebaseio.com/place.json')
             .then(res => res.json())
             .then(parsedRes => {
@@ -95,36 +94,26 @@ export default class Home extends React.Component {
             .catch(err => console.log(err));
     };
 
+
     render() {
         return (
             <View style={styles.container}>
-
-                {/*This is the top navigation bar*/}
-                <View style={styles.topNavBar}>
-                    <Image
-                        style={{width: 24, height: 24}}
-                        source={require('../images/MeetMe.png')}
-                    />
-                    <Text style={styles.topNavText}>Meet Me</Text>
-                    <View style={styles.topNavItem}>
-                        <TouchableOpacity>
-                            <MaterialIcon style={styles.navItem} name="account-circle" size={25} color="#808080"/>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
                 {/*This is the body in the home view*/}
                 <View style={styles.body}>
                     {/*This is initiate screen view*/}
-                    <View styele = {{ overflow: 'hidden'}}>
+                    <View styele={{overflow: 'hidden'}}>
 
 
                     </View>
 
                     {/*This is activities screen view*/}
-                    <View styele = {{top: window.height, bottom: -window.height}}>
+                    <View styele={{top: window.height, bottom: -window.height}}>
 
                         <FetchLocation onGetLocation={this.getUserLocationHandler}/>
+
+                        {/*<View>*/}
+                        {/*<Button title={"Get User Places"} onPress={this.getUsersPlacesHandler()}/>*/}
+                        {/*</View>*/}
                         <UsersMap
                             userLocation={this.state.userLocation}
                             usersPlaces={this.state.usersPlaces}
@@ -137,28 +126,23 @@ export default class Home extends React.Component {
 
                     </View>
                 </View>
-                {/*This is the tap bar*/}
-                <View style={styles.tabBar}>
-
-                    <TouchableOpacity style={styles.tabItem}>
-                        <MaterialIcon name="alarm-add" size={24} color="#808080"/>
-                        <Text style={styles.tabTitle}>Initiate</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.tabItem}>
-                        <MaterialIcon name="local-activity" size={24} color="#808080"/>
-                        <Text style={styles.tabTitle}>Activities</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.tabItem}>
-                        <MaterialIcon name="schedule" size={24} color="#808080"/>
-                        <Text style={styles.tabTitle}>Schedule</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
         );
     }
 }
+
+
+Activities.navigationOptions = ({navigation}) => ({
+    title: 'Activities',
+    headerTitleStyle: {textAlign: "center", flex: 1},
+    headerLeft: (<View></View>),
+    headerRight:
+        <View style={{paddingRight: 10}}>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                <Icon name="account-circle" size={25} color="#808080"/>
+            </TouchableOpacity>
+        </View>,
+});
 
 const styles = StyleSheet.create({
     container: {

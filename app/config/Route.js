@@ -2,14 +2,15 @@ import React from 'react';
 import {TouchableOpacity, View, Button} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
-import Activities from '../pages/Activities';
-import Initiate from '../pages/Initiate';
-import Schedule from '../pages/Schedule';
-import ActivityDetail from '../pages/ActivityDetail';
-import Settings from '../pages/Settings';
-import MapView from '../pages/MapView';
-import Profile from '../pages/Profile';
-
+import Activities from '../screens/Activities';
+import Initiate from '../screens/Initiate';
+import Schedule from '../screens/Schedule';
+import ActivityDetail from '../screens/ActivityDetail';
+import Settings from '../screens/Settings';
+import MapView from '../screens/MapView';
+import Profile from '../screens/Profile';
+import Login from '../screens/Login';
+import SignUp from '../screens/Signup';
 
 
 export const InitiateStack = StackNavigator({
@@ -17,8 +18,6 @@ export const InitiateStack = StackNavigator({
         screen: Initiate,
     },
 });
-
-
 
 export const ActivitiesStack = StackNavigator({
     Activities: {
@@ -29,7 +28,6 @@ export const ActivitiesStack = StackNavigator({
     }
 });
 
-
 export const ScheduleStack = StackNavigator({
     Schedule: {
         screen: Schedule,
@@ -37,45 +35,6 @@ export const ScheduleStack = StackNavigator({
     ActivityDetail: {
         screen: ActivityDetail,
     }
-});
-
-
-export const ProfileStack = StackNavigator({
-    Settings: {
-        screen: Profile,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Profile',
-            headerLeft: (<View></View>),
-            headerRight: (<View></View>),
-        }
-    },
-});
-
-
-export const SettingsStack = StackNavigator({
-    Settings: {
-        screen: Settings,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Settings',
-            headerLeft: (<View></View>),
-            headerRight: (<View></View>),
-        }
-    },
-});
-
-
-export const MapViewStack = StackNavigator({
-    MapViewStack: {
-        screen: MapView,
-        navigationOptions: {
-            headerTitleStyle: {textAlign: "center", flex: 1},
-            title: 'Map View',
-            headerLeft: (<View></View>),
-            headerRight: (<View></View>),
-        }
-    },
 });
 
 export const Tabs = TabNavigator({
@@ -111,22 +70,42 @@ export const Tabs = TabNavigator({
     swipeEnabled: false,
 });
 
-export const Root = StackNavigator({
+export const HomeScreenRoot = StackNavigator({
     Tabs: {
         screen: Tabs,
     },
     MapView: {
-        screen: MapViewStack,
+        screen: MapView,
     },
     Profile: {
-        screen: ProfileStack,
+        screen: Profile,
     },
     Settings: {
-        screen: SettingsStack,
+        screen: Settings,
     }
 }, {
     mode: 'modal',
     headerMode: 'none',
+    navigationOptions: {
+        gesturesEnabled: false,
+    },
 });
 
-
+export const Root = StackNavigator({
+    Login: {
+        screen: Login
+    },
+    Signup: {
+        screen: SignUp
+    },
+    HomeScreenRoot: {
+        screen: HomeScreenRoot,
+    },
+}, {
+    //If you need change the first screen when APP open, change the  initialRouteName, e.g. set it to 'HomeScreenRoot' will skip the login page
+    initialRouteName: 'HomeScreenRoot',
+    headerMode: 'none',
+    navigationOptions: {
+        gesturesEnabled: false,
+    },
+});

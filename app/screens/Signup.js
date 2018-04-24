@@ -13,6 +13,7 @@ import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown'
 import {styles} from "../const/styles";
+import {HomeScreenRoot} from "../config/Route";
 const GENDER_OPTIONS = ['female', 'male', 'other'];
 export default class signUp extends React.Component {
 
@@ -30,7 +31,7 @@ export default class signUp extends React.Component {
         this.signup=this.signup.bind(this);
         this._goBack=this._goBack.bind(this)
     }
-    signup() {
+     signup() {
         this.setState({loading:true});
         firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
@@ -43,7 +44,7 @@ export default class signUp extends React.Component {
                         let user= {id:loggedInUser.uid, avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA',
                             email:this.state.email, username:this.state.username,gender:this.state.gender};
                         this.setState({loading:false});
-                        this.props.navigation.navigate('userProfile',{
+                        this.props.navigation.navigate('HomeScreenRoot',{
                             user:user
                         });
                         }
@@ -55,7 +56,7 @@ export default class signUp extends React.Component {
     }
 
     _goBack() {
-        this.props.navigation.navigate('login');
+        this.props.navigation.navigate('Login');
     }
 
     render() {
