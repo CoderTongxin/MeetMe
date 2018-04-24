@@ -36,10 +36,10 @@ export default class Login extends React.Component {
             showLoading: false,
             password_valid:true
         };
-        this.login=this.Login.bind(this);
+        this.login=this.login.bind(this);
     }
     async componentDidMount() {
-        this.checkLoginStatus();
+        // this.checkLoginStatus();
         await Font.loadAsync({
             'georgia': require('../../assets/fonts/Georgia.ttf'),
             'regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
@@ -72,7 +72,7 @@ export default class Login extends React.Component {
         })
     }
 
-    static login() {
+    login() {
         this.setState({loading:true});
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
@@ -186,7 +186,7 @@ export default class Login extends React.Component {
                                     title='Log in'
                                     activeOpacity={1}
                                     underlayColor="transparent"
-                                    onPress={() =>this.Login()}
+                                    onPress={() =>this.login()}
                                     loading={this.state.loading}
                                     loadingProps={{size: 'small', color: 'white'}}
                                     disabled={ !this.state.email_valid || this.state.password.length < 6}

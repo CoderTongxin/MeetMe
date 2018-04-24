@@ -29,7 +29,7 @@ export default class signUp extends React.Component {
             isAuthenticated: false,
             genders:['female','male','other']
         };
-        this.signup=this.Signup.bind(this);
+        this.signup=this.signup.bind(this);
         this._goBack=this._goBack.bind(this)
     }
      signup() {
@@ -98,7 +98,7 @@ export default class signUp extends React.Component {
                                onChangeText={(text) => this.setState({password:text})}
                     />
 
-                    <SubmitButton onPress={this.Signup} type='Sign up'/>
+                    <SubmitButton onPress={this.signup} type='Sign up'/>
                 </View>
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Already have an account?</Text>
