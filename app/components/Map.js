@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Image, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {MapView} from 'expo';
 
 const usersMap = props => {
@@ -8,9 +8,10 @@ const usersMap = props => {
         userLocationMarker = <MapView.Marker coordinate={props.userLocation}/>
     }
 
-    const usersMarks = props.usersPlaces.map(usersPlace => (
-        <MapView.Marker coordinate={usersPlace} key={usersPlace.id}/>
-    ));
+    // const usersMarks = props.usersPlaces.map(usersPlace => (
+    //     <MapView.Marker coordinate={usersPlace} key={usersPlace.id}/>
+    // ));
+
     return (
         <View style={styles.mapContainer}>
             <MapView
@@ -23,8 +24,8 @@ const usersMap = props => {
                 }}
                 region={props.userLocation}
             >
-                {userLocationMarker}
-                {usersMarks}
+                {/*{userLocationMarker}*/}
+                {/*{usersMarks}*/}
             </MapView>
         </View>
     );

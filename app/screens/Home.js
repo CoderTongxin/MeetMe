@@ -3,12 +3,48 @@ import {StyleSheet, View, Image, TouchableOpacity, Text, Button} from 'react-nat
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import FetchLocation from '../components/FetchLocation';
 import UsersMap from '../components/Map'
+import {firebase} from "../servers/Firebase";
+
+const database = firebase.database();
+
+let activityInfo = {
+    title: 'Yo Sushi',
+    description: 'eating',
+    time: {
+        date: '01-05-2018',
+        startTime: '14:00',
+    },
+    location: {
+        longitude: '123',
+        latitude: '456',
+    },
+    owner: 'djflksdjdltj',
+    participants: {},
+    status: 'open',
+
+};
 
 export default class Home extends React.Component {
 
     state = {
         userLocation: null,
         usersPlaces: [],
+    };
+
+    createActivity(activity) {
+        firebase.database().ref('activities').push().set(activity).then(() => {
+            console.log('adding location');
+        }).catch((error) => {
+            console.log(error);
+        });
+    };
+
+    updateActivity(activity) {
+        firebase.database().ref('activities').update(activity).then(() => {
+            console.log('adding location');
+        }).catch((error) => {
+            console.log(error);
+        });
     };
 
     getUserLocationHandler = () => {
@@ -22,22 +58,27 @@ export default class Home extends React.Component {
                         longitudeDelta: 0.0421,
                     }
                 });
-                fetch('https://compsci-732-project.firebaseio.com/place.json', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                    })
-                })
-                    .then(res => console.log(res))
-                    .catch(err => console.log(err));
+
+
+                this.createActivity(activityInfo);
+
+
+                // fetch('https://compsci-732-project.firebaseio.com/place.json', {
+                //     method: 'POST',
+                //     body: JSON.stringify({
+                //         latitude: position.coords.latitude,
+                //         longitude: position.coords.longitude,
+                //     })
+                // })
+                //     .then(res => console.log(res))
+                //     .catch(err => console.log(err));
             },
             err => console.log(err)
         );
 
     };
 
-    getUserPlacesHandler = () => {
+    getActivitiesPlacesHandler = () => {
         fetch('https://compsci-732-project.firebaseio.com/place.json')
             .then(res => res.json())
             .then(parsedRes => {
@@ -59,6 +100,7 @@ export default class Home extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+
                 {/*This is the top navigation bar*/}
                 <View style={styles.topNavBar}>
                     <Image
@@ -75,16 +117,28 @@ export default class Home extends React.Component {
 
                 {/*This is the body in the home view*/}
                 <View style={styles.body}>
-                    <View>
-                        <Button title="Get Users Places" onPress={this.getUserPlacesHandler}/>
-                    </View>
-                    <FetchLocation onGetLocation={this.getUserLocationHandler}/>
-                    <UsersMap
-                        userLocation={this.state.userLocation}
-                        usersPlaces={this.state.usersPlaces}
-                    />
-                </View>
+                    {/*This is initiate screen view*/}
+                    <View styele = {{ overflow: 'hidden'}}>
 
+
+                    </View>
+
+                    {/*This is activities screen view*/}
+                    <View styele = {{top: window.height, bottom: -window.height}}>
+
+                        <FetchLocation onGetLocation={this.getUserLocationHandler}/>
+                        <UsersMap
+                            userLocation={this.state.userLocation}
+                            usersPlaces={this.state.usersPlaces}
+                        />
+                    </View>
+
+                    {/*This is Schedule screen view*/}
+                    <View>
+
+
+                    </View>
+                </View>
                 {/*This is the tap bar*/}
                 <View style={styles.tabBar}>
 

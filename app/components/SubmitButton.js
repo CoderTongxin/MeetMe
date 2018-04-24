@@ -5,13 +5,10 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-
-
 export default class SubmitButton extends Component {
     constructor(props) {
         super(props);
     }
-
     render(){
         return(
                 <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
