@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import {Actions} from 'react-native-router-flux';
+import Loader from '../components/Loader'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -92,10 +93,11 @@ export default class Login extends Component {
                 `https://graph.facebook.com/me?access_token=${token}&fields=email,gender,age_range`);
                 const user_info = await response.json();
                 const user_gender=user_info.gender;
-
+                this.setState({showLoading:true});
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
                 loggedInUser['gender']=user_gender;
+                this.setState({showLoading:false});
                 Actions.userProfile({user: loggedInUser})
             }).catch((error)=> {
                 Alert.alert(error.message)
@@ -110,6 +112,7 @@ export default class Login extends Component {
     render() {
         return(
             <View style={styles.container}>
+                <Loader loading={this.state.showLoading}/>
                 <ImageBackground
                     source={BG_IMAGE}
                     style={styles.bgImage}

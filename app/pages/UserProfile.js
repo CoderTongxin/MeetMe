@@ -80,6 +80,9 @@ export default class userProfile extends Component {
                                 </View>
                                 <View style={{width: 300, borderWidth: 0.5, borderColor: 'rgba(222, 223, 226, 1)', marginHorizontal: 20, height: 1, marginVertical: 10}} />
                                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
+                                        <Button title='home' color="#841584" onPress={this.goHome}/>
+                                         <Button title='logout' color="#841584" onPress={this.logout}/>
+                                        <Button title='activities' color="#841584" onPress={this.goActivityList}/>
                                 </View>
                             </View>
                         </ScrollView>
