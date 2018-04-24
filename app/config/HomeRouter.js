@@ -9,13 +9,16 @@ import ActivityDetail from '../pages/ActivityDetail';
 import Settings from '../pages/Settings';
 import MapView from '../pages/MapView';
 import Profile from '../pages/Profile';
+import Login from '../pages/Login';
+import SignUp from '../pages/Signup';
+import MainMenu from '../pages/MainMenu';
+import UserProfile from '../pages/UserProfile';
 
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,
     },
 });
-
 
 
 export const ActivitiesStack = StackNavigator({
@@ -103,7 +106,7 @@ export const Tabs = TabNavigator({
     swipeEnabled: false,
 });
 
-export const Root = StackNavigator({
+export const HomeScreenRoot = StackNavigator({
     Tabs: {
         screen: Tabs,
     },
@@ -121,4 +124,23 @@ export const Root = StackNavigator({
     headerMode: 'none',
 });
 
-
+export const Root = StackNavigator({
+    Login: {
+        screen: Login
+    },
+    Signup: {
+        screen: SignUp
+    },
+    MainMenu: {
+        screen: MainMenu
+    },
+    UserProfile: {
+        screen: UserProfile
+    },
+    HomeScreenRoot: {
+        screen: HomeScreenRoot,
+    },
+}, {
+    initialRouteName: 'Login',
+    headerMode: 'none'
+});

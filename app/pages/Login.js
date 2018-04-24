@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
+import {HomeScreenRoot} from "../config/HomeRouter";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -35,7 +36,7 @@ export default class Login extends React.Component {
             showLoading: false,
             password_valid:true
         };
-        this.login=this.login.bind(this);
+        this.login=this.Login.bind(this);
     }
     async componentDidMount() {
         this.checkLoginStatus();
@@ -65,19 +66,19 @@ export default class Login extends React.Component {
     checkLoginStatus(){
         firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
             if(loggedInUser!=null)
-                this.props.navigation.navigate('userProfile',{
+                this.props.navigation.navigate('HomeScreenRoot',{
                      user:loggedInUser
                 });
         })
     }
 
-    login() {
+    static login() {
         this.setState({loading:true});
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
                 this.setState({loading:false});
                 this.setState({user:loggedInUser});
-                this.props.navigation.navigate('userProfile',{
+                this.props.navigation.navigate('HomeScreenRoot',{
                     user:this.state.user
                 });
             })
@@ -108,7 +109,7 @@ export default class Login extends React.Component {
     }
 
     _goToSignUp() {
-        this.props.navigation.navigate('signup');
+        this.props.navigation.navigate('Signup');
     }
 
     render() {
@@ -185,7 +186,7 @@ export default class Login extends React.Component {
                                     title='Log in'
                                     activeOpacity={1}
                                     underlayColor="transparent"
-                                    onPress={() =>this.login()}
+                                    onPress={() =>this.Login()}
                                     loading={this.state.loading}
                                     loadingProps={{size: 'small', color: 'white'}}
                                     disabled={ !this.state.email_valid || this.state.password.length < 6}

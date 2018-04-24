@@ -13,6 +13,7 @@ import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown'
 import {styles} from "../const/styles";
+import {HomeScreenRoot} from "../config/HomeRouter";
 const GENDER_OPTIONS = ['female', 'male', 'other'];
 export default class signUp extends React.Component {
 
@@ -28,10 +29,10 @@ export default class signUp extends React.Component {
             isAuthenticated: false,
             genders:['female','male','other']
         };
-        this.signup=this.signup.bind(this);
+        this.signup=this.Signup.bind(this);
         this._goBack=this._goBack.bind(this)
     }
-    signup() {
+     signup() {
         this.setState({loading:true});
         firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
@@ -43,7 +44,7 @@ export default class signUp extends React.Component {
                     }).then( ()=>{
                         let user= {id:loggedInUser.uid, email:this.state.email, username:this.state.username,gender:this.state.gender,age:this.state.age};
                         this.setState({loading:false});
-                        this.props.navigation.navigate('userProfile',{
+                        this.props.navigation.navigate('HomeScreenRoot',{
                             user:user
                         });
                         }
@@ -55,7 +56,7 @@ export default class signUp extends React.Component {
     }
 
     _goBack() {
-        this.props.navigation.navigate('login');
+        this.props.navigation.navigate('Login');
     }
 
     render() {
@@ -97,7 +98,7 @@ export default class signUp extends React.Component {
                                onChangeText={(text) => this.setState({password:text})}
                     />
 
-                    <SubmitButton onPress={this.signup} type='Sign up'/>
+                    <SubmitButton onPress={this.Signup} type='Sign up'/>
                 </View>
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Already have an account?</Text>

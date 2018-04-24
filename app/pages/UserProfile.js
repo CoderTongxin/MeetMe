@@ -27,7 +27,7 @@ export default class userProfile extends React.Component {
     }
     logout(){
         firebaseRef.auth().signOut().then(function() {
-            this.props.navigation.navigate('login');
+            this.props.navigation.navigate('Login');
         }.bind(this), function(error) {
            Alert.alert(error.message)
         });
