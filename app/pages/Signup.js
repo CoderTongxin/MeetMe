@@ -23,7 +23,6 @@ export default class signUp extends React.Component {
             email: '',
             username:'',
             gender:'',
-            age: '',
             password: '',
             isAuthenticated: false,
             genders:['female','male','other']
@@ -39,9 +38,10 @@ export default class signUp extends React.Component {
                         username: this.state.username,
                         email: this.state.email,
                         gender:this.state.gender,
-                        age:this.state.age
+                        avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA'
                     }).then( ()=>{
-                        let user= {id:loggedInUser.uid, email:this.state.email, username:this.state.username,gender:this.state.gender,age:this.state.age};
+                        let user= {id:loggedInUser.uid, avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA',
+                            email:this.state.email, username:this.state.username,gender:this.state.gender};
                         this.setState({loading:false});
                         this.props.navigation.navigate('userProfile',{
                             user:user

@@ -93,14 +93,26 @@ export default class Login extends React.Component {
         logInWithReadPermissionsAsync('233859937160350',{permissions:['public_profile']});
         if(type === 'success') {
             const response = await fetch(
-                `https://graph.facebook.com/me?access_token=${token}&fields=email,gender,age_range`);
+                `https://graph.facebook.com/me?access_token=${token}&fields=gender`);
                 const user_info = await response.json();
                 const user_gender=user_info.gender;
                 this.setState({showLoading:true});
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
-                loggedInUser['gender']=user_gender;
-                this.setState({showLoading:false});
+                console.log(loggedInUser)
+                firebaseRef.database().ref('users/' + loggedInUser.uid).set({
+                    username: loggedInUser.displayName,
+                    email: loggedInUser.email,
+                    gender:user_gender,
+                    avatar:loggedInUser.photoURL
+                }).then( ()=>{
+                    let user= {id:loggedInUser.uid, avatar:loggedInUser.photoURL,
+                        email:loggedInUser.email, username:loggedInUser.displayName,gender:user_gender};
+                    this.setState({showLoading:false});
+                    this.props.navigation.navigate('userProfile',{
+                        user:user
+                    });
+                })
             }).catch((error)=> {
                 Alert.alert(error.message)
             })

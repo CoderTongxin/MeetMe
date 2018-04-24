@@ -50,7 +50,7 @@ export default class userProfile extends React.Component {
                                             width={145}
                                             height={145}
                                             source={{
-                                                uri: this.props.navigation.state.params.user.photoURL,
+                                                uri: this.props.navigation.state.params.user.avatar,
                                             }}
                                             activeOpacity={0.7}
                                             avatarStyle={{borderRadius: 145/2}}
@@ -60,7 +60,7 @@ export default class userProfile extends React.Component {
                                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                         <View style={{ flex: 1, marginTop: 10, justifyContent: 'center'}}>
                                             <Text style={{ fontFamily: 'bold', fontSize: 25, color: 'rgba(98,93,144,1)', marginLeft: -15}}>
-                                                {this.props.navigation.state.params.user.displayName}
+                                                {this.props.navigation.state.params.user.username}
                                             </Text>
                                         </View>
                                     </View>
