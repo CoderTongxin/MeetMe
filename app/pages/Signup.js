@@ -29,6 +29,7 @@ export default class signUp extends React.Component {
             genders:['female','male','other']
         };
         this.signup=this.signup.bind(this);
+        this._goBack=this._goBack.bind(this)
     }
     signup() {
         this.setState({loading:true});
@@ -42,14 +43,12 @@ export default class signUp extends React.Component {
                     }).then( ()=>{
                         let user= {id:loggedInUser.uid, email:this.state.email, username:this.state.username,gender:this.state.gender,age:this.state.age};
                         this.setState({loading:false});
-                        this.props.navigation.navigate('mainMenu',{
+                        this.props.navigation.navigate('userProfile',{
                             user:user
                         });
                         }
                     );
-
-            })
-            .catch(function(error) {
+            }).catch(function(error) {
                 this.setState({loading:false});
                 Alert.alert(error.message);
             }.bind(this));
@@ -98,7 +97,7 @@ export default class signUp extends React.Component {
                                onChangeText={(text) => this.setState({password:text})}
                     />
 
-                    <SubmitButton onPress={() => this.signup()} type='Sign up'/>
+                    <SubmitButton onPress={this.signup} type='Sign up'/>
                 </View>
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Already have an account?</Text>
