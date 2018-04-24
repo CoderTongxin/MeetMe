@@ -102,6 +102,10 @@ export const Root = StackNavigator({
         screen: HomeScreenRoot,
     },
 }, {
-    initialRouteName: 'HomeScreenRoot',
-    headerMode: 'none'
+    //If you need change the first screen when APP open, change the  initialRouteName, e.g. set it to 'HomeScreenRoot' will skip the login page
+    initialRouteName: 'Login',
+    headerMode: 'none',
+    navigationOptions: {
+        gesturesEnabled: false,
+    },
 });

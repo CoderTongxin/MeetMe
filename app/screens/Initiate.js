@@ -25,8 +25,8 @@ Initiate.navigationOptions = ({navigation}) => ({
     headerLeft: (<View></View>),
     headerRight:
         <View style={{paddingRight: 10}}>
-            <TouchableOpacity>
-                <Icon name="account-circle" size={25} color="#808080" onPress={() => navigation.navigate('Profile')}/>
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                <Icon name="account-circle" size={25} color="#808080" />
             </TouchableOpacity>
         </View>,
 });
