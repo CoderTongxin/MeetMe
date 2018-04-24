@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Input, Button} from 'react-native-elements';
 import { Font } from 'expo';
@@ -11,7 +11,6 @@ import {
     Dimensions
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
-import {Actions} from 'react-native-router-flux';
 import Loader from '../components/Loader'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -20,7 +19,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const BG_IMAGE = require('../images/bg.jpg');
 
-export default class Login extends Component {
+export default class Login extends React.Component {
 
 
     constructor(props) {
@@ -37,7 +36,6 @@ export default class Login extends Component {
             password_valid:true
         };
         this.login=this.login.bind(this);
-        console.disableYellowBox = true;
     }
     async componentDidMount() {
         this.checkLoginStatus();
@@ -60,7 +58,7 @@ export default class Login extends Component {
 
     validatePassword(password) {
 
-        return password.length >= 8;
+        return password.length >= 6;
     }
 
 
@@ -103,7 +101,6 @@ export default class Login extends Component {
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
                 loggedInUser['gender']=user_gender;
                 this.setState({showLoading:false});
-                Actions.userProfile({user: loggedInUser})
             }).catch((error)=> {
                 Alert.alert(error.message)
             })
@@ -180,7 +177,7 @@ export default class Login extends Component {
                                     }}
                                     placeholderTextColor="white"
                                     errorStyle={{textAlign: 'center', fontSize: 12}}
-                                    errorMessage={this.state.password_valid ? null : "Password should have at least 8 characters"}
+                                    errorMessage={this.state.password_valid ? null : "Password should have at least 6 characters"}
                                 />
                             </View>
                             <View style={styles.buttonGroup}>
@@ -191,7 +188,7 @@ export default class Login extends Component {
                                     onPress={() =>this.login()}
                                     loading={this.state.loading}
                                     loadingProps={{size: 'small', color: 'white'}}
-                                    disabled={ !this.state.email_valid || this.state.password.length < 8}
+                                    disabled={ !this.state.email_valid || this.state.password.length < 6}
                                     containerStyle={{marginVertical: 10}}
                                     buttonStyle={styles.buttonStyle}
                                     titleStyle={styles.buttonTitle}

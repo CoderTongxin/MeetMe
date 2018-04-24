@@ -61,8 +61,6 @@ export default class Home extends React.Component {
 
 
                 this.createActivity(activityInfo);
-
-
                 // fetch('https://compsci-732-project.firebaseio.com/place.json', {
                 //     method: 'POST',
                 //     body: JSON.stringify({

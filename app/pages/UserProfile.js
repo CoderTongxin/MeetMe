@@ -24,12 +24,11 @@ export default class userProfile extends React.Component {
     }
     goActivityList(){
         this.props.navigation.navigate('activityList');
-        // Actions.activityList({user:this.props.user});
     }
     logout(){
         firebaseRef.auth().signOut().then(function() {
             this.props.navigation.navigate('login');
-        }, function(error) {
+        }.bind(this), function(error) {
            Alert.alert(error.message)
         });
     }
@@ -68,9 +67,9 @@ export default class userProfile extends React.Component {
                                 </View>
                                 <View style={{width: 300, borderWidth: 0.5, borderColor: 'rgba(222, 223, 226, 1)', marginHorizontal: 20, height: 1, marginVertical: 10}} />
                                 <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                        <Button title='home' color="#841584" onPress={this.goHome}/>
-                                         <Button title='logout' color="#841584" onPress={this.logout}/>
-                                        <Button title='activities' color="#841584" onPress={this.goActivityList}/>
+                                        <Button title='home' color="#841584" onPress={()=>this.goHome()}/>
+                                         <Button title='logout' color="#841584" onPress={()=>this.logout()}/>
+                                        <Button title='activities' color="#841584" onPress={()=>this.goActivityList()}/>
                                 </View>
                             </View>
                         </ScrollView>

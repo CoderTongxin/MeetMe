@@ -1,7 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Button} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Map from '../components/Map'
-import Header from "react-native-elements/src/header/Header";
 
 export default class MapView extends React.Component {
     constructor(props) {
