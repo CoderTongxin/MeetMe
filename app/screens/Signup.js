@@ -13,7 +13,7 @@ import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
 import ModalDropdown from 'react-native-modal-dropdown'
 import {styles} from "../const/styles";
-import {HomeScreenRoot} from "../config/HomeRouter";
+import {HomeScreenRoot} from "../config/Route";
 const GENDER_OPTIONS = ['female', 'male', 'other'];
 export default class signUp extends React.Component {
 

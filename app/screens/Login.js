@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
-import {HomeScreenRoot} from "../config/HomeRouter";
+import {HomeScreenRoot} from "../config/Route";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
