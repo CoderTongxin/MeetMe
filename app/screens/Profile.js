@@ -9,13 +9,15 @@ import {firebaseRef} from "../servers/Firebase";
 export default class Profile extends React.Component {
 constructor(props){
     super(props);
+    this.logout=this.logout.bind(this)
+
 }
 
 
     logout(){
         firebaseRef.auth().signOut().then(function() {
             this.props.navigation.navigate('Login');
-        }.bind(this), function(error) {
+        }.bind(this)).catch((error)=>{
             Alert.alert(error.message)
         });
     }
@@ -63,7 +65,7 @@ constructor(props){
                                         width={145}
                                         height={145}
                                         source={{
-                                            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQiLjH5U5QUf8tpKJy0NNS30s38KygCCVRjnPDGYvtLVGRla_DvTw',
+                                            uri: this.props.screenProps.avatar,
                                         }}
                                         activeOpacity={0.7}
                                         avatarStyle={{borderRadius: 145 / 2}}
@@ -78,7 +80,7 @@ constructor(props){
                                             color: 'rgba(98,93,144,1)',
                                             marginLeft: -15
                                         }}>
-                                            TONGXIN XIE
+                                            {this.props.screenProps.username}
                                         </Text>
                                     </View>
                                 </View>
@@ -92,7 +94,7 @@ constructor(props){
                                 marginVertical: 10
                             }}/>
                             <View style={{flex: 1, flexDirection: 'row', alignItems: 'center'}}>
-                                <Button title='logout' color="#841584" onPress={()=>this.logout()}/>
+                                <Button title='logout' color="#841584" onPress={this.logout}/>
                             </View>
                         </View>
                     </ScrollView>

@@ -11,6 +11,7 @@ import MapView from '../screens/MapView';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
+import Home from '../screens/Home';
 
 
 
@@ -100,7 +101,7 @@ export const Root = StackNavigator({
         screen: SignUp
     },
     HomeScreenRoot: {
-        screen: HomeScreenRoot,
+        screen: Home,
     },
 }, {
     //If you need change the first screen when APP open, change the  initialRouteName, e.g. set it to 'HomeScreenRoot' will skip the login page

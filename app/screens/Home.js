@@ -2,15 +2,26 @@
 import React from 'react';
 import { StyleSheet,  View } from 'react-native';
 import {HomeScreenRoot} from '../config/Route';
-
+let user='';
 export default class Home extends React.Component {
+
     constructor(props){
         super(props);
+        const params=this.props.navigation.state.params;
+        user = {
+            username: params.username,
+            gender: params.gender,
+            avatar: params.avatar,
+            email: params.username,
+            uid:params.uid
+
+        };
+
     }
     render() {
         return (
             <View style={styles.container}>
-                <HomeScreenRoot />
+                <HomeScreenRoot screenProps={user}/>
             </View>
         );
     }

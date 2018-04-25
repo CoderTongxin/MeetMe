@@ -16,8 +16,6 @@ import {HomeScreenRoot} from "../config/Route";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
-
 const BG_IMAGE = require('../images/bg.jpg');
 
 export default class Login extends React.Component {
@@ -100,14 +98,15 @@ export default class Login extends React.Component {
 
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
-                firebaseRef.database().ref('users/' + loggedInUser.uid).set({
+                const user={
                     username: loggedInUser.displayName,
                     email: loggedInUser.email,
                     gender:user_gender,
                     avatar:loggedInUser.photoURL,
                     uid:loggedInUser.uid
-                }).then( ()=>{
-                    this.getUserInfo(loggedInUser.uid)
+                };
+                firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
+                    this.getUserInfo(user)
                 })
             }).catch((error)=> {
                 Alert.alert(error.message)
@@ -115,15 +114,16 @@ export default class Login extends React.Component {
         }
     }
 
-    getUserInfo(userUID){
-        firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
+    getUserInfo(loggedInUser){
             this.setState({showLoading:false});
-            this.props.navigation.navigate('Tabs',{
-                uid:userUID
+            this.props.navigation.navigate('HomeScreenRoot',{
+                username:loggedInUser.username,
+                email:loggedInUser.email,
+                gender:loggedInUser.gender,
+                avatar:loggedInUser.avatar,
+                uid:loggedInUser.uid
             });
-        }.bind(this)).catch((error)=>{
-            Alert.alert(error.message)
-        });
+
     }
 
     _goToSignUp() {
