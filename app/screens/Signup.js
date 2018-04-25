@@ -29,7 +29,8 @@ export default class signUp extends React.Component {
             genders:['female','male','other']
         };
         this.signup=this.signup.bind(this);
-        this._goBack=this._goBack.bind(this)
+        this._goBack=this._goBack.bind(this);
+        this.getUserInfo=this.getUserInfo.bind(this)
     }
      signup() {
         this.setState({loading:true});
@@ -39,14 +40,10 @@ export default class signUp extends React.Component {
                         username: this.state.username,
                         email: this.state.email,
                         gender:this.state.gender,
-                        avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA'
+                        avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA',
+                        uid:loggedInUser.uid
                     }).then( ()=>{
-                        let user= {id:loggedInUser.uid, avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA',
-                            email:this.state.email, username:this.state.username,gender:this.state.gender};
-                        this.setState({loading:false});
-                        this.props.navigation.navigate('HomeScreenRoot',{
-                            user:user
-                        });
+                         this.getUserInfo(loggedInUser.uid)
                         }
                     );
             }).catch(function(error) {
@@ -55,6 +52,16 @@ export default class signUp extends React.Component {
             }.bind(this));
     }
 
+    getUserInfo(userUID){
+        firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
+            this.setState({loading:false});
+            this.props.navigation.navigate('HomeScreenRoot',{
+                uid:userUID
+            });
+        }.bind(this)).catch((error)=>{
+            Alert.alert(error.message)
+        });
+    }
     _goBack() {
         this.props.navigation.navigate('Login');
     }

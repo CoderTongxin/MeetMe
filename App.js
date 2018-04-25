@@ -1,6 +1,10 @@
 import React from 'react';
 import { StyleSheet,  View } from 'react-native';
-import {Root} from './app/config/Route';
+import {Root,HomeScreenRoot} from './app/config/Route';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import logger from 'redux-logger';
+
 
 console.disableYellowBox = true;
 export default class App extends React.Component {

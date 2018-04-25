@@ -1,3 +1,27 @@
+
+import React from 'react';
+import { StyleSheet,  View } from 'react-native';
+import {HomeScreenRoot} from '../config/Route';
+
+export default class Home extends React.Component {
+    constructor(props){
+        super(props);
+    }
+    render() {
+        return (
+            <View style={styles.container}>
+                <HomeScreenRoot />
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+});
+
 // import React from 'react';
 // import {StyleSheet, View, Image, TouchableOpacity, Text, Button} from 'react-native';
 // import MaterialIcon from 'react-native-vector-icons/MaterialIcons';

@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import {Icon,Button} from 'react-native-elements';
+import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
+import {Icon, Button} from 'react-native-elements';
 import t from 'tcomb-form-native';
-var dateFormat = require('dateformat');
+
+const dateFormat = require('dateformat');
 
 const Form = t.form.Form;
 
@@ -38,7 +39,7 @@ const options = {
 };
 
 const Category = t.enums({
-    Food:'Food',
+    Food: 'Food',
     Sports: 'Sports',
     Shopping: 'Shopping',
     Movie: 'Movie',
@@ -63,22 +64,24 @@ export default class Initiate extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Form
-                    ref={c => this._form = c}
-                    type={Activity}
-                    options={options}
-                />
-                <Button
-                    title="Submit"
-                    onPress={this.handleSubmit}
-                />
-                {/*<Button*/}
+            <ScrollView>
+                <View style={styles.container}>
+                    <Form
+                        ref={c => this._form = c}
+                        type={Activity}
+                        options={options}
+                    />
+                    <Button
+                        title="Submit"
+                        onPress={this.handleSubmit}
+                    />
+                    {/*<Button*/}
                     {/*onPress={() => this.props.navigation.navigate(("MapView"))}*/}
                     {/*title="Open Map"*/}
                     {/*color="#841584"*/}
-                {/*/>*/}
-            </View>
+                    {/*/>*/}
+                </View>
+            </ScrollView>
         );
     }
 }
@@ -90,7 +93,7 @@ Initiate.navigationOptions = ({navigation}) => ({
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="#808080" />
+                <Icon name="account-circle" size={25} color="#808080"/>
             </TouchableOpacity>
         </View>,
 });
