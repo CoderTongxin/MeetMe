@@ -5,8 +5,7 @@ import {
     TouchableOpacity,
     Alert,
     ScrollView,
-    KeyboardAvoidingView
-    ScrollView,
+    KeyboardAvoidingView,
     StyleSheet
 } from 'react-native';
 import {Button} from 'react-native-elements';
@@ -36,7 +35,7 @@ const Options = {
         },
         password: {
             placeholder: 'Enter your password here',
-            error: 'Invalid date',
+            error: 'Password cannot be blank',
             password: true,
             secureTextEntry: true
         }
@@ -51,7 +50,7 @@ const UserInfo = t.struct({
     password: t.String
 });
 
-export default class signUp extends React.Component {
+export default class SignUp extends React.Component {
 
     constructor(props) {
         super(props);
@@ -63,20 +62,28 @@ export default class signUp extends React.Component {
         this._goBack=this._goBack.bind(this);
     }
      signup =()=> {
-        this.setState({loading:true});
+
          let userInfo = this._form.getValue();
-        firebaseRef.auth().createUserWithEmailAndPassword(userInfo.email, userInfo.password)
-            .then((loggedInUser)=>{
-                userInfo.uid = loggedInUser.uid;
-                userInfo.avatar='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA';
-                    firebaseRef.database().ref('users/' + loggedInUser.uid).set(userInfo).then( ()=>{
-                         this.storeUserInfo(userInfo)
-                        }
-                    );
-            }).catch(function(error) {
-                this.setState({loading:false});
-                Alert.alert(error.message);
-            }.bind(this));
+         if(userInfo){
+             this.setState({loading:true});
+             firebaseRef.auth().createUserWithEmailAndPassword(userInfo.email, userInfo.password)
+                 .then((loggedInUser)=>{
+                     const user={
+                         username:userInfo.username,
+                         email:userInfo.email,
+                         gender:userInfo.gender,
+                         uid:loggedInUser.uid,
+                         avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA'
+                     };
+                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
+                             this.storeUserInfo(user)
+                         }
+                     );
+                 }).catch(function(error) {
+                 this.setState({loading:false});
+                 Alert.alert(error.message);
+             }.bind(this));
+         }
     };
 
     storeUserInfo(user){
@@ -92,10 +99,11 @@ export default class signUp extends React.Component {
 
     render() {
         return(
-            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
-               <Loader loading={this.state.loading}/>
-                <Logo/>
-                <ScrollView>
+
+                <ScrollView >
+                    <View style={styles.container}>
+                    <Loader loading={this.state.loading}/>
+                    <Logo/>
                         <Form
                             ref={c => this._form = c}
                             type={UserInfo}
@@ -118,44 +126,9 @@ export default class signUp extends React.Component {
                             onPress={this._goBack}
                         />
                     </View>
+                    </View>
                 </ScrollView>
-                {/*<View style={styles.inputContainer}>*/}
-                    {/*<TextInput style={styles.inputBox}*/}
-                               {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                               {/*placeholder="Email"*/}
-                               {/*placeholderTextColor = "#000000"*/}
-                               {/*selectionColor="#000"*/}
-                               {/*keyboardType="email-address"*/}
-                               {/*onChangeText={(text) => this.setState({email:text})}*/}
-                    {/*/>*/}
-                    {/*<TextInput style={styles.inputBox}*/}
-                               {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                               {/*placeholder="Username"*/}
-                               {/*placeholderTextColor = "#000000"*/}
-                               {/*selectionColor="#000"*/}
-                               {/*onChangeText={(text) => this.setState({username:text})}*/}
-                    {/*/>*/}
 
-                    {/*<ModalDropdown style={styles.dropdown}*/}
-                                   {/*textStyle={styles.dropdown_text}*/}
-                                   {/*dropdownStyle={styles.dropdown_dropdown}*/}
-                                   {/*dropdownTextStyle={styles.dropdown_dropdownText}*/}
-                                   {/*defaultValue='Select gender'*/}
-                                   {/*options={GENDER_OPTIONS}*/}
-                                   {/*onSelect={(idx, value) => this.setState({gender:value})}*/}
-                        {/*/>*/}
-                    {/*<TextInput style={styles.inputBox}*/}
-                               {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
-                               {/*placeholder="Password"*/}
-                               {/*selectionColor="#000"*/}
-                               {/*secureTextEntry={true}*/}
-                               {/*placeholderTextColor = "#000000"*/}
-                               {/*onChangeText={(text) => this.setState({password:text})}*/}
-                    {/*/>*/}
-
-                    {/*<SubmitButton onPress={this.signup} type='Sign up'/>*/}
-                {/*</View>*/}
-            </KeyboardAvoidingView>
         )
     }
 }
@@ -163,6 +136,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding:20,
+        backgroundColor: '#ffffff'
+    },
+    formContainer:{
+        flex:1,
         backgroundColor: '#ffffff'
     },
     footerView: {
