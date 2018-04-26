@@ -29,6 +29,7 @@ export default class Home extends React.Component {
     state = {
         userLocation: null,
         usersPlaces: [],
+        pinLocation:null,
     };
 
     createActivity(activity) {
@@ -128,6 +129,7 @@ export default class Home extends React.Component {
                         <UsersMap
                             userLocation={this.state.userLocation}
                             usersPlaces={this.state.usersPlaces}
+                            pinLocation={this.state.pinLocation}
                         />
                     </View>
 
