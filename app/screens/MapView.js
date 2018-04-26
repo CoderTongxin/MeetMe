@@ -1,13 +1,37 @@
 import React from 'react';
-import {StyleSheet, View, Button, TouchableOpacity} from 'react-native';
-import Map from '../components/Map'
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import Header from 'react-navigation/src/views/Header/Header';
 import {Icon} from 'react-native-elements';
+import Map from '../components/Map.js';
+import FetchLocation from '../components/FetchLocation';
 
-export default class MapView extends React.Component {
+export default class MapModal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            usersPlaces: [],
+            pinLocation: null,
+        }
+    };
 
+    // getUserLocationHandler = () => {
+    //     navigator.geolocation.getCurrentPosition(position => {
+    //             this.setState({
+    //                 userLocation: {
+    //                     latitude: position.coords.latitude,
+    //                     longitude: position.coords.longitude,
+    //                     latitudeDelta: 0.0922,
+    //                     longitudeDelta: 0.0421,
+    //                 }
+    //             });
+    //         },
+    //         err => console.log(err)
+    //     );
+    // };
 
     render() {
+        const { params } = this.props.navigation.state;
+        const userLocation = params ? params.userLocation : null;
         return (
             <View style={{flex: 1}}>
                 {/*The key part to rewrite Header and make a icon to close the modal screen*/}
@@ -32,8 +56,21 @@ export default class MapView extends React.Component {
                 />
 
                 {/*Edit here to add any functions*/}
-                <View style={styles.container}>
-                    <Map/>
+                <View>
+
+                    {/*<FetchLocation onGetLocation={this.getUserLocationHandler}/>*/}
+
+                    {/*<View>*/}
+                    {/*<Button title={"Get User Places"} onPress={this.getUsersPlacesHandler()}/>*/}
+                    {/*</View>*/}
+
+                    {/*{this.getUserLocationHandler()}*/}
+
+                    <Map
+                        userLocation={userLocation}
+                        usersPlaces={this.state.usersPlaces}
+                        pinLocation={this.state.pinLocation}
+                    />
                 </View>
             </View>
         );
@@ -46,4 +83,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
+    mapContainer: {
+        width: '100%',
+        height: '100%',
+    },
+    map: {
+        width: '100%',
+        height: '100%',
+    }
+
 });

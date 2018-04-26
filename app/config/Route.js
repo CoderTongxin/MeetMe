@@ -12,10 +12,23 @@ import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 
+import InitiateStep2 from '../screens/InitiateStep2';
+import InitiateStep3 from '../screens/InitiateStep3';
+
 
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,
+    },
+    InitiateStep2: {
+        screen: InitiateStep2,
+    },
+    InitiateStep3: {
+        screen: InitiateStep3,
+    },
+},{
+    navigationOptions: {
+        gesturesEnabled: false,
     },
 });
 
@@ -104,7 +117,7 @@ export const Root = StackNavigator({
     },
 }, {
     //If you need change the first screen when APP open, change the  initialRouteName, e.g. set it to 'HomeScreenRoot' will skip the login page
-    initialRouteName: 'SignUp',
+    initialRouteName: 'HomeScreenRoot',
     headerMode: 'none',
     navigationOptions: {
         gesturesEnabled: false,

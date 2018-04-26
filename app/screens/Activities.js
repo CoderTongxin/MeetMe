@@ -4,7 +4,7 @@ import {Icon} from 'react-native-elements';
 
 
 import FetchLocation from '../components/FetchLocation';
-import UsersMap from '../components/Map'
+import Map from '../components/Map'
 //import {firebaseRef} from "../servers/Firebase";
 
 let activityInfo = {
@@ -25,10 +25,13 @@ let activityInfo = {
 };
 
 export default class Activities extends React.Component {
-    state = {
-        userLocation: null,
-        usersPlaces: [],
-        pinLocation:null,
+    constructor(props) {
+        super(props);
+        this.state = {
+            userLocation: null,
+            usersPlaces: [],
+            pinLocation:null,
+        }
     };
 
     // createActivity(activity) {
@@ -54,8 +57,8 @@ export default class Activities extends React.Component {
                     userLocation: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.03,
+                        longitudeDelta: 0.01,
                     }
                 });
 
@@ -115,18 +118,13 @@ export default class Activities extends React.Component {
                         {/*<View>*/}
                         {/*<Button title={"Get User Places"} onPress={this.getUsersPlacesHandler()}/>*/}
                         {/*</View>*/}
-                        <UsersMap
+                        <Map
                             userLocation={this.state.userLocation}
                             usersPlaces={this.state.usersPlaces}
                             pinLocation={this.state.pinLocation}
                         />
                     </View>
 
-                    {/*This is Schedule screen view*/}
-                    <View>
-
-
-                    </View>
                 </View>
             </View>
         );
