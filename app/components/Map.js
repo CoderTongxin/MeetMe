@@ -29,7 +29,7 @@ const Map = props => {
 
 
     return (
-        <View style={styles.container}>
+        <View style={styles.mapContainer}>
             <MapView
                 style={styles.map}
                 initialRegion={{

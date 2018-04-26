@@ -54,8 +54,7 @@ export default class InitiateStep2 extends React.Component {
         const actInfo = params ? params.actInfo : null;
         return (
             <View style={styles.container}>
-                <MapView
-                    style={styles.map}
+                <MapView style={styles.map}
                     initialRegion={{
                         latitude: -36.84705474575118,
                         longitude: 174.76480531990111,
@@ -70,6 +69,7 @@ export default class InitiateStep2 extends React.Component {
                         color="#841584"
                     />
                 </MapView>
+
             </View>
         );
     }
