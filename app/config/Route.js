@@ -13,7 +13,6 @@ import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 
 
-
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,
@@ -97,7 +96,7 @@ export const Root = StackNavigator({
     Login: {
         screen: Login
     },
-    Signup: {
+    SignUp: {
         screen: SignUp
     },
     HomeScreenRoot: {
@@ -105,7 +104,7 @@ export const Root = StackNavigator({
     },
 }, {
     //If you need change the first screen when APP open, change the  initialRouteName, e.g. set it to 'HomeScreenRoot' will skip the login page
-    initialRouteName: 'Login',
+    initialRouteName: 'SignUp',
     headerMode: 'none',
     navigationOptions: {
         gesturesEnabled: false,
