@@ -95,7 +95,7 @@ export const Root = StackNavigator({
     Login: {
         screen: Login
     },
-    Signup: {
+    SignUp: {
         screen: SignUp
     },
     HomeScreenRoot: {

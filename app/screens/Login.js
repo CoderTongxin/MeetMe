@@ -115,7 +115,7 @@ export default class Login extends React.Component {
         });
     }
     _goToSignUp() {
-        this.props.navigation.navigate('singUp');
+        this.props.navigation.navigate('SignUp');
     }
 
     render() {
