@@ -3,12 +3,12 @@ import {StyleSheet, View} from 'react-native';
 // import {MapView} from 'expo';
 import MapView, { Marker }from 'react-native-maps';
 
-// const Marker = MapView.Marker;
-// const Callout = MapView.Callout;
-// const Polygon = MapView.Polygon;
-// const Polyline = MapView.Polyline;
-// const Circle = MapView.Circle;
-// const Overlay = MapView.Overlay;
+// common Marker = MapView.Marker;
+// common Callout = MapView.Callout;
+// common Polygon = MapView.Polygon;
+// common Polyline = MapView.Polyline;
+// common Circle = MapView.Circle;
+// common Overlay = MapView.Overlay;
 
 
 

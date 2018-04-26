@@ -2,19 +2,53 @@ import React  from 'react';
 import {
     Text,
     View,
-    TextInput,
     TouchableOpacity,
-    Alert
+    Alert,
+    ScrollView
 } from 'react-native';
-
+import {Button} from 'react-native-elements';
 import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
-import ModalDropdown from 'react-native-modal-dropdown'
-import {styles} from "../const/styles";
+import {styles} from "../common/style/styles";
 import {HomeScreenRoot} from "../config/Route";
-const GENDER_OPTIONS = ['female', 'male', 'other'];
+import {storeUserInfo} from '../common/js/userInfo';
+import t from 'tcomb-form-native';
+const Form = t.form.Form;
+
+const Options = {
+    fields: {
+        email: {
+            placeholder: 'Enter your email here',
+            error: 'Email cannot be blank',
+            keyboardType:"email-address"
+        },
+        username: {
+            placeholder: 'Enter your username here',
+            error: 'Username cannot be blank',
+        },
+        gender: {
+            placeholder: 'Select your gender',
+            error: 'Gender cannot be blank'
+        },
+        password: {
+            placeholder: 'Enter your password here',
+            error: 'Invalid date',
+            password: true,
+            secureTextEntry: true
+        }
+    },
+};
+const GENDER_OPTIONS =t.enums({female:'female', male:'male', other:'other'});
+
+const UserInfo = t.struct({
+    email: t.String,
+    username: t.String,
+    gender: GENDER_OPTIONS,
+    password: t.String
+});
+
 export default class signUp extends React.Component {
 
     constructor(props) {
@@ -55,9 +89,8 @@ export default class signUp extends React.Component {
     getUserInfo(userUID){
         firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
             this.setState({loading:false});
-            this.props.navigation.navigate('HomeScreenRoot',{
-                uid:userUID
-            });
+            storeUserInfo(user);
+            this.props.navigation.navigate('HomeScreenRoot');
         }.bind(this)).catch((error)=>{
             Alert.alert(error.message)
         });
@@ -66,47 +99,63 @@ export default class signUp extends React.Component {
         this.props.navigation.navigate('Login');
     }
 
+    handleSubmit = () => {
+        const value = this._form.getValue(); // use that ref to get the form value
+        console.log('value: ', value);
+    };
+
     render() {
         return(
             <View style={styles.container}>
                <Loader loading={this.state.loading}/>
                 <Logo/>
-                <View style={styles.inputContainer}>
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               placeholder="Email"
-                               placeholderTextColor = "#000000"
-                               selectionColor="#000"
-                               keyboardType="email-address"
-                               onChangeText={(text) => this.setState({email:text})}
-                    />
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               placeholder="Username"
-                               placeholderTextColor = "#000000"
-                               selectionColor="#000"
-                               onChangeText={(text) => this.setState({username:text})}
-                    />
-
-                    <ModalDropdown style={styles.dropdown}
-                                   textStyle={styles.dropdown_text}
-                                   dropdownStyle={styles.dropdown_dropdown}
-                                   dropdownTextStyle={styles.dropdown_dropdownText}
-                                   defaultValue='Select gender'
-                                   options={GENDER_OPTIONS}
-                                   onSelect={(idx, value) => this.setState({gender:value})}
+                <ScrollView>
+                        <Form
+                            ref={c => this._form = c}
+                            type={UserInfo}
+                            options={Options}
                         />
-                    <TextInput style={styles.inputBox}
-                               underlineColorAndroid='rgba(0,0,0,0)'
-                               placeholder="Password"
-                               selectionColor="#000"
-                               secureTextEntry={true}
-                               placeholderTextColor = "#000000"
-                               onChangeText={(text) => this.setState({password:text})}
-                    />
+                        <Button
+                            title="Submit"
+                            onPress={this.handleSubmit}
+                        />
+                </ScrollView>
+                {/*<View style={styles.inputContainer}>*/}
+                    {/*<TextInput style={styles.inputBox}*/}
+                               {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
+                               {/*placeholder="Email"*/}
+                               {/*placeholderTextColor = "#000000"*/}
+                               {/*selectionColor="#000"*/}
+                               {/*keyboardType="email-address"*/}
+                               {/*onChangeText={(text) => this.setState({email:text})}*/}
+                    {/*/>*/}
+                    {/*<TextInput style={styles.inputBox}*/}
+                               {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
+                               {/*placeholder="Username"*/}
+                               {/*placeholderTextColor = "#000000"*/}
+                               {/*selectionColor="#000"*/}
+                               {/*onChangeText={(text) => this.setState({username:text})}*/}
+                    {/*/>*/}
 
-                    <SubmitButton onPress={this.signup} type='Sign up'/>
-                </View>
+                    {/*<ModalDropdown style={styles.dropdown}*/}
+                                   {/*textStyle={styles.dropdown_text}*/}
+                                   {/*dropdownStyle={styles.dropdown_dropdown}*/}
+                                   {/*dropdownTextStyle={styles.dropdown_dropdownText}*/}
+                                   {/*defaultValue='Select gender'*/}
+                                   {/*options={GENDER_OPTIONS}*/}
+                                   {/*onSelect={(idx, value) => this.setState({gender:value})}*/}
+                        {/*/>*/}
+                    {/*<TextInput style={styles.inputBox}*/}
+                               {/*underlineColorAndroid='rgba(0,0,0,0)'*/}
+                               {/*placeholder="Password"*/}
+                               {/*selectionColor="#000"*/}
+                               {/*secureTextEntry={true}*/}
+                               {/*placeholderTextColor = "#000000"*/}
+                               {/*onChangeText={(text) => this.setState({password:text})}*/}
+                    {/*/>*/}
+
+                    {/*<SubmitButton onPress={this.signup} type='Sign up'/>*/}
+                {/*</View>*/}
                 <View style={styles.textContent}>
                     <Text style={styles.text}>Already have an account?</Text>
                     <TouchableOpacity onPress={this._goBack}><Text style={styles.textLink}> Login</Text></TouchableOpacity>

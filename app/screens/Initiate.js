@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, ScrollView, TouchableOpacity,AsyncStorage} from 'react-native';
 import {Icon, Button} from 'react-native-elements';
 import t from 'tcomb-form-native';
 
@@ -57,6 +57,20 @@ const Activity = t.struct({
 });
 
 export default class Initiate extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            user: ''
+        }
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('user', (err, result) => {
+            this.setState({
+                user:JSON.parse(result)
+            });
+        });
+    }
     handleSubmit = () => {
         const value = this._form.getValue(); // use that ref to get the form value
         console.log('value: ', value);

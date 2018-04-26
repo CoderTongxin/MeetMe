@@ -1,23 +1,32 @@
 import React from 'react';
-import {StyleSheet, View, Text, Button, ScrollView, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet, View, Text, Button, ScrollView, TouchableOpacity, Alert, AsyncStorage} from 'react-native';
 import Header from 'react-navigation/src/views/Header/Header';
 import {Icon, Avatar} from 'react-native-elements';
 import {firebaseRef} from "../servers/Firebase";
 
-
-
 export default class Profile extends React.Component {
-constructor(props){
-    super(props);
-    this.logout=this.logout.bind(this)
+    constructor(props) {
+        super(props);
+        this.logout = this.logout.bind(this);
+        this.state = {
+            user: ''
+        }
+    }
 
-}
+    componentDidMount() {
+        AsyncStorage.getItem('user', (err, result) => {
+            this.setState({
+                user:JSON.parse(result)
+            });
+        });
+    }
 
-
-    logout(){
-        firebaseRef.auth().signOut().then(function() {
-            this.props.navigation.navigate('Login');
-        }.bind(this)).catch((error)=>{
+    logout() {
+        firebaseRef.auth().signOut().then(function () {
+            AsyncStorage.removeItem('user', () => {
+                this.props.navigation.navigate('Login');
+            })
+        }.bind(this)).catch((error) => {
             Alert.alert(error.message)
         });
     }
@@ -65,7 +74,7 @@ constructor(props){
                                         width={145}
                                         height={145}
                                         source={{
-                                            uri: this.props.screenProps.avatar,
+                                            uri: this.state.user.avatar,
                                         }}
                                         activeOpacity={0.7}
                                         avatarStyle={{borderRadius: 145 / 2}}
@@ -80,7 +89,7 @@ constructor(props){
                                             color: 'rgba(98,93,144,1)',
                                             marginLeft: -15
                                         }}>
-                                            {this.props.screenProps.username}
+                                            {this.state.user.username}
                                         </Text>
                                     </View>
                                 </View>

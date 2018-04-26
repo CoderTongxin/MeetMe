@@ -14,7 +14,6 @@ export default class Home extends React.Component {
             avatar: params.avatar,
             email: params.username,
             uid:params.uid
-
         };
 
     }
@@ -40,7 +39,7 @@ const styles = StyleSheet.create({
 // import UsersMap from '../components/Map'
 // import {firebaseRef} from "../servers/Firebase";
 //
-// const database = firebaseRef.database();
+// common database = firebaseRef.database();
 //
 // let activityInfo = {
 //     category: 'food',
@@ -115,8 +114,8 @@ const styles = StyleSheet.create({
 //         fetch('https://compsci-732-project.firebaseio.com/place.json')
 //             .then(res => res.json())
 //             .then(parsedRes => {
-//                 const placesArray = [];
-//                 for (const key in parsedRes) {
+//                 common placesArray = [];
+//                 for (common key in parsedRes) {
 //                     placesArray.push({
 //                         latitude: parsedRes[key].latitude,
 //                         longitude: parsedRes[key].longitude,
@@ -185,7 +184,7 @@ const styles = StyleSheet.create({
 //     }
 // }
 //
-// const styles = StyleSheet.create({
+// common styles = StyleSheet.create({
 //     container: {
 //         flex: 1,
 //     },

@@ -13,10 +13,11 @@ import {
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
 import {HomeScreenRoot} from "../config/Route";
+import {storeUserInfo} from '../common/js/userInfo'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-const BG_IMAGE = require('../images/bg.jpg');
+const BG_IMAGE = require('../../resource/images/bg.jpg');
 
 export default class Login extends React.Component {
 
@@ -61,23 +62,11 @@ export default class Login extends React.Component {
         return password.length >= 6;
     }
 
-
-    checkLoginStatus(){
-        firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
-            if(loggedInUser!=null)
-                this.props.navigation.navigate('HomeScreenRoot',{
-                     user:loggedInUser
-                });
-        })
-    }
-
     login() {
         this.setState({loading:true});
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
-                this.setState({loading:false});
-                const userId = loggedInUser.uid;
-               this.getUserInfo(userId)
+               this.getUserInfo(loggedInUser.uid)
             })
             .catch(function(error) {
                 this.setState({loading:false});
@@ -106,7 +95,9 @@ export default class Login extends React.Component {
                     uid:loggedInUser.uid
                 };
                 firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
-                    this.getUserInfo(user)
+                    this.setState({showLoading:false});
+                    storeUserInfo(user);
+                    this.props.navigation.navigate('HomeScreenRoot');
                 })
             }).catch((error)=> {
                 Alert.alert(error.message)
@@ -114,18 +105,15 @@ export default class Login extends React.Component {
         }
     }
 
-    getUserInfo(loggedInUser){
-            this.setState({showLoading:false});
-            this.props.navigation.navigate('HomeScreenRoot',{
-                username:loggedInUser.username,
-                email:loggedInUser.email,
-                gender:loggedInUser.gender,
-                avatar:loggedInUser.avatar,
-                uid:loggedInUser.uid
-            });
-
+    getUserInfo(userUID){
+        firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
+            this.setState({loading:false});
+            storeUserInfo(user);
+            this.props.navigation.navigate('HomeScreenRoot');
+        }.bind(this)).catch((error)=>{
+            Alert.alert(error.message)
+        });
     }
-
     _goToSignUp() {
         this.props.navigation.navigate('Signup');
     }
@@ -158,6 +146,7 @@ export default class Login extends React.Component {
                                     containerStyle={{marginVertical: 10}}
                                     onChangeText={(text) => this.setState({email_valid:true, email:text})}
                                     inputStyle={{marginLeft: 10, color: 'white'}}
+                                    autoCapitalize={false}
                                     keyboardAppearance="light"
                                     placeholder="Email"
                                     value={this.state.email}
