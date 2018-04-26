@@ -4,14 +4,15 @@ import {
     View,
     TouchableOpacity,
     Alert,
-    ScrollView
+    ScrollView,
+    StyleSheet
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
-import {styles} from "../common/style/styles";
+// import {styles} from "../common/style/styles";
 import {HomeScreenRoot} from "../config/Route";
 import {storeUserInfo} from '../common/js/userInfo';
 import t from 'tcomb-form-native';
@@ -29,7 +30,6 @@ const Options = {
             error: 'Username cannot be blank',
         },
         gender: {
-            placeholder: 'Select your gender',
             error: 'Gender cannot be blank'
         },
         password: {
@@ -55,61 +55,44 @@ export default class signUp extends React.Component {
         super(props);
         this.state = {
             loading:false,
-            email: '',
-            username:'',
-            gender:'',
-            password: '',
             isAuthenticated: false,
-            genders:['female','male','other']
         };
         this.signup=this.signup.bind(this);
         this._goBack=this._goBack.bind(this);
-        this.getUserInfo=this.getUserInfo.bind(this)
     }
-     signup() {
+     signup =()=> {
         this.setState({loading:true});
-        firebaseRef.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+         let userInfo = this._form.getValue();
+        firebaseRef.auth().createUserWithEmailAndPassword(userInfo.email, userInfo.password)
             .then((loggedInUser)=>{
-                    firebaseRef.database().ref('users/' + loggedInUser.uid).set({
-                        username: this.state.username,
-                        email: this.state.email,
-                        gender:this.state.gender,
-                        avatar:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA',
-                        uid:loggedInUser.uid
-                    }).then( ()=>{
-                         this.getUserInfo(loggedInUser.uid)
+                userInfo.uid = loggedInUser.uid;
+                userInfo.avatar='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA';
+                    firebaseRef.database().ref('users/' + loggedInUser.uid).set(userInfo).then( ()=>{
+                         this.storeUserInfo(userInfo)
                         }
                     );
             }).catch(function(error) {
                 this.setState({loading:false});
                 Alert.alert(error.message);
             }.bind(this));
-    }
+    };
 
-    getUserInfo(userUID){
-        firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
-            this.setState({loading:false});
-            storeUserInfo(user);
-            this.props.navigation.navigate('HomeScreenRoot');
-        }.bind(this)).catch((error)=>{
-            Alert.alert(error.message)
-        });
+    storeUserInfo(user){
+        this.setState({loading:false});
+        storeUserInfo(user);
+        this.props.navigation.navigate('HomeScreenRoot');
     }
     _goBack() {
         this.props.navigation.navigate('Login');
     }
 
-    handleSubmit = () => {
-        const value = this._form.getValue(); // use that ref to get the form value
-        console.log('value: ', value);
-    };
 
     render() {
         return(
             <View style={styles.container}>
-               <Loader loading={this.state.loading}/>
-                <Logo/>
                 <ScrollView>
+                    <Loader loading={this.state.loading}/>
+                    <Logo/>
                         <Form
                             ref={c => this._form = c}
                             type={UserInfo}
@@ -117,8 +100,21 @@ export default class signUp extends React.Component {
                         />
                         <Button
                             title="Submit"
-                            onPress={this.handleSubmit}
+                            onPress={this.signup}
                         />
+                    <View style={styles.footerView}>
+                        <Text style={{color: '#000000'}}>
+                            Already have an account?
+                        </Text>
+                        <Button
+                            title="Login"
+                            clear
+                            activeOpacity={0.5}
+                            titleStyle={{color: '#616161', fontSize: 15}}
+                            containerStyle={{marginTop: -10}}
+                            onPress={this._goBack}
+                        />
+                    </View>
                 </ScrollView>
                 {/*<View style={styles.inputContainer}>*/}
                     {/*<TextInput style={styles.inputBox}*/}
@@ -156,11 +152,20 @@ export default class signUp extends React.Component {
 
                     {/*<SubmitButton onPress={this.signup} type='Sign up'/>*/}
                 {/*</View>*/}
-                <View style={styles.textContent}>
-                    <Text style={styles.text}>Already have an account?</Text>
-                    <TouchableOpacity onPress={this._goBack}><Text style={styles.textLink}> Login</Text></TouchableOpacity>
-                </View>
             </View>
         )
     }
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding:20,
+        backgroundColor: '#ffffff'
+    },
+    footerView: {
+        marginTop: 20,
+        flex: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+})

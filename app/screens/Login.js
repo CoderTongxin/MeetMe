@@ -146,7 +146,7 @@ export default class Login extends React.Component {
                                     containerStyle={{marginVertical: 10}}
                                     onChangeText={(text) => this.setState({email_valid:true, email:text})}
                                     inputStyle={{marginLeft: 10, color: 'white'}}
-                                    autoCapitalize={false}
+                                    autoCapitalize='none'
                                     keyboardAppearance="light"
                                     placeholder="Email"
                                     value={this.state.email}
@@ -265,8 +265,6 @@ const styles = StyleSheet.create({
         flex:1,
         marginTop: 100,
         backgroundColor: 'transparent',
-        width: 250,
-        height: 400,
     },
     loginTitle: {
         flex: 1,
@@ -300,7 +298,7 @@ const styles = StyleSheet.create({
     },
     buttonStyle:{
         height: 50,
-        width: 250,
+        width: 240,
         backgroundColor: 'transparent',
         borderWidth: 2,
         borderColor: 'white',
@@ -308,7 +306,7 @@ const styles = StyleSheet.create({
     },
     disabledButtonStyle:{
         height: 50,
-        width: 250,
+        width: 240,
         backgroundColor: 'transparent',
         borderWidth: 2,
         borderColor: 'grey',

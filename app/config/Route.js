@@ -1,5 +1,4 @@
 import React from 'react';
-import {TouchableOpacity, View, Button} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
 import Activities from '../screens/Activities';
@@ -11,8 +10,6 @@ import MapView from '../screens/MapView';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
-
-
 
 export const InitiateStack = StackNavigator({
     Initiate: {
