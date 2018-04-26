@@ -1,19 +1,35 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {MapView} from 'expo';
+// import {MapView} from 'expo';
+import MapView, { Marker }from 'react-native-maps';
+
+// common Marker = MapView.Marker;
+// common Callout = MapView.Callout;
+// common Polygon = MapView.Polygon;
+// common Polyline = MapView.Polyline;
+// common Circle = MapView.Circle;
+// common Overlay = MapView.Overlay;
+
+
 
 const usersMap = props => {
     let userLocationMarker = null;
     if (props.userLocation) {
-        userLocationMarker = <MapView.Marker coordinate={props.userLocation}/>
+        userLocationMarker = <
+            MapView.Marker
+            coordinate={props.userLocation}
+            title={'Best Sushi!'}
+            description={'I found a amazing sushi, join me!'}
+        />
     }
 
-    // const usersMarks = props.usersPlaces.map(usersPlace => (
-    //     <MapView.Marker coordinate={usersPlace} key={usersPlace.id}/>
-    // ));
+    const usersMarks = props.usersPlaces.map(usersPlace => (
+        <MapView.Marker coordinate={usersPlace} key={usersPlace.id}/>
+    ));
+
 
     return (
-        <View style={styles.mapContainer}>
+        <View style={styles.container}>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -24,8 +40,8 @@ const usersMap = props => {
                 }}
                 region={props.userLocation}
             >
-                {/*{userLocationMarker}*/}
-                {/*{usersMarks}*/}
+                {userLocationMarker}
+                {usersMarks}
             </MapView>
         </View>
     );

@@ -12,13 +12,12 @@ import {
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
-import {HomeScreenRoot} from "../config/HomeRouter";
+import {HomeScreenRoot} from "../config/Route";
+import {storeUserInfo} from '../common/js/userInfo'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
-
-
-const BG_IMAGE = require('../images/bg.jpg');
+const BG_IMAGE = require('../../resource/images/bg.jpg');
 
 export default class Login extends React.Component {
 
@@ -36,10 +35,11 @@ export default class Login extends React.Component {
             showLoading: false,
             password_valid:true
         };
-        this.login=this.Login.bind(this);
+        this.login=this.login.bind(this);
+        this.loginWithFacebook=this.loginWithFacebook.bind(this);
+        this.getUserInfo=this.getUserInfo.bind(this)
     }
     async componentDidMount() {
-        this.checkLoginStatus();
         await Font.loadAsync({
             'georgia': require('../../assets/fonts/Georgia.ttf'),
             'regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
@@ -62,25 +62,11 @@ export default class Login extends React.Component {
         return password.length >= 6;
     }
 
-
-    checkLoginStatus(){
-        firebaseRef.auth().onAuthStateChanged((loggedInUser)=>{
-            if(loggedInUser!=null)
-                this.props.navigation.navigate('HomeScreenRoot',{
-                     user:loggedInUser
-                });
-        })
-    }
-
-    static login() {
+    login() {
         this.setState({loading:true});
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
-                this.setState({loading:false});
-                this.setState({user:loggedInUser});
-                this.props.navigation.navigate('HomeScreenRoot',{
-                    user:this.state.user
-                });
+               this.getUserInfo(loggedInUser.uid)
             })
             .catch(function(error) {
                 this.setState({loading:false});
@@ -93,21 +79,41 @@ export default class Login extends React.Component {
         const {type,token} =await Expo.Facebook.
         logInWithReadPermissionsAsync('233859937160350',{permissions:['public_profile']});
         if(type === 'success') {
+            this.setState({showLoading:true});
             const response = await fetch(
-                `https://graph.facebook.com/me?access_token=${token}&fields=email,gender,age_range`);
+                `https://graph.facebook.com/me?access_token=${token}&fields=gender`);
                 const user_info = await response.json();
                 const user_gender=user_info.gender;
-                this.setState({showLoading:true});
+
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
-                loggedInUser['gender']=user_gender;
-                this.setState({showLoading:false});
+                const user={
+                    username: loggedInUser.displayName,
+                    email: loggedInUser.email,
+                    gender:user_gender,
+                    avatar:loggedInUser.photoURL,
+                    uid:loggedInUser.uid
+                };
+                firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
+                    this.setState({showLoading:false});
+                    storeUserInfo(user);
+                    this.props.navigation.navigate('HomeScreenRoot');
+                })
             }).catch((error)=> {
                 Alert.alert(error.message)
             })
         }
     }
 
+    getUserInfo(userUID){
+        firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
+            this.setState({loading:false});
+            storeUserInfo(user);
+            this.props.navigation.navigate('HomeScreenRoot');
+        }.bind(this)).catch((error)=>{
+            Alert.alert(error.message)
+        });
+    }
     _goToSignUp() {
         this.props.navigation.navigate('Signup');
     }
@@ -140,6 +146,7 @@ export default class Login extends React.Component {
                                     containerStyle={{marginVertical: 10}}
                                     onChangeText={(text) => this.setState({email_valid:true, email:text})}
                                     inputStyle={{marginLeft: 10, color: 'white'}}
+                                    autoCapitalize={false}
                                     keyboardAppearance="light"
                                     placeholder="Email"
                                     value={this.state.email}
@@ -186,7 +193,7 @@ export default class Login extends React.Component {
                                     title='Log in'
                                     activeOpacity={1}
                                     underlayColor="transparent"
-                                    onPress={() =>this.Login()}
+                                    onPress={() =>this.login()}
                                     loading={this.state.loading}
                                     loadingProps={{size: 'small', color: 'white'}}
                                     disabled={ !this.state.email_valid || this.state.password.length < 6}
