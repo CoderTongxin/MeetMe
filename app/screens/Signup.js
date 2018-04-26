@@ -1,9 +1,11 @@
-import React  from 'react';
+import React from 'react';
 import {
     Text,
     View,
     TouchableOpacity,
     Alert,
+    ScrollView,
+    KeyboardAvoidingView
     ScrollView,
     StyleSheet
 } from 'react-native';
@@ -23,7 +25,7 @@ const Options = {
         email: {
             placeholder: 'Enter your email here',
             error: 'Email cannot be blank',
-            keyboardType:"email-address"
+            keyboardType: "email-address"
         },
         username: {
             placeholder: 'Enter your username here',
@@ -40,7 +42,7 @@ const Options = {
         }
     },
 };
-const GENDER_OPTIONS =t.enums({female:'female', male:'male', other:'other'});
+const GENDER_OPTIONS = t.enums({female: 'female', male: 'male', other: 'other'});
 
 const UserInfo = t.struct({
     email: t.String,
@@ -82,6 +84,7 @@ export default class signUp extends React.Component {
         storeUserInfo(user);
         this.props.navigation.navigate('HomeScreenRoot');
     }
+
     _goBack() {
         this.props.navigation.navigate('Login');
     }
@@ -89,10 +92,10 @@ export default class signUp extends React.Component {
 
     render() {
         return(
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
+               <Loader loading={this.state.loading}/>
+                <Logo/>
                 <ScrollView>
-                    <Loader loading={this.state.loading}/>
-                    <Logo/>
                         <Form
                             ref={c => this._form = c}
                             type={UserInfo}
@@ -152,7 +155,7 @@ export default class signUp extends React.Component {
 
                     {/*<SubmitButton onPress={this.signup} type='Sign up'/>*/}
                 {/*</View>*/}
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }

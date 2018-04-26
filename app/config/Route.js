@@ -1,4 +1,5 @@
 import React from 'react';
+import {TouchableOpacity, View, Button} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
 import Activities from '../screens/Activities';

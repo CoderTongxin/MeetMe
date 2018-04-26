@@ -1,5 +1,13 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, TouchableOpacity,AsyncStorage} from 'react-native';
+import {
+    StyleSheet,
+    View,
+    ScrollView,
+    TouchableOpacity,
+    AsyncStorage,
+    KeyboardAvoidingView,
+    TextInput
+} from 'react-native';
 import {Icon, Button} from 'react-native-elements';
 import t from 'tcomb-form-native';
 
@@ -11,15 +19,15 @@ const options = {
 
     fields: {
         category: {
-            placeholder: 'Please tell others what kind of activity you are initiating',
-            error: 'Category cannot be blank',
+            nullOption: {value: '', text: 'Please select activity type'},
+            error: 'Please tell others what kind of activity you are initiating',
         },
         title: {
-            placeholder: 'A beautiful title can attract people to join your activity',
-            error: 'Title cannot be blank',
+            placeholder: 'Please write an activity title',
+            error: 'A beautiful title can attract people to join your activity',
         },
         description: {
-            placeholder: 'A brief description can offer more opportunities to encounter new friends'
+            placeholder: 'Please write a brief activity description'
         },
         date: {
             mode: 'date',
@@ -57,7 +65,7 @@ const Activity = t.struct({
 });
 
 export default class Initiate extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             user: ''
@@ -67,10 +75,11 @@ export default class Initiate extends React.Component {
     componentDidMount() {
         AsyncStorage.getItem('user', (err, result) => {
             this.setState({
-                user:JSON.parse(result)
+                user: JSON.parse(result)
             });
         });
     }
+
     handleSubmit = () => {
         const value = this._form.getValue(); // use that ref to get the form value
         console.log('value: ', value);
@@ -78,24 +87,28 @@ export default class Initiate extends React.Component {
 
     render() {
         return (
-            <ScrollView>
-                <View style={styles.container}>
+            <ScrollView style={styles.container}>
+
                     <Form
                         ref={c => this._form = c}
                         type={Activity}
                         options={options}
                     />
+
                     <Button
                         title="Submit"
                         onPress={this.handleSubmit}
                     />
+
                     {/*<Button*/}
                     {/*onPress={() => this.props.navigation.navigate(("MapView"))}*/}
                     {/*title="Open Map"*/}
                     {/*color="#841584"*/}
                     {/*/>*/}
-                </View>
+
+
             </ScrollView>
+
         );
     }
 }
