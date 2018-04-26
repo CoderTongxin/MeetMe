@@ -88,7 +88,6 @@ export default class Initiate extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-
                     <Form
                         ref={c => this._form = c}
                         type={Activity}
@@ -105,8 +104,6 @@ export default class Initiate extends React.Component {
                     {/*title="Open Map"*/}
                     {/*color="#841584"*/}
                     {/*/>*/}
-
-
             </ScrollView>
 
         );

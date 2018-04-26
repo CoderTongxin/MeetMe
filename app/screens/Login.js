@@ -8,7 +8,8 @@ import {
     StyleSheet,
     ImageBackground,
     Alert,
-    Dimensions
+    Dimensions,
+    KeyboardAvoidingView
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
@@ -121,7 +122,8 @@ export default class Login extends React.Component {
     render() {
 
         return(
-            <View style={styles.container}>
+            <KeyboardAvoidingView style={styles.container}>
+
                 <Loader loading={this.state.showLoading}/>
                 <ImageBackground
                     source={BG_IMAGE}
@@ -241,7 +243,7 @@ export default class Login extends React.Component {
                         <Text>Loading...</Text>
                     }
                 </ImageBackground>
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
