@@ -10,7 +10,7 @@ import {Icon} from 'react-native-elements';
 import { Button } from 'react-native-elements'
 import t from 'tcomb-form-native';
 
-var _ = require('lodash');
+const _ = require('lodash');
 const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
 
 stylesheet.pickerTouchable.normal.height = 36;

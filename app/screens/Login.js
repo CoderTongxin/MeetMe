@@ -9,7 +9,6 @@ import {
     ImageBackground,
     Alert,
     Dimensions,
-    KeyboardAvoidingView
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
@@ -47,8 +46,18 @@ export default class Login extends React.Component {
             'bold': require('../../assets/fonts/Montserrat-Bold.ttf'),
         });
         this.setState({ fontLoaded: true });
+        this.checkLogin();
     }
 
+    checkLogin(){
+
+        firebaseRef.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                this.changeLoadingStatus();
+                this.getUserInfo(user.uid)
+            }
+        }.bind(this));
+    }
 
     validateEmail(email) {
         const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

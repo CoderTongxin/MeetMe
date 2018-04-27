@@ -3,7 +3,8 @@ import {
     Text,
     View,
     Alert,
-    StyleSheet
+    StyleSheet,
+    Dimensions
 } from 'react-native';
 import {Button} from 'react-native-elements';
 import Logo from '../components/Logo';
@@ -13,8 +14,16 @@ import Loader from '../components/Loader';
 // import {styles} from "../common/style/styles";
 import {HomeScreenRoot} from "../config/Route";
 import {storeUserInfo} from '../common/js/userInfo';
-import t from 'tcomb-form-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
+
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const _ = require('lodash');
+const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
+stylesheet.pickerTouchable.normal.height = 36;
+stylesheet.pickerTouchable.error.height = 36;
+import t from 'tcomb-form-native';
 
 const Form = t.form.Form;
 const Options = {
@@ -29,7 +38,9 @@ const Options = {
             error: 'Username cannot be blank',
         },
         gender: {
-            error: 'Gender cannot be blank'
+            nullOption: {value: '', text: 'Please select your gender'},
+            error: 'Gender cannot be blank',
+            stylesheet: stylesheet,
         },
         password: {
             placeholder: 'Enter your password here',
@@ -110,18 +121,20 @@ export default class SignUp extends React.Component {
                         title="Submit"
                         onPress={this.signup}
                     />
-                    <View style={styles.footerView}>
-                        <Text style={{color: '#000000'}}>
-                            Already have an account?
-                        </Text>
-                        <Button
-                            title="Login"
-                            clear
-                            activeOpacity={0.5}
-                            titleStyle={{color: '#616161', fontSize: 15}}
-                            containerStyle={{marginTop: -10}}
-                            onPress={this._goBack}
-                        />
+                    <View style={styles.footerContainer}>
+                        <View style={styles.footerView}>
+                            <Text style={{color: '#000000'}}>
+                                Already have an account?
+                            </Text>
+                            <Button
+                                title="Login"
+                                clear
+                                activeOpacity={0.5}
+                                titleStyle={{color: '#616161', fontSize: 15}}
+                                containerStyle={{marginTop: -10}}
+                                onPress={this._goBack}
+                            />
+                        </View>
                     </View>
                 </View>
             </KeyboardAwareScrollView>
@@ -133,15 +146,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        width: SCREEN_WIDTH,
+        height: SCREEN_HEIGHT,
+        flexDirection: 'column',
         backgroundColor: '#ffffff'
     },
     formContainer: {
         flex: 1,
-        backgroundColor: '#ffffff'
+    },
+    footerContainer: {
+        flex: 1,
+        justifyContent: 'flex-end'
     },
     footerView: {
-        marginTop: 20,
-        flex: 0.5,
+        marginTop:15,
         justifyContent: 'center',
         alignItems: 'center',
     },
