@@ -5,22 +5,28 @@ import {
     ScrollView,
     TouchableOpacity,
     AsyncStorage,
-    KeyboardAvoidingView,
-    TextInput
 } from 'react-native';
-import {Icon, Button} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
+import { Button } from 'react-native-elements'
 import t from 'tcomb-form-native';
+
+var _ = require('lodash');
+const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
+
+stylesheet.pickerTouchable.normal.height = 36;
+stylesheet.pickerTouchable.error.height = 36;
 
 const dateFormat = require('dateformat');
 
 const Form = t.form.Form;
 
 const options = {
-
+    order: ['title', 'description', 'category', 'date', 'time'],
     fields: {
         category: {
             nullOption: {value: '', text: 'Please select activity type'},
             error: 'Please tell others what kind of activity you are initiating',
+            stylesheet: stylesheet,
         },
         title: {
             placeholder: 'Please write an activity title',
@@ -64,46 +70,64 @@ const Activity = t.struct({
     time: t.Date,
 });
 
+
 export default class Initiate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: ''
+            user: '',
+            userLocation: null,
         }
     }
 
-    componentDidMount() {
-        AsyncStorage.getItem('user', (err, result) => {
-            this.setState({
-                user: JSON.parse(result)
-            });
-        });
-    }
+    // componentDidMount() {
+    //     AsyncStorage.getItem('user', (err, result) => {
+    //         this.setState({
+    //             user: JSON.parse(result)
+    //         });
+    //     });
+    // }
 
     handleSubmit = () => {
-        const value = this._form.getValue(); // use that ref to get the form value
-        console.log('value: ', value);
+        const value = this._form.getValue();
+        if(value){
+            this.props.navigation.navigate(("InitiateStep2"),
+                {
+                    actInfo: value,
+                });
+        }
     };
+
+    getUserLocationHandler = () => {
+        navigator.geolocation.getCurrentPosition(position => {
+                this.setState({
+                    userLocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.03,
+                        longitudeDelta: 0.01,
+                    }
+                });
+                this.props.navigation.navigate(("MapView"), {userLocation: this.state.userLocation})
+            },
+            err => console.log(err)
+        );
+    };
+
 
     render() {
         return (
             <ScrollView style={styles.container}>
-                    <Form
-                        ref={c => this._form = c}
-                        type={Activity}
-                        options={options}
-                    />
-
-                    <Button
-                        title="Submit"
-                        onPress={this.handleSubmit}
-                    />
-
-                    {/*<Button*/}
-                    {/*onPress={() => this.props.navigation.navigate(("MapView"))}*/}
-                    {/*title="Open Map"*/}
-                    {/*color="#841584"*/}
-                    {/*/>*/}
+                <Form
+                    ref={c => this._form = c}
+                    type={Activity}
+                    options={options}
+                />
+                <Button
+                    large
+                    title="Next"
+                    onPress={this.handleSubmit}
+                />
             </ScrollView>
 
         );
