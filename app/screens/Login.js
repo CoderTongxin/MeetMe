@@ -52,14 +52,11 @@ export default class Login extends React.Component {
 
 
     validateEmail(email) {
-
-        const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+        const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         return re.test(email);
     }
 
     validatePassword(password) {
-
         return password.length >= 6;
     }
 
@@ -122,8 +119,7 @@ export default class Login extends React.Component {
     render() {
 
         return(
-            <KeyboardAvoidingView style={styles.container}>
-
+            <View style={styles.container}>
                 <Loader loading={this.state.showLoading}/>
                 <ImageBackground
                     source={BG_IMAGE}
@@ -152,14 +148,13 @@ export default class Login extends React.Component {
                                     keyboardAppearance="light"
                                     placeholder="Email"
                                     value={this.state.email}
-                                    keyboardType="email-address"
                                     returnKeyType="next"
                                     onSubmitEditing={(event) => {
                                         this.setState({email_valid: this.validateEmail(event.nativeEvent.text)});
                                         this.passwordInput.focus();
                                     }}
-                                    onBlur={(event)=>{
-                                        this.setState({email_valid: this.validateEmail(event.nativeEvent.text)});
+                                    onBlur={()=>{
+                                        this.setState({email_valid: this.validateEmail(this.state.email)});
                                     }}
                                     placeholderTextColor="white"
                                     errorStyle={{textAlign: 'center', fontSize: 12}}
@@ -243,7 +238,7 @@ export default class Login extends React.Component {
                         <Text>Loading...</Text>
                     }
                 </ImageBackground>
-            </KeyboardAvoidingView>
+            </View>
         )
     }
 }

@@ -17,7 +17,6 @@ import t from 'tcomb-form-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
 const Form = t.form.Form;
-
 const Options = {
     fields: {
         email: {
