@@ -98,10 +98,9 @@ export default class SignUp extends React.Component {
     render() {
         return (
             <KeyboardAwareScrollView>
+                <Loader loading={this.state.loading}/>
                 <View style={styles.container}>
-                    <Loader loading={this.state.loading}/>
                     <Logo/>
-
                     <Form
                         ref='form'
                         type={UserInfo}

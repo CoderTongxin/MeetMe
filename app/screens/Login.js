@@ -26,7 +26,6 @@ export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading:false,
             user: null,
             fontLoaded: false,
             email: '',
@@ -60,14 +59,17 @@ export default class Login extends React.Component {
         return password.length >= 6;
     }
 
+    changeLoadingStatus(){
+        this.setState({showLoading:!this.state.showLoading});
+    }
     login() {
-        this.setState({loading:true});
+        this.changeLoadingStatus();
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser)=>{
-               this.getUserInfo(loggedInUser.uid)
+                this.getUserInfo(loggedInUser.uid)
             })
             .catch(function(error) {
-                this.setState({loading:false});
+                this.changeLoadingStatus();
                 Alert.alert(error.message)
             }.bind(this));
     }
@@ -77,7 +79,7 @@ export default class Login extends React.Component {
         const {type,token} =await Expo.Facebook.
         logInWithReadPermissionsAsync('233859937160350',{permissions:['public_profile']});
         if(type === 'success') {
-            this.setState({showLoading:true});
+            this.changeLoadingStatus();
             const response = await fetch(
                 `https://graph.facebook.com/me?access_token=${token}&fields=gender`);
                 const user_info = await response.json();
@@ -93,11 +95,12 @@ export default class Login extends React.Component {
                     uid:loggedInUser.uid
                 };
                 firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
-                    this.setState({showLoading:false});
+                   this.changeLoadingStatus();
                     storeUserInfo(user);
                     this.props.navigation.navigate('HomeScreenRoot');
                 })
             }).catch((error)=> {
+                this.changeLoadingStatus();
                 Alert.alert(error.message)
             })
         }
@@ -105,7 +108,7 @@ export default class Login extends React.Component {
 
     getUserInfo(userUID){
         firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
-            this.setState({loading:false});
+            this.changeLoadingStatus();
             storeUserInfo(user);
             this.props.navigation.navigate('HomeScreenRoot');
         }.bind(this)).catch((error)=>{
@@ -191,8 +194,6 @@ export default class Login extends React.Component {
                                     activeOpacity={1}
                                     underlayColor="transparent"
                                     onPress={() =>this.login()}
-                                    loading={this.state.loading}
-                                    loadingProps={{size: 'small', color: 'white'}}
                                     disabled={ !this.state.email_valid || this.state.password.length < 6}
                                     containerStyle={{marginVertical: 10}}
                                     buttonStyle={styles.buttonStyle}
@@ -212,8 +213,6 @@ export default class Login extends React.Component {
                                     activeOpacity={1}
                                     underlayColor="transparent"
                                     onPress={() =>this.loginWithFacebook()}
-                                    loading={this.state.loading}
-                                    loadingProps={{size: 'small', color: 'white'}}
                                     buttonStyle={styles.buttonStyle}
                                     titleStyle={styles.buttonTitle}
                                     disabledStyle={styles.disabledButtonStyle}
