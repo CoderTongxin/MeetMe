@@ -62,6 +62,7 @@ export default class Schedule extends React.Component {
     }
     render() {
         return (
+            <ScrollView>
                     <View style={styles.list}>
                         {activityList.map((l, i) => (
                             <ListItem
@@ -76,6 +77,7 @@ export default class Schedule extends React.Component {
                             />
                         ))}
                     </View>
+            </ScrollView>
         );
     }
 }
