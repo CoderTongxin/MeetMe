@@ -46,6 +46,13 @@ const activityList = [
             'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
         date: '01-03-2018',
     },
+    {
+        category:'eating',
+        title: 'Korean food  on queens street',
+        category_photo:
+            'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+        date: '01-03-2018',
+    },
 ];
 
 export default class Schedule extends React.Component {
@@ -55,8 +62,6 @@ export default class Schedule extends React.Component {
     }
     render() {
         return (
-                <ScrollView>
-
                     <View style={styles.list}>
                         {activityList.map((l, i) => (
                             <ListItem
@@ -71,7 +76,6 @@ export default class Schedule extends React.Component {
                             />
                         ))}
                     </View>
-                </ScrollView>
         );
     }
 }
@@ -96,7 +100,6 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     list: {
-        marginTop: 20,
         backgroundColor: '#fff',
     }
 })

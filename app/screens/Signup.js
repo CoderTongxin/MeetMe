@@ -82,7 +82,7 @@ export default class SignUp extends React.Component {
                         email: userInfo.email,
                         gender: userInfo.gender,
                         uid: loggedInUser.uid,
-                        avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS505a3eKGNwX5SB6AMA0K7sr4uvozsp5HK8o2Fpqv0IZ4MsEHVrA'
+                        avatar: this.defaultAvatar(userInfo.gender)
                     };
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then(() => {
                             this.storeUserInfo(user)
@@ -95,6 +95,16 @@ export default class SignUp extends React.Component {
         }
     };
 
+    defaultAvatar(userGender){
+        switch(userGender) {
+            case 'female':
+                return 'https://cdn4.iconfinder.com/data/icons/business-conceptual-part1-1/513/business-woman-512.png';
+            case 'male':
+                return 'https://tiraerasdereggaeton.com/wp-content/uploads/2018/03/avatar-user-boy-389cd1eb1d503149-512x512.png';
+            default:
+                return 'https://freeiconshop.com/wp-content/uploads/edd/bulb-curvy-flat.png'
+        }
+    }
     storeUserInfo(user) {
         this.setState({loading: false});
         storeUserInfo(user);
