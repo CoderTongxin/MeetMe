@@ -1,13 +1,7 @@
 import React from 'react';
-import {StyleSheet, ScrollView, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {
-    Text,
-    Card,
-    ButtonGroup,
-    Tile,
-    Icon,
-    ListItem,
-    Avatar
+    ListItem
 } from 'react-native-elements';
 
 const activityList = [
@@ -125,7 +119,7 @@ const activityList = [
     },
 ];
 
-export default class Schedule extends React.Component {
+export default class ActivityList extends React.Component {
 
     log() {
         console.log('hello')
@@ -172,25 +166,10 @@ export default class Schedule extends React.Component {
     }
 }
 
-Schedule.navigationOptions = ({navigation}) => ({
-    title: 'Schedule',
-    headerTitleStyle: {textAlign: "center", flex: 1},
-    headerLeft: (<View></View>),
-    headerRight:
-        <View style={{paddingRight: 10}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="#808080"/>
-            </TouchableOpacity>
-        </View>,
-});
 
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
+
     list: {
         backgroundColor: '#fff',
     }

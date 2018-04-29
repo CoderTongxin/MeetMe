@@ -1,38 +1,22 @@
 import React from 'react';
 import {
-    Animated,
     StyleSheet,
     View,
     Text,
     ScrollView,
     TouchableOpacity,
     Alert,
-    Platform,
     AsyncStorage,
-    Dimensions
+    Dimensions,
+    Image
 } from 'react-native';
 import Header from 'react-navigation/src/views/Header/Header';
-import {Avatar} from 'react-native-elements';
+import {Avatar, Button} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {firebaseRef} from "../servers/Firebase";
-import Schedule from './Schedule'
-import {
-    TabViewAnimated,
-    TabBar,
-    SceneMap,
-    TabViewPagerScroll,
-    TabViewPagerPan,
-} from 'react-native-tab-view'
-
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const initialLayout = {
-    height: 0,
-    width: SCREEN_WIDTH,
-};
 
-
-const FirstRoute = () => <Schedule/>;
-const SecondRoute = () => <Schedule/>;
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -40,13 +24,6 @@ export default class Profile extends React.Component {
         this.logout = this.logout.bind(this);
         this.state = {
             user: '',
-            tabs: {
-                index: 0,
-                routes: [
-                    {key: '1', title: 'my activity', count: 31},
-                    {key: '2', title: 'joined activity', count: 86},
-                ],
-            },
         }
 
     }
@@ -69,62 +46,6 @@ export default class Profile extends React.Component {
         });
     }
 
-    _handleIndexChange = index => {
-        this.setState({
-            tabs: {
-                ...this.state.tabs,
-                index,
-            },
-        })
-    };
-
-
-    _renderScene = SceneMap({
-        1: FirstRoute,
-        2: SecondRoute,
-    });
-
-    _renderHeader = props => {
-        return (
-            <TabBar
-                {...props}
-                indicatorStyle={styles.indicatorTab}
-                renderLabel={this._renderLabel(props)}
-                pressOpacity={0.8}
-                style={styles.tabBar}
-            />
-        )
-    };
-
-
-    _renderLabel = props => ({route, index}) => {
-        const inputRange = props.navigationState.routes.map((x, i) => i);
-        const outputRange = inputRange.map(
-            inputIndex => (inputIndex === index ? 'black' : 'gray')
-        );
-        const color = props.position.interpolate({
-            inputRange,
-            outputRange,
-        });
-        return (
-            <View>
-                <Animated.Text style={[styles.tabLabelText, {color}]}>
-                    {route.count}
-                </Animated.Text>
-                <Animated.Text style={[styles.tabLabelNumber, {color}]}>
-                    {route.title}
-                </Animated.Text>
-            </View>
-        )
-    };
-
-    _renderPager = props => {
-        return Platform.OS === 'ios' ? (
-            <TabViewPagerScroll {...props} />
-        ) : (
-            <TabViewPagerPan {...props} />
-        )
-    };
 
     render() {
         return (
@@ -139,11 +60,6 @@ export default class Profile extends React.Component {
                             options: {
                                 headerTitleStyle: {textAlign: "center", flex: 1},
                                 title: 'Profile',
-                                headerLeft: (<View style={{paddingLeft: 10}}>
-                                    <TouchableOpacity onPress={() => this.logout()}>
-                                        <Icon name="sign-out" size={25} color="#808080"/>
-                                    </TouchableOpacity>
-                                </View>),
                                 headerRight: (
                                     <View style={{paddingRight: 10}}>
                                         <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
@@ -151,6 +67,7 @@ export default class Profile extends React.Component {
                                         </TouchableOpacity>
                                     </View>
                                 )
+
                             }
                         })}
                     />
@@ -189,16 +106,31 @@ export default class Profile extends React.Component {
                                     </View> :
                                     <View/>
                                 }
+                                {/*<View style={styles.divider}/>*/}
+                                <Image style={{width:SCREEN_WIDTH*0.8 , height: 300}}
+                                       source={{uri: 'https://www.eurogif.com/files/uploads/2018/04/mCYny9f2c.gif'}}/>
                             </View>
-                            <View style={styles.activityContainer}>
-                                <TabViewAnimated
-                                    navigationState={this.state.tabs}
-                                    renderScene={this._renderScene}
-                                    renderPager={this._renderPager}
-                                    renderHeader={this._renderHeader}
-                                    onIndexChange={this._handleIndexChange}
-                                    initialLayout={initialLayout}
-                                />
+                            <View style={styles.footerContainer}>
+                                <View style={styles.divider}/>
+                                <View style={styles.buttonContainer}>
+                                    <Button
+                                        title='Log out'
+                                        icon={
+                                            <Icon
+                                                name='sign-out'
+                                                size={18}
+                                                color='white'
+                                            />}
+                                        buttonStyle={{
+                                            backgroundColor: "#c0392b",
+                                            borderRadius: 5,
+                                            shadowOffset: {width: 0, height: 2},
+                                            shadowOpacity: 0.8,
+                                            shadowColor: 'rgba(0,0,0,0.3)'
+                                        }}
+                                        containerStyle={{height: 40}}
+                                        onPress={this.logout}/>
+                                </View>
                             </View>
                         </View>
                     </View>
@@ -211,17 +143,20 @@ export default class Profile extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgba(241,240,241,1)'
+        backgroundColor: 'rgba(241,240,241,1)',
+        height:SCREEN_HEIGHT,
     },
     contentContainer: {
+        flex:1,
         flexDirection: 'column',
         backgroundColor: 'white',
         borderRadius: 5,
-        height: '100%',
+        height:'100%',
         alignItems: 'center',
-        paddingVertical: 5
+        paddingVertical: 5,
     },
     headContainer: {
+        flex:1,
         flexDirection: 'column',
         alignItems: 'center',
     },
@@ -249,38 +184,18 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     divider: {
-        width: 320,
+        width: SCREEN_WIDTH,
         borderWidth: 0.5,
         borderColor: 'rgba(222, 223, 226, 1)',
-        marginHorizontal: 20,
+        marginVertical: 10,
         height: 1,
     },
     footerContainer: {
-        flex: 1, justifyContent: 'flex-end'
+        flex:1,
+        justifyContent: 'flex-end'
     },
     buttonContainer: {
         alignItems: 'center',
         marginTop: 10
-    },
-    tabContainer: {
-        flex: 1,
-        marginBottom: 12,
-    },
-    tabBar: {
-        backgroundColor: '#EEE',
-    },
-    tabLabelNumber: {
-        color: 'gray',
-        fontSize: 12.5,
-        textAlign: 'center',
-    },
-    tabLabelText: {
-        color: 'black',
-        fontSize: 22.5,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-    indicatorTab: {
-        backgroundColor: 'transparent',
     },
 });

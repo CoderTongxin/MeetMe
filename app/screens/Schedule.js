@@ -1,173 +1,145 @@
 import React from 'react';
-import {StyleSheet, ScrollView, View, TouchableOpacity} from 'react-native';
 import {
-    Text,
-    Card,
-    ButtonGroup,
-    Tile,
-    Icon,
-    ListItem,
-    Avatar
+    Animated,
+    StyleSheet,
+    ScrollView,
+    View,
+    TouchableOpacity,
+    Dimensions,
+    Platform,
+    AsyncStorage,
+} from 'react-native';
+import {
+    Icon
 } from 'react-native-elements';
+import ActivityList from '../components/ActivityList'
 
-const activityList = [
-    {
-        category: 'food',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'game',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'movie',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'pet',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'shopping',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'sports',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'study',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-];
+import {
+    TabViewAnimated,
+    TabBar,
+    SceneMap,
+    TabViewPagerScroll,
+    TabViewPagerPan,
+} from 'react-native-tab-view'
+import {firebaseRef} from '../servers/Firebase'
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const initialLayout = {
+    height: 0,
+    width: SCREEN_WIDTH,
+};
+
+
+const FirstRoute = () => <ActivityList type='all'/>;
+const SecondRoute = () => <ActivityList type='my'/>;
+const ThirdRoute = () => <ActivityList type='joined'/>;
 
 export default class Schedule extends React.Component {
 
-    log() {
-        console.log('hello')
+     constructor(props){
+         super(props);
+         this.state = {
+             user:null,
+             tabs: {
+                 index: 0,
+                 routes: [
+                     {key: 'all', title: 'all activity', count: 20},
+                     {key: 'my', title: 'my activity', count: 8},
+                     {key: 'joined', title: 'joined activity', count: 12},
+                 ],
+             },
+         }
+     }
+
+    componentDidMount() {
+        AsyncStorage.getItem('user', (err, result) => {
+            this.setState({
+                user: JSON.parse(result)
+            });
+        });
     }
 
-    chooseAvatar(category) {
-        switch (category) {
-            case 'food':
-                return require('../../resource/images/food.png');
-            case 'sports':
-                return require('../../resource/images/sports.png');
-            case 'game':
-                return require('../../resource/images/game.png');
-            case 'movie':
-                return require('../../resource/images/movie.png');
-            case 'pet':
-                return require('../../resource/images/pet.png');
-            case 'study':
-                return require('../../resource/images/study.png');
-            case 'shopping':
-                return require('../../resource/images/shopping.png');
+     getAllActivity(){
 
-        }
+     }
+
+    getMyActivity(){
 
     }
+    getJoinedActivity(){
+
+
+    }
+    _handleIndexChange = index => {
+        this.setState({
+            tabs: {
+                ...this.state.tabs,
+                index,
+            },
+        })
+    };
+
+
+    _renderScene = SceneMap({
+        all: FirstRoute,
+        my: SecondRoute,
+        joined: ThirdRoute
+    });
+
+    _renderHeader = props => {
+        return (
+            <TabBar
+                {...props}
+                indicatorStyle={styles.indicatorTab}
+                renderLabel={this._renderLabel(props)}
+                pressOpacity={0.8}
+                style={styles.tabBar}
+            />
+        )
+    };
+
+
+    _renderLabel = props => ({route, index}) => {
+        const inputRange = props.navigationState.routes.map((x, i) => i);
+        const outputRange = inputRange.map(
+            inputIndex => (inputIndex === index ? 'black' : 'gray')
+        );
+        const color = props.position.interpolate({
+            inputRange,
+            outputRange,
+        });
+        return (
+            <View>
+                <Animated.Text style={[styles.tabLabelText, {color}]}>
+                    {route.count}
+                </Animated.Text>
+                <Animated.Text style={[styles.tabLabelNumber, {color}]}>
+                    {route.title}
+                </Animated.Text>
+            </View>
+        )
+    };
+
+    _renderPager = props => {
+        return Platform.OS === 'ios' ? (
+            <TabViewPagerScroll {...props} />
+        ) : (
+            <TabViewPagerPan {...props} />
+        )
+    };
 
     render() {
         return (
-            <View style={styles.list}>
-                {activityList.map((activity, i) => (
-                    <ListItem
-                        leftAvatar={{rounded: true, source: this.chooseAvatar(activity.category)}}
-                        key={i}
-                        onPress={this.log}
-                        title={activity.title}
-                        subtitle={activity.time.date}
-                        chevron
-                        bottomDivider
-                        topDivider
-                    />
-                ))}
-            </View>
+            <ScrollView>
+                <TabViewAnimated
+                    navigationState={this.state.tabs}
+                    renderScene={this._renderScene}
+                    renderPager={this._renderPager}
+                    renderHeader={this._renderHeader}
+                    onIndexChange={this._handleIndexChange}
+                    initialLayout={initialLayout}
+                />
+            </ScrollView>
         );
     }
 }
@@ -193,5 +165,22 @@ const styles = StyleSheet.create({
     },
     list: {
         backgroundColor: '#fff',
-    }
+    },
+    tabBar: {
+        backgroundColor: '#EEE',
+    },
+    tabLabelNumber: {
+        color: 'gray',
+        fontSize: 12.5,
+        textAlign: 'center',
+    },
+    tabLabelText: {
+        color: 'black',
+        fontSize: 20,
+        fontWeight: '600',
+        textAlign: 'center',
+    },
+    indicatorTab: {
+        backgroundColor: 'transparent',
+    },
 })

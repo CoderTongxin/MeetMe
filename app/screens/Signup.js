@@ -11,7 +11,6 @@ import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
 import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
-// import {styles} from "../common/style/styles";
 import {HomeScreenRoot} from "../config/Route";
 import {storeUserInfo} from '../common/js/userInfo';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
