@@ -201,28 +201,6 @@ export default class Profile extends React.Component {
                                 />
                             </View>
                         </View>
-                        {/*<View style={styles.footerContainer}>*/}
-                        {/*<View style={styles.divider}/>*/}
-                        {/*<View style={styles.buttonContainer}>*/}
-                        {/*<Button*/}
-                        {/*title='Log out'*/}
-                        {/*icon={*/}
-                        {/*<Icon*/}
-                        {/*name='sign-out'*/}
-                        {/*size={18}*/}
-                        {/*color='white'*/}
-                        {/*/>}*/}
-                        {/*buttonStyle={{*/}
-                        {/*backgroundColor: "#c0392b",*/}
-                        {/*borderRadius: 5,*/}
-                        {/*shadowOffset: {width: 0, height: 2},*/}
-                        {/*shadowOpacity: 0.8,*/}
-                        {/*shadowColor: 'rgba(0,0,0,0.3)'*/}
-                        {/*}}*/}
-                        {/*containerStyle={{height: 40}}*/}
-                        {/*onPress={this.logout}/>*/}
-                        {/*</View>*/}
-                        {/*</View>*/}
                     </View>
                 </View>
             </ScrollView>
@@ -268,7 +246,7 @@ const styles = StyleSheet.create({
         color: '#000',
     },
     activityContainer: {
-        marginTop: 15
+        marginTop: 15,
     },
     divider: {
         width: 320,
