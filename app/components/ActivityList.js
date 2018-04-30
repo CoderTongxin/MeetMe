@@ -1,191 +1,93 @@
 import React from 'react';
-import {AsyncStorage, StyleSheet, View} from 'react-native';
+import {AsyncStorage, StyleSheet, View, TouchableHighlight, Text, Alert} from 'react-native';
 import {
     ListItem
 } from 'react-native-elements';
 import {firebaseRef} from "../servers/Firebase";
 
-const activityList = [
-    {
-        category: 'food',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'game',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'movie',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'pet',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'shopping',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'sports',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-    {
-        category: 'study',
-        title: 'Yo Sushi',
-        description: 'eating',
-        time: {
-            date: '01-05-2018',
-            startTime: '14:00',
-        },
-        location: {
-            longitude: '123',
-            latitude: '456',
-        },
-        owner: 'djflksdjdltj',
-        participants: {},
-        status: 'open',
-    },
-];
 
 export default class ActivityList extends React.Component {
 
-    constructor(props){
-        super(props);
+    constructor(props) {
         super(props);
         this.state = {
-            user:null,
-            activities:null
-        }
+            user: '',
+            activities: [],
+            showDetail: false
+        };
+        this._renderDetail=this._renderDetail.bind(this);
+        this.toggleCancel=this.toggleCancel.bind(this)
     }
 
     componentDidMount() {
-        AsyncStorage.getItem('user', (err, result) => {
-            this.setState({
-                user: JSON.parse(result),
-                activities:this.chooseListType(this.props.type)
+        // AsyncStorage.getItem('user', (err, result) => {
+        //     this.setState({
+        //         user: JSON.parse(result),
+        //     });
+        //     this.getUserActivityList(this.props.type)
+        // });
+    }
+
+    getUserActivityList(type) {
+        const userActivityList = Object.values(this.state.user.activities);
+
+        const activityPromises = userActivityList.map(key => {
+            return firebaseRef.database().ref().child("activities").child(key.actId).once("value", activity => Promise.resolve(activity));
+        });
+
+        Promise.all(activityPromises)
+            .then(activities => {
+                this.setState({
+                    activities: activities
+                });
+            })
+            .catch(err => {
+                Alert.alert(err)
             });
+
+
+        let myActivityList = [];
+        console.log(this.state.activities)
+        this.state.activities.map((activity) => {
+            console.log(activity)
+            if (activity.owner.uid === this.state.user.uid) {
+                myActivityList.push(activity)
+            }
         });
 
-    }
-    chooseListType(type){
-        const activities=this.getAllActivity();
-        switch (type) {
-            case 'all':
-                return activities;
-            case 'my':
-                return this.getMyActivity(activities);
-            case 'joined':
-                return this.getJoinedActivity(activities);
 
-        }
     }
-    getAllActivity(){
-        let activity = [
-            "-LBF8NDhx5SpJY3Mf8BM",
-            "-LBF8NDhx5SpJY3Mf8BM",
-            "-LBF8NDhx5SpJY3Mf8BM",
-            "-LBF8NDhx5SpJY3Mf8BM"
-        ];
-        let promises = activity.map(function(key) {
-            return firebaseRef.database().ref("activities").child(key).once("value");
+
+
+    getMyActivity(activities) {
+
+        let myActivityList = [];
+        activities.map((activity) => {
+            console.log(activity.owner.uid);
+            if (activity.owner.uid === this.state.user.uid) {
+                myActivityList.push(activity)
+            }
         });
-        Promise.all(promises).then(function(snapshots) {
-                  return JSON.stringify(snapshots);
-            // snapshots.forEach(function(snapshot) {
-            //     console.log(snapshot.key+": "+JSON.stringify(snapshot.val()));
-            // });
+        return myActivityList;
+
+    }
+
+
+    getJoinedActivity(activities) {
+        let joinedActivityList = [];
+        activities.map((activity) => {
+            if (activity.owner.uid !== this.state.user.uid) {
+                joinedActivityList.push(activity)
+            }
         });
+        return joinedActivityList;
     }
-
-    getMyActivity(activities){
-        let myActivityList=[];
-        activities.map()
-
-    }
-
-
-    getJoinedActivity(activities){
-        let joinedActivityList=[];
-        activities.map()
-    }
-
 
 
     log() {
-        console.log('hello')
+        this.setState({
+            showDetail:!this.state.showDetail
+        })
     }
 
     chooseAvatar(category) {
@@ -209,26 +111,48 @@ export default class ActivityList extends React.Component {
 
     }
 
+    _renderDetail() {
+        if (this.state.showDetail) {
+            return (
+                <TouchableHighlight>
+                    onPress={this.toggleCancel()}>
+                    <View>
+                        <Text>Cancel</Text>
+                    </View>
+                </TouchableHighlight>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    toggleCancel(){
+        this.setState({
+            showDetail:!this.state.showDetail
+        })
+    }
     render() {
         return (
-            <View style={styles.list}>
-                {this.state.activities.map((activity, i) => (
-                    <ListItem
-                        leftAvatar={{rounded: true, source: this.chooseAvatar(activity.category)}}
-                        key={i}
-                        onPress={this.log}
-                        title={activity.title}
-                        subtitle={activity.time.date}
-                        chevron
-                        bottomDivider
-                        topDivider
-                    />
-                ))}
+            <View>
+                <View style={styles.list}>
+                    {this.props.list.map((activity, i) => (
+                        <ListItem
+                            leftAvatar={{rounded: true, source: this.chooseAvatar(activity.category)}}
+                            key={i}
+                            onPress={this.log}
+                            title={activity.title}
+                            subtitle={activity.title}
+                            chevron
+                            bottomDivider
+                            topDivider
+                        />
+                    ))}
+                </View>
+                {this._renderDetail()}
             </View>
         );
     }
 }
-
 
 
 const styles = StyleSheet.create({

@@ -6,8 +6,7 @@ import {
     View,
     TouchableOpacity,
     Dimensions,
-    Platform,
-    AsyncStorage,
+    Platform, Alert, AsyncStorage
 } from 'react-native';
 import {
     Icon
@@ -21,6 +20,7 @@ import {
     TabViewPagerScroll,
     TabViewPagerPan,
 } from 'react-native-tab-view'
+import TabView from '../components/TabView'
 import {firebaseRef} from '../servers/Firebase'
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -30,98 +30,165 @@ const initialLayout = {
 };
 
 
-const FirstRoute = () => <ActivityList list='all'/>;
-const SecondRoute = () => <ActivityList list='my'/>;
-const ThirdRoute = () => <ActivityList list='joined'/>;
+// const FirstRoute = () => <ActivityList type='all'/>;
+// const SecondRoute = () => <ActivityList type='my'/>;
+// const ThirdRoute = () => <ActivityList type='joined'/>;
 
 export default class Schedule extends React.Component {
 
-     constructor(props){
-         super(props);
-         this.state = {
-             tabs: {
-                 index: 0,
-                 routes: [
-                     {key: 'all', title: 'all activity', count:0},
-                     {key: 'my', title: 'my activity', count: 0},
-                     {key: 'joined', title: 'joined activity', count: 0},
-                 ],
-             },
-         }
-     }
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: '',
+            activities:[],
+            myActivities:[],
+            joinedActivities:[],
+            showDetail: false
+        }
+    }
 
-
-
-
-    _handleIndexChange = index => {
-        this.setState({
-            tabs: {
-                ...this.state.tabs,
-                index,
-            },
-        })
-    };
-
-
-    _renderScene = SceneMap({
-        all: FirstRoute,
-        my: SecondRoute,
-        joined: ThirdRoute
-    });
-
-    _renderHeader = props => {
-        return (
-            <TabBar
-                {...props}
-                indicatorStyle={styles.indicatorTab}
-                renderLabel={this._renderLabel(props)}
-                pressOpacity={0.8}
-                style={styles.tabBar}
-            />
-        )
-    };
-
-
-    _renderLabel = props => ({route, index}) => {
-        const inputRange = props.navigationState.routes.map((x, i) => i);
-        const outputRange = inputRange.map(
-            inputIndex => (inputIndex === index ? 'black' : 'gray')
-        );
-        const color = props.position.interpolate({
-            inputRange,
-            outputRange,
+    componentDidMount() {
+        AsyncStorage.getItem('user', (err, result) => {
+            this.setState({
+                user: JSON.parse(result),
+            });
+            this.getUserActivityList(this.props.type)
         });
-        return (
-            <View>
-                <Animated.Text style={[styles.tabLabelText, {color}]}>
-                    {route.count}
-                </Animated.Text>
-                <Animated.Text style={[styles.tabLabelNumber, {color}]}>
-                    {route.title}
-                </Animated.Text>
-            </View>
-        )
-    };
+    }
 
-    _renderPager = props => {
-        return Platform.OS === 'ios' ? (
-            <TabViewPagerScroll {...props} />
-        ) : (
-            <TabViewPagerPan {...props} />
-        )
-    };
+    getUserActivityList() {
+        const userActivityList = Object.values(this.state.user.activities);
+
+        const activityPromises = userActivityList.map(key => {
+            return firebaseRef.database().ref().child("activities").child(key.actId).once("value", activity => Promise.resolve(activity));
+        });
+
+        Promise.all(activityPromises)
+            .then(activities => {
+                this.setState({
+                    activities: activities
+                });
+            })
+            .catch(err => {
+                Alert.alert(err)
+            });
+
+
+        let myActivityList = [];
+        console.log(this.state.activities);
+        this.state.activities.map((activity) => {
+            console.log(activity);
+            if (activity.owner.uid === this.state.user.uid) {
+                myActivityList.push(activity)
+            }
+        });
+
+
+    }
+
+
+    getMyActivity(activities) {
+
+        let myActivityList = [];
+        activities.map((activity) => {
+            console.log(activity.owner.uid);
+            if (activity.owner.uid === this.state.user.uid) {
+                myActivityList.push(activity)
+            }
+        });
+        return myActivityList;
+
+    }
+
+
+    getJoinedActivity(activities) {
+        let joinedActivityList = [];
+        activities.map((activity) => {
+            if (activity.owner.uid !== this.state.user.uid) {
+                joinedActivityList.push(activity)
+            }
+        });
+        return joinedActivityList;
+    }
+     //
+     // constructor(props){
+     //     super(props);
+     //
+     //     this.state = {
+     //         tabs: {
+     //             index: 0,
+     //             routes: [
+     //                 {key: 'all', title: 'all activity', count:0},
+     //                 {key: 'my', title: 'my activity', count: 0},
+     //                 {key: 'joined', title: 'joined activity', count: 0},
+     //             ],
+     //         },
+     //     }
+     // }
+
+
+    // _handleIndexChange = index => {
+    //     this.setState({
+    //         tabs: {
+    //             ...this.state.tabs,
+    //             index,
+    //         },
+    //     })
+    // };
+    //
+    //
+    // _renderScene = SceneMap({
+    //     all: FirstRoute,
+    //     my: SecondRoute,
+    //     joined: ThirdRoute
+    // });
+    //
+    // _renderHeader = props => {
+    //     return (
+    //         <TabBar
+    //             {...props}
+    //             indicatorStyle={styles.indicatorTab}
+    //             renderLabel={this._renderLabel(props)}
+    //             pressOpacity={0.8}
+    //             style={styles.tabBar}
+    //         />
+    //     )
+    // };
+    //
+    //
+    // _renderLabel = props => ({route, index}) => {
+    //     const inputRange = props.navigationState.routes.map((x, i) => i);
+    //     const outputRange = inputRange.map(
+    //         inputIndex => (inputIndex === index ? 'black' : 'gray')
+    //     );
+    //     const color = props.position.interpolate({
+    //         inputRange,
+    //         outputRange,
+    //     });
+    //     return (
+    //         <View>
+    //             <Animated.Text style={[styles.tabLabelText, {color}]}>
+    //                 {route.count}
+    //             </Animated.Text>
+    //             <Animated.Text style={[styles.tabLabelNumber, {color}]}>
+    //                 {route.title}
+    //             </Animated.Text>
+    //         </View>
+    //     )
+    // };
+    //
+    // _renderPager = props => {
+    //     return Platform.OS === 'ios' ? (
+    //         <TabViewPagerScroll {...props} />
+    //     ) : (
+    //         <TabViewPagerPan {...props} />
+    //     )
+    // };
 
     render() {
         return (
             <ScrollView>
-                <TabViewAnimated
-                    navigationState={this.state.tabs}
-                    renderScene={this._renderScene}
-                    renderPager={this._renderPager}
-                    renderHeader={this._renderHeader}
-                    onIndexChange={this._handleIndexChange}
-                    initialLayout={initialLayout}
-                />
+                <TabView activities={this.state.activities}/>
             </ScrollView>
         );
     }
