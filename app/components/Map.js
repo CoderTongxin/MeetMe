@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-// import {MapView} from 'expo';
-import MapView, { Marker }from 'react-native-maps';
+
+import {MapView} from 'expo';
 
 // common Marker = MapView.Marker;
 // common Callout = MapView.Callout;
@@ -29,7 +29,7 @@ const Map = props => {
 
 
     return (
-        <View style={styles.mapContainer}>
+        <View style={styles.container}>
             <MapView
                 style={styles.map}
                 initialRegion={{
@@ -40,7 +40,7 @@ const Map = props => {
                 }}
                 region={props.userLocation}
             >
-                {userLocationMarker}
+                {/*{userLocationMarker}*/}
                 {/*{usersMarks}*/}
             </MapView>
         </View>
@@ -49,14 +49,13 @@ const Map = props => {
 
 
 const styles = StyleSheet.create({
-    mapContainer: {
-        width: '100%',
-        height: '100%',
+    Container: {
+        flex:1
     },
     map: {
         width: '100%',
         height: '100%',
-    }
+    },
 
 
 });

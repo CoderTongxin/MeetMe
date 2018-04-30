@@ -13,6 +13,7 @@ import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 import InitiateStep2 from '../screens/InitiateStep2';
 import InitiateStep3 from '../screens/InitiateStep3';
+import Welcome from '../screens/Welcome';
 
 export const InitiateStack = StackNavigator({
     Initiate: {
@@ -104,6 +105,9 @@ export const HomeScreenRoot = StackNavigator({
 });
 
 export const Root = StackNavigator({
+    // Welcome:{
+    //     screen: Welcome
+    // },
     Login: {
         screen: Login
     },
