@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet,  View } from 'react-native';
 import {Root} from './app/config/Route';
 
-console.disableYellowBox = true;
+ console.disableYellowBox = true;
 export default class App extends React.Component {
   render() {
     return (
