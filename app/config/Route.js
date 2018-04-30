@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, View, Button} from 'react-native';
+// import {TouchableOpacity, View, Button} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
 import Activities from '../screens/Activities';
@@ -7,13 +7,13 @@ import Initiate from '../screens/Initiate';
 import Schedule from '../screens/Schedule';
 import ActivityDetail from '../screens/ActivityDetail';
 import Settings from '../screens/Settings';
-import MapView from '../screens/MapView';
+// import MapView from '../screens/MapView';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 import InitiateStep2 from '../screens/InitiateStep2';
 import InitiateStep3 from '../screens/InitiateStep3';
-import Welcome from '../screens/Welcome';
+// import Welcome from '../screens/Welcome';
 
 export const InitiateStack = StackNavigator({
     Initiate: {
@@ -86,9 +86,9 @@ export const HomeScreenRoot = StackNavigator({
     Tabs: {
         screen: Tabs,
     },
-    MapView: {
-        screen: MapView,
-    },
+    // MapView: {
+    //     screen: MapView,
+    // },
     Profile: {
         screen: Profile,
     },
