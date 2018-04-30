@@ -91,7 +91,7 @@ export default class Initiate extends React.Component {
     handleSubmit = () => {
         const value = this._form.getValue();
         if(value){
-            console.log(value)
+            // console.log(value);
             this.props.navigation.navigate(("InitiateStep2"),
                 {
                     actInfo: value,

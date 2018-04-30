@@ -80,13 +80,13 @@ export default class InitiateStep2 extends React.Component {
         };
 
         newPostRef.set(createInfo).then(() => {
-            console.log('adding location');
+            //console.log('adding location');
         }).catch((error) => {
             console.log(error);
         });
 
         firebaseRef.database().ref('users/' + this.state.user.uid + '/activities').push().set(userInfo).then(() => {
-            console.log('adding location');
+            //console.log('adding location');
         }).catch((error) => {
             console.log(error);
         });

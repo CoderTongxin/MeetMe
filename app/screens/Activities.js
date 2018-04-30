@@ -1,57 +1,31 @@
 import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Button} from 'react-native';
 import {Icon} from 'react-native-elements';
-
-
 import FetchLocation from '../components/FetchLocation';
 import Map from '../components/Map'
-//import {firebaseRef} from "../servers/Firebase";
+import {firebaseRef} from "../servers/Firebase";
 
-let activityInfo = {
-    category: 'food',
-    title: 'Yo Sushi',
-    description: 'eating',
-    time: {
-        date: '01-05-2018',
-        startTime: '14:00',
-    },
-    location: {
-        longitude: '123',
-        latitude: '456',
-    },
-    owner: 'djflksdjdltj',
-    participants: {},
-    status: 'open',
-};
+const db = firebaseRef.database();
+const actRef = db.ref("activities");
 
 export default class Activities extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             userLocation: null,
+            activities: null,
             usersPlaces: [],
-            pinLocation:null,
-        }
+            actPlaces:[]
+        };
     };
 
-    // createActivity(activity) {
-    //     firebaseRef.database().ref('activities').push().set(activity).then(() => {
-    //         console.log('adding location');
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // };
-    //
-    // updateActivity(activity) {
-    //     firebaseRef.database().ref('activities').update(activity).then(() => {
-    //         console.log('adding location');
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // };
+
+    componentDidMount() {
+        this.listenForAct();
+    };
+
 
     getUserLocationHandler = () => {
-
         navigator.geolocation.getCurrentPosition(position => {
                 this.setState({
                     userLocation: {
@@ -61,69 +35,51 @@ export default class Activities extends React.Component {
                         longitudeDelta: 0.01,
                     }
                 });
-
-                //this.createActivity(activityInfo);
-
-                // fetch('https://compsci-732-project.firebaseio.com/place.json', {
-                //     method: 'POST',
-                //     body: JSON.stringify({
-                //         latitude: position.coords.latitude,
-                //         longitude: position.coords.longitude,
-                //     })
-                // })
-                //     .then(res => console.log(res))
-                //     .catch(err => console.log(err));
             },
             err => console.log(err)
         );
 
     };
 
-    getUsersPlacesHandler = () => {
-        fetch('https://compsci-732-project.firebaseio.com/place.json')
-            .then(res => res.json())
-            .then(parsedRes => {
-                const placesArray = [];
-                for (const key in parsedRes) {
-                    placesArray.push({
-                        latitude: parsedRes[key].latitude,
-                        longitude: parsedRes[key].longitude,
-                        id: key
-                    });
-                }
-                this.setState({
-                    usersPlaces: placesArray
-                });
-            })
-            .catch(err => console.log(err));
-    };
+    listenForAct() {
+        actRef.on('value', (snap) => {
+            const activities = snap.val();
 
+            this.setState({
+                activities: activities
+            });
+            const placesArray = [];
+            for (const key in activities) {
+                placesArray.push({
+                    latitude: activities[key].location.latitude,
+                    longitude: activities[key].location.longitude,
+                    title:activities[key].title,
+                    description:activities[key].description,
+                    id: key
+                });
+            }
+            this.setState({
+                actPlaces: placesArray
+            });
+        });
+
+
+    }
 
     render() {
+
+
         return (
             <View style={styles.container}>
-                {/*This is the body in the home view*/}
+
                 <View style={styles.body}>
-                    {/*This is initiate screen view*/}
-                    <View styele={{overflow: 'hidden'}}>
+                    <FetchLocation onGetLocation={this.getUserLocationHandler}/>
 
-
-                    </View>
-
-                    {/*This is activities screen view*/}
-                    <View styele={{top: window.height, bottom: -window.height}}>
-
-                        <FetchLocation onGetLocation={this.getUserLocationHandler}/>
-
-                        {/*<View>*/}
-                        {/*<Button title={"Get User Places"} onPress={this.getUsersPlacesHandler()}/>*/}
-                        {/*</View>*/}
-                        <Map
-                            userLocation={this.state.userLocation}
-                            usersPlaces={this.state.usersPlaces}
-                            pinLocation={this.state.pinLocation}
-                        />
-                    </View>
+                    <Map
+                        userLocation={this.state.userLocation}
+                        actPlaces={this.state.actPlaces}
+                        activities={this.state.activities}
+                    />
 
                 </View>
             </View>

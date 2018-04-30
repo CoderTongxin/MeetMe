@@ -51,7 +51,7 @@ const activityList = [
 export default class Schedule extends React.Component {
 
     log() {
-        console.log('hello')
+        //console.log('hello')
     }
     render() {
         return (
