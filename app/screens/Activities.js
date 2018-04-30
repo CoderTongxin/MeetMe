@@ -12,24 +12,27 @@ import {
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 
+import {Divider} from 'react-native-elements';
+
 import MapView from "react-native-maps";
 import {firebaseRef} from "../servers/Firebase";
 
 const db = firebaseRef.database();
 const actRef = db.ref("activities");
-
+const dateFormat = require('dateformat');
 
 const {width, height} = Dimensions.get("window");
-const CARD_HEIGHT = height / 5;
-const CARD_WIDTH = CARD_HEIGHT - 50;
+const heightFactor = 5;
+const widthFactor = 4;
+const CARD_HEIGHT = height / heightFactor;
+const CARD_WIDTH = width / widthFactor;
+const CARD_MARGIN = CARD_WIDTH / ((widthFactor - 1) * 2);
 
 export default class Activities extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            userLocation: null,
             activities: null,
-            usersPlaces: [],
             actPlaces: [],
             region: {
                 latitude: -36.84705474575118,
@@ -46,9 +49,14 @@ export default class Activities extends React.Component {
     }
 
     componentDidMount() {
+        this.getUserLocation();
         this.listenForAct();
+        this.listenForAnimation();
+    };
+
+    listenForAnimation() {
         this.animation.addListener(({value}) => {
-            let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+            let index = Math.floor(value / (CARD_WIDTH + 2 * CARD_MARGIN) + 0.3); // animate 30% away from landing on the next item
             if (index >= this.state.actPlaces.length) {
                 index = this.state.actPlaces.length - 1;
             }
@@ -72,13 +80,12 @@ export default class Activities extends React.Component {
                 }
             }, 10);
         });
-    };
+    }
 
-
-    getUserLocationHandler = () => {
+    getUserLocation() {
         navigator.geolocation.getCurrentPosition(position => {
                 this.setState({
-                    userLocation: {
+                    region: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
                         latitudeDelta: 0.03,
@@ -88,7 +95,6 @@ export default class Activities extends React.Component {
             },
             err => console.log(err)
         );
-
     };
 
     listenForAct() {
@@ -99,7 +105,35 @@ export default class Activities extends React.Component {
                 activities: activities
             });
             const placesArray = [];
+
             for (const key in activities) {
+                const participantsArray = [];
+                for (const keyB in activities[key].participants) {
+                    participantsArray.push({
+                        uid: activities[key].participants[keyB].uid,
+                        username: activities[key].participants[keyB].username,
+                    });
+                }
+                let image = null;
+
+                if (activities[key].category === 'Food') {
+                    image = {uri: "https://static.boredpanda.com/blog/wp-content/uploads/2015/05/food-cubes-raw-lernert-sander-volkskrant-6.jpg"};
+                } else if (activities[key].category === 'Sport') {
+                    image = {uri: "http://www.youthvillage.co.za/wp-content/uploads/2014/10/football-fiesta-salisbury.jpg"};
+                } else if (activities[key].category === 'Shopping') {
+                    image = {uri: "http://freedesignfile.com/upload/2016/12/Happy-shopping-woman-HD-picture.jpg"};
+                } else if (activities[key].category === 'Movie') {
+                    image = {uri: "https://st.depositphotos.com/2185383/4533/v/950/depositphotos_45330093-stock-illustration-cinema-concept.jpg"};
+                } else if (activities[key].category === 'Study') {
+                    image = {uri: "http://www.nebrija.com/medios/actualidadnebrija/wp-content/uploads/sites/2/2016/11/bbva-educacion-1920x0-c-f-787x459.jpg"};
+                } else if (activities[key].category === 'Game') {
+                    image = {uri: "https://images.unsplash.com/10/wii.jpg?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=592b3b24ffafc20dbe8b0a1df97ef5c6&w=1000&q=80"};
+                } else if (activities[key].category === 'Pet') {
+                    image = {uri: "http://yourdost-blog-images.s3-ap-southeast-1.amazonaws.com/wp-content/uploads/2016/01/03170233/cute-cat.jpg"};
+                } else{
+                    image = {uri: "https://static1.squarespace.com/static/51277219e4b08376dc025505/t/55f17df3e4b0d3922cc4c416/1441889779581/?format=300w"};
+                }
+
                 placesArray.push({
                     location: {
                         latitude: activities[key].location.latitude,
@@ -107,7 +141,18 @@ export default class Activities extends React.Component {
                     },
                     title: activities[key].title,
                     description: activities[key].description,
-                    id: key
+                    id: key,
+                    time: {
+                        date: dateFormat(activities[key].time.date, "mediumDate"),
+                        time: activities[key].time.time,
+                    },
+                    owner: {
+                        uid: activities[key].owner.uid,
+                        username: activities[key].owner.username,
+                    },
+                    status: activities[key].status,
+                    image: image,
+                    participants: {participantsArray}
                 });
             }
             this.setState({
@@ -121,14 +166,14 @@ export default class Activities extends React.Component {
     render() {
         const interpolations = this.state.actPlaces.map((act, index) => {
             const inputRange = [
-                (index - 1) * CARD_WIDTH,
-                index * CARD_WIDTH,
-                ((index + 1) * CARD_WIDTH),
+                (index - 1) * (CARD_WIDTH + 2 * CARD_MARGIN),
+                index * (CARD_WIDTH + 2 * CARD_MARGIN),
+                (index + 1) * (CARD_WIDTH + 2 * CARD_MARGIN),
             ];
 
             const cardScale = this.animation.interpolate({
                 inputRange,
-                outputRange: [1, 1.1, 1],
+                outputRange: [1, 1.2, 1],
                 extrapolate: "clamp",
             });
 
@@ -172,8 +217,8 @@ export default class Activities extends React.Component {
                                             title={act.title}
                                             description={act.description}>
                                 <Animated.View style={[styles.markerWrap, opacityStyle]}>
-                                    <Animated.View style={[styles.ring, scaleStyle]}/>
                                     <View style={styles.marker}/>
+                                    <Animated.View style={[styles.ring, scaleStyle]}/>
                                 </Animated.View>
                             </MapView.Marker>
                         );
@@ -183,7 +228,7 @@ export default class Activities extends React.Component {
                     horizontal
                     scrollEventThrottle={1}
                     showsHorizontalScrollIndicator={false}
-                    snapToInterval={CARD_WIDTH}
+                    snapToInterval={CARD_WIDTH + 2 * CARD_MARGIN}
                     onScroll={Animated.event(
                         [
                             {
@@ -213,17 +258,21 @@ export default class Activities extends React.Component {
                                 key={index}
                                 actId={act.key}
                             >
-                                {/*<Image*/}
-                                {/*source={marker.image}*/}
-                                {/*style={styles.cardImage}*/}
-                                {/*resizeMode="cover"*/}
-                                {/*/>*/}
+                                <Image
+                                    source={act.image}
+                                    style={styles.cardImage}
+                                    resizeMode="cover"
+                                />
                                 <View style={styles.textContent}>
                                     <Text numberOfLines={1} style={styles.cardTitle}>
                                         {act.title}
                                     </Text>
-                                    <Text numberOfLines={5} style={styles.cardDescription}>
-                                        {act.description}
+                                    <Divider/>
+                                    <Text numberOfLines={1} style={styles.cardDescription}>
+                                        {act.time.date}
+                                    </Text>
+                                    <Text numberOfLines={1} style={styles.cardDescription}>
+                                        {act.time.time}
                                     </Text>
                                 </View>
                             </Animated.View>
@@ -305,14 +354,14 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     endPadding: {
-
-        paddingRight: CARD_WIDTH*1.3,
+        paddingLeft: (width - (CARD_WIDTH + 2 * CARD_MARGIN)) / 2,
+        paddingRight: (width - (CARD_WIDTH + 2 * CARD_MARGIN)) / 2,
     },
     card: {
         padding: 10,
         elevation: 2,
         backgroundColor: "#FFF",
-        marginHorizontal: 10,
+        marginHorizontal: CARD_MARGIN,
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
@@ -322,7 +371,8 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     cardImage: {
-        flex: 3,
+        flex: 2,
+        marginTop: 5,
         width: "100%",
         height: "100%",
         alignSelf: "center",
@@ -338,10 +388,12 @@ const styles = StyleSheet.create({
     cardDescription: {
         fontSize: 12,
         color: "#444",
+        textAlign: "justify",
     },
     markerWrap: {
         alignItems: "center",
         justifyContent: "center",
+
     },
     marker: {
         width: 8,
