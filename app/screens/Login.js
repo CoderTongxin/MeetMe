@@ -118,7 +118,7 @@ export default class Login extends React.Component {
     }
 
     getUserInfo(userUID){
-        firebaseRef.database().ref('/users/' + userUID).once('value').then(function(user) {
+        firebaseRef.database().ref('users/' + userUID).once('value').then(function(user) {
             this.changeLoadingStatus();
             storeUserInfo(user);
             this.props.navigation.navigate('HomeScreenRoot');

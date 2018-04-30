@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {AsyncStorage, StyleSheet, View} from 'react-native';
 import {
     ListItem
 } from 'react-native-elements';
+import {firebaseRef} from "../servers/Firebase";
 
 const activityList = [
     {
@@ -121,6 +122,68 @@ const activityList = [
 
 export default class ActivityList extends React.Component {
 
+    constructor(props){
+        super(props);
+        super(props);
+        this.state = {
+            user:null,
+            activities:null
+        }
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('user', (err, result) => {
+            this.setState({
+                user: JSON.parse(result),
+                activities:this.chooseListType(this.props.type)
+            });
+        });
+
+    }
+    chooseListType(type){
+        const activities=this.getAllActivity();
+        switch (type) {
+            case 'all':
+                return activities;
+            case 'my':
+                return this.getMyActivity(activities);
+            case 'joined':
+                return this.getJoinedActivity(activities);
+
+        }
+    }
+    getAllActivity(){
+        let activity = [
+            "-LBF8NDhx5SpJY3Mf8BM",
+            "-LBF8NDhx5SpJY3Mf8BM",
+            "-LBF8NDhx5SpJY3Mf8BM",
+            "-LBF8NDhx5SpJY3Mf8BM"
+        ];
+        let promises = activity.map(function(key) {
+            return firebaseRef.database().ref("activities").child(key).once("value");
+        });
+        Promise.all(promises).then(function(snapshots) {
+                  return JSON.stringify(snapshots);
+            // snapshots.forEach(function(snapshot) {
+            //     console.log(snapshot.key+": "+JSON.stringify(snapshot.val()));
+            // });
+        });
+    }
+
+    getMyActivity(activities){
+        let myActivityList=[];
+        activities.map()
+
+    }
+
+
+    getJoinedActivity(activities){
+        let joinedActivityList=[];
+        activities.map()
+    }
+
+
+
     log() {
         console.log('hello')
     }
@@ -149,7 +212,7 @@ export default class ActivityList extends React.Component {
     render() {
         return (
             <View style={styles.list}>
-                {activityList.map((activity, i) => (
+                {this.state.activities.map((activity, i) => (
                     <ListItem
                         leftAvatar={{rounded: true, source: this.chooseAvatar(activity.category)}}
                         key={i}

@@ -107,7 +107,7 @@ export default class Profile extends React.Component {
                                     <View/>
                                 }
                                 {/*<View style={styles.divider}/>*/}
-                                <Image style={{width:SCREEN_WIDTH*0.8 , height: 300}}
+                                <Image style={{width:SCREEN_WIDTH*0.8,height:200}}
                                        source={{uri: 'https://www.eurogif.com/files/uploads/2018/04/mCYny9f2c.gif'}}/>
                             </View>
                             <View style={styles.footerContainer}>
@@ -128,7 +128,7 @@ export default class Profile extends React.Component {
                                             shadowOpacity: 0.8,
                                             shadowColor: 'rgba(0,0,0,0.3)'
                                         }}
-                                        containerStyle={{height: 40}}
+                                        containerStyle={{height: 45}}
                                         onPress={this.logout}/>
                                 </View>
                             </View>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'rgba(241,240,241,1)',
-        height:SCREEN_HEIGHT,
+        height:SCREEN_HEIGHT
     },
     contentContainer: {
         flex:1,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         width: SCREEN_WIDTH,
         borderWidth: 0.5,
         borderColor: 'rgba(222, 223, 226, 1)',
-        marginVertical: 10,
+        marginVertical: 8,
         height: 1,
     },
     footerContainer: {
@@ -196,6 +196,5 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         alignItems: 'center',
-        marginTop: 10
     },
 });

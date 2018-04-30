@@ -30,46 +30,29 @@ const initialLayout = {
 };
 
 
-const FirstRoute = () => <ActivityList type='all'/>;
-const SecondRoute = () => <ActivityList type='my'/>;
-const ThirdRoute = () => <ActivityList type='joined'/>;
+const FirstRoute = () => <ActivityList list='all'/>;
+const SecondRoute = () => <ActivityList list='my'/>;
+const ThirdRoute = () => <ActivityList list='joined'/>;
 
 export default class Schedule extends React.Component {
 
      constructor(props){
          super(props);
          this.state = {
-             user:null,
              tabs: {
                  index: 0,
                  routes: [
-                     {key: 'all', title: 'all activity', count: 20},
-                     {key: 'my', title: 'my activity', count: 8},
-                     {key: 'joined', title: 'joined activity', count: 12},
+                     {key: 'all', title: 'all activity', count:0},
+                     {key: 'my', title: 'my activity', count: 0},
+                     {key: 'joined', title: 'joined activity', count: 0},
                  ],
              },
          }
      }
 
-    componentDidMount() {
-        AsyncStorage.getItem('user', (err, result) => {
-            this.setState({
-                user: JSON.parse(result)
-            });
-        });
-    }
-
-     getAllActivity(){
-
-     }
-
-    getMyActivity(){
-
-    }
-    getJoinedActivity(){
 
 
-    }
+
     _handleIndexChange = index => {
         this.setState({
             tabs: {
