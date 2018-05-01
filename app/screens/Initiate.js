@@ -54,12 +54,13 @@ const options = {
 
 const Category = t.enums({
     Food: 'Food',
-    Sports: 'Sports',
+    Sport: 'Sport',
     Shopping: 'Shopping',
     Movie: 'Movie',
     Study: 'Study',
     Game: 'Game',
     Pet: 'Pet',
+    Other: 'Other',
 });
 
 const Activity = t.struct({

@@ -6,7 +6,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import {Icon, Button} from 'react-native-elements';
-import {MapView} from 'expo';
+import MapView from 'react-native-maps';
 import {firebaseRef} from "../servers/Firebase";
 
 const dateFormat = require('dateformat');
