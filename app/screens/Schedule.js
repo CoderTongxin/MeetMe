@@ -5,34 +5,14 @@ import {
     ScrollView,
     View,
     TouchableOpacity,
-    Dimensions,
-    Platform, Alert, AsyncStorage
+     Alert,
+    AsyncStorage
 } from 'react-native';
 import {
     Icon
 } from 'react-native-elements';
-import ActivityList from '../components/ActivityList'
-
-import {
-    TabViewAnimated,
-    TabBar,
-    SceneMap,
-    TabViewPagerScroll,
-    TabViewPagerPan,
-} from 'react-native-tab-view'
 import TabView from '../components/TabView'
 import {firebaseRef} from '../servers/Firebase'
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const initialLayout = {
-    height: 0,
-    width: SCREEN_WIDTH,
-};
-
-
-// const FirstRoute = () => <ActivityList type='all'/>;
-// const SecondRoute = () => <ActivityList type='my'/>;
-// const ThirdRoute = () => <ActivityList type='joined'/>;
 
 export default class Schedule extends React.Component {
 
@@ -57,10 +37,11 @@ export default class Schedule extends React.Component {
     }
 
     getUserActivityList() {
+        console.log(this.state.user.activities);
         const userActivityList = Object.values(this.state.user.activities);
 
         const activityPromises = userActivityList.map(key => {
-            return firebaseRef.database().ref().child("activities").child(key.actId).once("value", activity => Promise.resolve(activity));
+            return firebaseRef.database().ref('activities/'+key.actId).once("value", activity => activity)
         });
 
         Promise.all(activityPromises)
@@ -73,15 +54,15 @@ export default class Schedule extends React.Component {
                 Alert.alert(err)
             });
 
-
-        let myActivityList = [];
-        console.log(this.state.activities);
-        this.state.activities.map((activity) => {
-            console.log(activity);
-            if (activity.owner.uid === this.state.user.uid) {
-                myActivityList.push(activity)
-            }
-        });
+        //
+        // let myActivityList = [];
+        // console.log(this.state.activities);
+        // this.state.activities.map((activity) => {
+        //     console.log(activity);
+        //     if (activity.owner.uid === this.state.user.uid) {
+        //         myActivityList.push(activity)
+        //     }
+        // });
 
 
     }
@@ -110,80 +91,6 @@ export default class Schedule extends React.Component {
         });
         return joinedActivityList;
     }
-     //
-     // constructor(props){
-     //     super(props);
-     //
-     //     this.state = {
-     //         tabs: {
-     //             index: 0,
-     //             routes: [
-     //                 {key: 'all', title: 'all activity', count:0},
-     //                 {key: 'my', title: 'my activity', count: 0},
-     //                 {key: 'joined', title: 'joined activity', count: 0},
-     //             ],
-     //         },
-     //     }
-     // }
-
-
-    // _handleIndexChange = index => {
-    //     this.setState({
-    //         tabs: {
-    //             ...this.state.tabs,
-    //             index,
-    //         },
-    //     })
-    // };
-    //
-    //
-    // _renderScene = SceneMap({
-    //     all: FirstRoute,
-    //     my: SecondRoute,
-    //     joined: ThirdRoute
-    // });
-    //
-    // _renderHeader = props => {
-    //     return (
-    //         <TabBar
-    //             {...props}
-    //             indicatorStyle={styles.indicatorTab}
-    //             renderLabel={this._renderLabel(props)}
-    //             pressOpacity={0.8}
-    //             style={styles.tabBar}
-    //         />
-    //     )
-    // };
-    //
-    //
-    // _renderLabel = props => ({route, index}) => {
-    //     const inputRange = props.navigationState.routes.map((x, i) => i);
-    //     const outputRange = inputRange.map(
-    //         inputIndex => (inputIndex === index ? 'black' : 'gray')
-    //     );
-    //     const color = props.position.interpolate({
-    //         inputRange,
-    //         outputRange,
-    //     });
-    //     return (
-    //         <View>
-    //             <Animated.Text style={[styles.tabLabelText, {color}]}>
-    //                 {route.count}
-    //             </Animated.Text>
-    //             <Animated.Text style={[styles.tabLabelNumber, {color}]}>
-    //                 {route.title}
-    //             </Animated.Text>
-    //         </View>
-    //     )
-    // };
-    //
-    // _renderPager = props => {
-    //     return Platform.OS === 'ios' ? (
-    //         <TabViewPagerScroll {...props} />
-    //     ) : (
-    //         <TabViewPagerPan {...props} />
-    //     )
-    // };
 
     render() {
         return (

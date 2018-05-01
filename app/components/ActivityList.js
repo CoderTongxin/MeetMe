@@ -137,11 +137,11 @@ export default class ActivityList extends React.Component {
                 <View style={styles.list}>
                     {this.props.list.map((activity, i) => (
                         <ListItem
-                            leftAvatar={{rounded: true, source: this.chooseAvatar(activity.category)}}
+                            leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
                             key={i}
                             onPress={this.log}
-                            title={activity.title}
-                            subtitle={activity.title}
+                            title={activity.val().title}
+                            subtitle={activity.val().title}
                             chevron
                             bottomDivider
                             topDivider

@@ -8,6 +8,9 @@ import {
     Dimensions,
     Platform
 } from 'react-native';
+import {
+    ListItem
+} from 'react-native-elements';
 import ActivityList from './ActivityList'
 
 import {
@@ -26,23 +29,19 @@ const initialLayout = {
 };
 
 
-
 export default class TabView extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             tabs: {
                 index: 0,
                 routes: [
-                    {key: 'all', title: 'all activity', count:props.activities},
+                    {key: 'all', title: 'all activity', count: props.activities},
                     {key: 'my', title: 'my activity', count: props.activities},
                     {key: 'joined', title: 'joined activity', count: props.activities},
                 ],
             },
-            // activities:props.activities,
-            // myActivities:props.myActivities,
-            // joinedActivities:props.joinedActivities
         }
     }
 
@@ -56,21 +55,20 @@ export default class TabView extends React.Component {
         })
     };
 
-    _renderScene = ({ route: { key } }) => {
-        this.props.activities.map((activity)=>{
-            console.log(activity.category)
-        })
+
+    _renderScene = ({route: {key}}) => {
+
         switch (key) {
             case 'all':
-                return <ActivityList list={this.props.activities}/>
+                return <ActivityList list={this.props.activities}/>;
             case 'my':
-                return <ActivityList list={this.props.activities}/>
+                return <ActivityList list={this.props.activities}/>;
             case 'joined':
-                return <ActivityList list={this.props.activities}/>
+                return <ActivityList list={this.props.activities}/>;
             default:
-                return <View />
+                return <View/>
         }
-    }
+    };
 
     _renderHeader = props => {
         return (
@@ -116,14 +114,14 @@ export default class TabView extends React.Component {
 
     render() {
         return (
-                <TabViewAnimated
-                    navigationState={this.state.tabs}
-                    renderScene={this._renderScene}
-                    renderPager={this._renderPager}
-                    renderHeader={this._renderHeader}
-                    onIndexChange={this._handleIndexChange}
-                    initialLayout={initialLayout}
-                />
+            <TabViewAnimated
+                navigationState={this.state.tabs}
+                renderScene={this._renderScene}
+                renderPager={this._renderPager}
+                renderHeader={this._renderHeader}
+                onIndexChange={this._handleIndexChange}
+                initialLayout={initialLayout}
+            />
         );
     }
 }
