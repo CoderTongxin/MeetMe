@@ -10,6 +10,7 @@ import {
     Image,
     Dimensions,
 } from 'react-native';
+
 import {Icon} from 'react-native-elements';
 
 import {Divider} from 'react-native-elements';
@@ -41,6 +42,7 @@ export default class Activities extends React.Component {
                 longitudeDelta: 0.01,
             },
         };
+        this.ListenForClick = this.ListenForClick.bind(this)
     };
 
     componentWillMount() {
@@ -79,6 +81,23 @@ export default class Activities extends React.Component {
                     );
                 }
             }, 10);
+
+            clearTimeout(this.animationTimeout);
+            this.animationTimeout = setTimeout(() => {
+                if (this.index !== index) {
+                    this.index = index;
+                    const {location} = this.state.actPlaces[index];
+                    this.map.animateToRegion(
+                        {
+                            ...location,
+                            latitudeDelta: this.state.region.latitudeDelta,
+                            longitudeDelta: this.state.region.longitudeDelta,
+                        },
+                        350
+                    );
+                }
+            }, 10);
+
         });
     }
 
@@ -105,7 +124,7 @@ export default class Activities extends React.Component {
                 activities: activities
             });
             const placesArray = [];
-
+            let count = 0;
             for (const key in activities) {
                 const participantsArray = [];
                 for (const keyB in activities[key].participants) {
@@ -130,11 +149,12 @@ export default class Activities extends React.Component {
                     image = {uri: "https://images.unsplash.com/10/wii.jpg?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=592b3b24ffafc20dbe8b0a1df97ef5c6&w=1000&q=80"};
                 } else if (activities[key].category === 'Pet') {
                     image = {uri: "http://yourdost-blog-images.s3-ap-southeast-1.amazonaws.com/wp-content/uploads/2016/01/03170233/cute-cat.jpg"};
-                } else{
+                } else {
                     image = {uri: "https://static1.squarespace.com/static/51277219e4b08376dc025505/t/55f17df3e4b0d3922cc4c416/1441889779581/?format=300w"};
                 }
 
                 placesArray.push({
+                    actNum: count,
                     location: {
                         latitude: activities[key].location.latitude,
                         longitude: activities[key].location.longitude,
@@ -154,6 +174,7 @@ export default class Activities extends React.Component {
                     image: image,
                     participants: {participantsArray}
                 });
+                count++;
             }
             this.setState({
                 actPlaces: placesArray
@@ -162,6 +183,24 @@ export default class Activities extends React.Component {
 
 
     }
+
+    ListenForClick(act) {
+        let actNum = act.actNum;
+        let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
+        console.log('1');
+        console.log(value);
+        this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
+    }
+
+
+    ListenForMarkerClick(act) {
+        let actNum = act.actNum;
+        let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
+        console.log('1');
+        console.log(value);
+        this.scrollView.getNode().scrollTo({x: value, y: 0, animated: false})
+    }
+
 
     render() {
         const interpolations = this.state.actPlaces.map((act, index) => {
@@ -190,7 +229,7 @@ export default class Activities extends React.Component {
             });
             return {scale, opacity, cardScale};
         });
-
+        let cardIndex;
         return (
             <View style={styles.container}>
 
@@ -214,8 +253,9 @@ export default class Activities extends React.Component {
                             <MapView.Marker coordinate={act.location}
                                             key={index}
                                             actId={act.key}
-                                            title={act.title}
-                                            description={act.description}>
+                                            onSelect={()=>{this.ListenForMarkerClick(act)}}
+                                            onPress={()=>{this.ListenForMarkerClick(act)}}
+                            >
                                 <Animated.View style={[styles.markerWrap, opacityStyle]}>
                                     <View style={styles.marker}/>
                                     <Animated.View style={[styles.ring, scaleStyle]}/>
@@ -225,6 +265,7 @@ export default class Activities extends React.Component {
                     })}
                 </MapView>
                 <Animated.ScrollView
+                    ref={c => this.scrollView = c}
                     horizontal
                     scrollEventThrottle={1}
                     showsHorizontalScrollIndicator={false}
@@ -245,6 +286,7 @@ export default class Activities extends React.Component {
                     contentContainerStyle={styles.endPadding}
                 >
                     {this.state.actPlaces.map((act, index) => {
+                        cardIndex = index;
                         const cardScale = {
                             transform: [
                                 {
@@ -252,29 +294,35 @@ export default class Activities extends React.Component {
                                 },
                             ],
                         };
+
                         return (
                             <Animated.View
                                 style={[styles.card, cardScale]}
                                 key={index}
                                 actId={act.key}
                             >
+
                                 <Image
                                     source={act.image}
                                     style={styles.cardImage}
                                     resizeMode="cover"
                                 />
-                                <View style={styles.textContent}>
-                                    <Text numberOfLines={1} style={styles.cardTitle}>
-                                        {act.title}
-                                    </Text>
-                                    <Divider/>
-                                    <Text numberOfLines={1} style={styles.cardDescription}>
-                                        {act.time.date}
-                                    </Text>
-                                    <Text numberOfLines={1} style={styles.cardDescription}>
-                                        {act.time.time}
-                                    </Text>
-                                </View>
+                                <TouchableOpacity style={styles.container} id={index} onPress={()=>this.ListenForClick(act)}>
+                                    <View style={styles.textContent} key={index}>
+
+                                        <Text numberOfLines={1} style={styles.cardTitle}>
+                                            {act.title}
+                                        </Text>
+                                        <Divider/>
+                                        <Text numberOfLines={1} style={styles.cardDescription}>
+                                            {act.time.date}
+                                        </Text>
+                                        <Text numberOfLines={1} style={styles.cardDescription}>
+                                            {act.time.time}
+                                        </Text>
+
+                                    </View>
+                                </TouchableOpacity>
                             </Animated.View>
                         );
                     })}
@@ -347,11 +395,13 @@ const styles = StyleSheet.create({
     },
 
     scrollView: {
+        height: CARD_HEIGHT * 1.5,
         position: "absolute",
         bottom: 30,
         left: 0,
         right: 0,
         paddingVertical: 10,
+        alignSelf: "center",
     },
     endPadding: {
         paddingLeft: (width - (CARD_WIDTH + 2 * CARD_MARGIN)) / 2,
@@ -362,6 +412,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         backgroundColor: "#FFF",
         marginHorizontal: CARD_MARGIN,
+        marginVertical: CARD_HEIGHT * 0.25,
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
@@ -371,8 +422,7 @@ const styles = StyleSheet.create({
         overflow: "hidden",
     },
     cardImage: {
-        flex: 2,
-        marginTop: 5,
+        flex: 1,
         width: "100%",
         height: "100%",
         alignSelf: "center",
