@@ -194,8 +194,8 @@ export default class Activities extends React.Component {
 
 
     ListenForMarkerClick(act) {
-        // let actNum = act.actNum;
-        let value = act * (CARD_WIDTH + 2 * CARD_MARGIN);
+        let actNum = act.actNum;
+        let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
         console.log('1');
         console.log(value);
         this.scrollView.getNode().scrollTo({x: value, y: 0, animated: false})
@@ -253,11 +253,12 @@ export default class Activities extends React.Component {
                             <MapView.Marker coordinate={act.location}
                                             key={index}
                                             actId={act.key}
-                                            onSelect={() => {this.ListenForMarkerClick(index)}}
+                                            onSelect={()=>{this.ListenForMarkerClick(act)}}
+                                            onPress={()=>{this.ListenForMarkerClick(act)}}
                             >
                                 <Animated.View style={[styles.markerWrap, opacityStyle]}>
-                                    <Animated.View style={[styles.ring, scaleStyle]}/>
                                     <View style={styles.marker}/>
+                                    <Animated.View style={[styles.ring, scaleStyle]}/>
                                 </Animated.View>
                             </MapView.Marker>
                         );
@@ -306,8 +307,7 @@ export default class Activities extends React.Component {
                                     style={styles.cardImage}
                                     resizeMode="cover"
                                 />
-                                <TouchableOpacity style={styles.container} id={index}
-                                                  onPress={() => this.ListenForClick(act)}>
+                                <TouchableOpacity style={styles.container} id={index} onPress={()=>this.ListenForClick(act)}>
                                     <View style={styles.textContent} key={index}>
 
                                         <Text numberOfLines={1} style={styles.cardTitle}>
