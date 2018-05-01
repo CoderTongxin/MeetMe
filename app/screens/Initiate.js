@@ -76,46 +76,19 @@ export default class Initiate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
             userLocation: null,
         }
     }
 
-    // componentDidMount() {
-    //     AsyncStorage.getItem('user', (err, result) => {
-    //         this.setState({
-    //             user: JSON.parse(result)
-    //         });
-    //     });
-    // }
-
     handleSubmit = () => {
         const value = this._form.getValue();
         if(value){
-            // console.log(value);
             this.props.navigation.navigate(("InitiateStep2"),
                 {
                     actInfo: value,
                 });
         }
     };
-
-    getUserLocationHandler = () => {
-        navigator.geolocation.getCurrentPosition(position => {
-                this.setState({
-                    userLocation: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: 0.03,
-                        longitudeDelta: 0.01,
-                    }
-                });
-                this.props.navigation.navigate(("MapView"), {userLocation: this.state.userLocation})
-            },
-            err => console.log(err)
-        );
-    };
-
 
     render() {
         return (

@@ -18,7 +18,7 @@ export default class SubmitButton extends Component {
                 animationType={'none'}
                 visible={this.props.loading}
                 onRequestClose={() => {
-                    console.log('close modal')
+                    // console.log('close modal')
                 }}>
                 <View style={styles.modalBackground}>
                     <View style={styles.activityIndicatorWrapper}>

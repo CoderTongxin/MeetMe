@@ -7,6 +7,7 @@ import Initiate from '../screens/Initiate';
 import Schedule from '../screens/Schedule';
 import ActivityDetail from '../screens/ActivityDetail';
 import Settings from '../screens/Settings';
+import ActivityInfo from '../screens/ActivityInfo';
 // import MapView from '../screens/MapView';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
@@ -89,6 +90,9 @@ export const HomeScreenRoot = StackNavigator({
     // MapView: {
     //     screen: MapView,
     // },
+    ActivityInfo:{
+        screen: ActivityInfo,
+    },
     Profile: {
         screen: Profile,
     },

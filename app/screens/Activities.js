@@ -28,8 +28,10 @@ const widthFactor = 4;
 const CARD_HEIGHT = height / heightFactor;
 const CARD_WIDTH = width / widthFactor;
 const CARD_MARGIN = CARD_WIDTH / ((widthFactor - 1) * 2);
+let CARD_INDEX = 0;
 
 export default class Activities extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -41,6 +43,7 @@ export default class Activities extends React.Component {
                 latitudeDelta: 0.03,
                 longitudeDelta: 0.01,
             },
+            cardIndex: 0,
         };
         this.ListenForClick = this.ListenForClick.bind(this)
     };
@@ -58,7 +61,8 @@ export default class Activities extends React.Component {
 
     listenForAnimation() {
         this.animation.addListener(({value}) => {
-            let index = Math.floor(value / (CARD_WIDTH + 2 * CARD_MARGIN) + 0.3); // animate 30% away from landing on the next item
+            let index = Math.floor(value / (CARD_WIDTH + 2 * CARD_MARGIN) + 0.3);
+            CARD_INDEX  = index;
             if (index >= this.state.actPlaces.length) {
                 index = this.state.actPlaces.length - 1;
             }
@@ -68,22 +72,6 @@ export default class Activities extends React.Component {
 
             clearTimeout(this.regionTimeout);
             this.regionTimeout = setTimeout(() => {
-                if (this.index !== index) {
-                    this.index = index;
-                    const {location} = this.state.actPlaces[index];
-                    this.map.animateToRegion(
-                        {
-                            ...location,
-                            latitudeDelta: this.state.region.latitudeDelta,
-                            longitudeDelta: this.state.region.longitudeDelta,
-                        },
-                        350
-                    );
-                }
-            }, 10);
-
-            clearTimeout(this.animationTimeout);
-            this.animationTimeout = setTimeout(() => {
                 if (this.index !== index) {
                     this.index = index;
                     const {location} = this.state.actPlaces[index];
@@ -186,21 +174,19 @@ export default class Activities extends React.Component {
 
     ListenForClick(act) {
         let actNum = act.actNum;
-        let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
-        console.log('1');
-        console.log(value);
-        this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
+        if (actNum !== CARD_INDEX) {
+            let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
+            this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
+        } else {
+            this.props.navigation.navigate(("ActivityInfo"), {actInfo: act})
+        }
     }
-
 
     ListenForMarkerClick(act) {
         let actNum = act.actNum;
         let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
-        console.log('1');
-        console.log(value);
         this.scrollView.getNode().scrollTo({x: value, y: 0, animated: false})
     }
-
 
     render() {
         const interpolations = this.state.actPlaces.map((act, index) => {
@@ -230,6 +216,7 @@ export default class Activities extends React.Component {
             return {scale, opacity, cardScale};
         });
         let cardIndex;
+
         return (
             <View style={styles.container}>
 
@@ -253,8 +240,13 @@ export default class Activities extends React.Component {
                             <MapView.Marker coordinate={act.location}
                                             key={index}
                                             actId={act.key}
-                                            onSelect={()=>{this.ListenForMarkerClick(act)}}
-                                            onPress={()=>{this.ListenForMarkerClick(act)}}
+                                            onSelect={() => {
+                                                this.ListenForMarkerClick(act)
+                                            }}
+                                            onPress={(event) => {
+                                                event.stopPropagation();
+                                                this.ListenForMarkerClick(act)
+                                            }}
                             >
                                 <Animated.View style={[styles.markerWrap, opacityStyle]}>
                                     <View style={styles.marker}/>
@@ -270,18 +262,17 @@ export default class Activities extends React.Component {
                     scrollEventThrottle={1}
                     showsHorizontalScrollIndicator={false}
                     snapToInterval={CARD_WIDTH + 2 * CARD_MARGIN}
-                    onScroll={Animated.event(
-                        [
-                            {
+                    onScroll={
+                        Animated.event
+                        ([{
                                 nativeEvent: {
                                     contentOffset: {
                                         x: this.animation,
                                     },
                                 },
-                            },
-                        ],
-                        {useNativeDriver: true}
-                    )}
+                            },],
+                            {useNativeDriver: true}
+                        )}
                     style={styles.scrollView}
                     contentContainerStyle={styles.endPadding}
                 >
@@ -301,13 +292,13 @@ export default class Activities extends React.Component {
                                 key={index}
                                 actId={act.key}
                             >
-
-                                <Image
-                                    source={act.image}
-                                    style={styles.cardImage}
-                                    resizeMode="cover"
-                                />
-                                <TouchableOpacity style={styles.container} id={index} onPress={()=>this.ListenForClick(act)}>
+                                <TouchableOpacity style={styles.container} id={index}
+                                                  onPress={() => this.ListenForClick(act)}>
+                                    <Image
+                                        source={act.image}
+                                        style={styles.cardImage}
+                                        resizeMode="cover"
+                                    />
                                     <View style={styles.textContent} key={index}>
 
                                         <Text numberOfLines={1} style={styles.cardTitle}>

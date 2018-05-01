@@ -2,7 +2,7 @@ import {AsyncStorage} from "react-native";
 
 export function storeUserInfo(loggedInUser) {
     AsyncStorage.setItem('user',JSON.stringify(loggedInUser),()=>{
-        console.log(loggedInUser)
+        // console.log(loggedInUser)
     });
 }
 export function getUserInfo(user, fn){
