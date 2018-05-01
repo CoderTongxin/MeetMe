@@ -2,7 +2,7 @@ import React from 'react';
 import {
     View,
     TouchableOpacity,
-     Alert,
+    Alert,
     AsyncStorage
 } from 'react-native';
 import {
@@ -10,44 +10,45 @@ import {
 } from 'react-native-elements';
 import TabView from '../components/TabView';
 import {firebaseRef} from '../servers/Firebase';
-const userRef=firebaseRef.database().ref('users');
+
+const userRef = firebaseRef.database().ref('users');
+const ScrollableTabView = require('react-native-scrollable-tab-view');
 
 export default class Schedule extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            activities:null
+            activities: null
         }
     }
 
-   componentDidMount() {
+    componentDidMount() {
         AsyncStorage.getItem('user', (err, result) => {
-            const user=JSON.parse(result);
-            userRef.child(user.uid).on('value',()=>{
-                this.getUserActivityList(user)
+            userRef.child(result).on('value', (userInfo) => {
+                this.getUserActivityList(userInfo.val())
             })
         });
     }
 
     getUserActivityList(user) {
 
-        if(user.activities){
+        if (user.activities) {
             const userActivityList = Object.values(user.activities);
             const activityPromises = userActivityList.map(key => {
-                return firebaseRef.database().ref('activities/'+key.actId).once("value", activity => activity)
+                return firebaseRef.database().ref('activities/' + key.actId).once("value", activity => activity)
             });
 
             Promise.all(activityPromises)
                 .then(activities => {
-                    let myActivities=[];
+                    let myActivities = [];
 
                     activities.map((activity) => {
                         if (activity.val().owner.uid === user.uid) {
                             myActivities.push(activity)
                         }
                     });
-                    const joinedActivities=[];
+                    const joinedActivities = [];
                     activities.map((activity) => {
                         if (activity.val().owner.uid !== user.uid) {
                             joinedActivities.push(activity.val().category)
@@ -55,24 +56,29 @@ export default class Schedule extends React.Component {
                     });
 
                     this.setState({
-                        activities: {'activities':activities,'myActivities':myActivities,'joinedActivities':joinedActivities,'user':user},
+                        activities: {
+                            'activities': activities,
+                            'myActivities': myActivities,
+                            'joinedActivities': joinedActivities,
+                            'user': user
+                        },
                     });
 
                 })
                 .catch(err => {
                     Alert.alert(err)
                 });
-        }else {
+        } else {
             this.setState({
-                activities: {...this.props,'no':true},
+                activities: {...this.props, 'no': true},
             });
         }
     }
 
     render() {
         return (
-                    <TabView {...this.state.activities}/>
-        );
+            <TabView {...this.state.activities}/>
+    )
     }
 }
 

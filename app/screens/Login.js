@@ -115,7 +115,7 @@ export default class Login extends React.Component {
                     };
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
                         this.changeLoadingStatus();
-                        storeUserInfo(user);
+                        storeUserInfo(user.uid);
                         this.props.navigation.navigate('HomeScreenRoot');
                     })
                 }
@@ -127,14 +127,15 @@ export default class Login extends React.Component {
     }
 
     getUserInfo(userUID){
-        firebaseRef.database().ref('users/' + userUID).once('value').then(function(user) {
+        firebaseRef.database().ref('users/' + userUID).once('value').then(function() {
             this.changeLoadingStatus();
-            storeUserInfo(user);
+            storeUserInfo(userUID);
             this.props.navigation.navigate('HomeScreenRoot');
         }.bind(this)).catch((error)=>{
             Alert.alert(error.message)
         });
     }
+
     _goToSignUp() {
         this.props.navigation.navigate('SignUp');
     }
