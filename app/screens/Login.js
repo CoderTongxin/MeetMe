@@ -98,18 +98,27 @@ export default class Login extends React.Component {
 
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
-                const user={
-                    username: loggedInUser.displayName,
-                    email: loggedInUser.email,
-                    gender:user_gender,
-                    avatar:loggedInUser.photoURL,
-                    uid:loggedInUser.uid
-                };
-                firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
-                   this.changeLoadingStatus();
-                    storeUserInfo(user);
-                    this.props.navigation.navigate('HomeScreenRoot');
-                })
+                const facebookUser=this.getUserInfo(loggedInUser.uid);
+                if(facebookUser){
+                    firebaseRef.database().ref('users/' + loggedInUser.uid).set(facebookUser).then( ()=>{
+                        this.changeLoadingStatus();
+                        storeUserInfo(user);
+                        this.props.navigation.navigate('HomeScreenRoot');
+                    })
+                }else {
+                    const user={
+                        username: loggedInUser.displayName,
+                        email: loggedInUser.email,
+                        gender:user_gender,
+                        avatar:loggedInUser.photoURL,
+                        uid:loggedInUser.uid
+                    };
+                    firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
+                        this.changeLoadingStatus();
+                        storeUserInfo(user);
+                        this.props.navigation.navigate('HomeScreenRoot');
+                    })
+                }
             }).catch((error)=> {
                 this.changeLoadingStatus();
                 Alert.alert(error.message)
