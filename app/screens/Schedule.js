@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-    Animated,
-    StyleSheet,
-    ScrollView,
     View,
     TouchableOpacity,
      Alert,
@@ -11,92 +8,70 @@ import {
 import {
     Icon
 } from 'react-native-elements';
-import TabView from '../components/TabView'
-import {firebaseRef} from '../servers/Firebase'
+import TabView from '../components/TabView';
+import {firebaseRef} from '../servers/Firebase';
+const userRef=firebaseRef.database().ref('users');
 
 export default class Schedule extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
-            activities:[],
-            myActivities:[],
-            joinedActivities:[],
-            showDetail: false
+            activities:null
         }
     }
 
-    componentDidMount() {
+   componentDidMount() {
         AsyncStorage.getItem('user', (err, result) => {
-            this.setState({
-                user: JSON.parse(result),
-            });
-            this.getUserActivityList(this.props.type)
-        });
-    }
-
-    getUserActivityList() {
-        console.log(this.state.user.activities);
-        const userActivityList = Object.values(this.state.user.activities);
-
-        const activityPromises = userActivityList.map(key => {
-            return firebaseRef.database().ref('activities/'+key.actId).once("value", activity => activity)
-        });
-
-        Promise.all(activityPromises)
-            .then(activities => {
-                this.setState({
-                    activities: activities
-                });
+            const user=JSON.parse(result);
+            userRef.child(user.uid).on('value',()=>{
+                this.getUserActivityList(user)
             })
-            .catch(err => {
-                Alert.alert(err)
+        });
+    }
+
+    getUserActivityList(user) {
+
+        if(user.activities){
+            const userActivityList = Object.values(user.activities);
+            const activityPromises = userActivityList.map(key => {
+                return firebaseRef.database().ref('activities/'+key.actId).once("value", activity => activity)
             });
 
-        //
-        // let myActivityList = [];
-        // console.log(this.state.activities);
-        // this.state.activities.map((activity) => {
-        //     console.log(activity);
-        //     if (activity.owner.uid === this.state.user.uid) {
-        //         myActivityList.push(activity)
-        //     }
-        // });
+            Promise.all(activityPromises)
+                .then(activities => {
+                    let myActivities=[];
 
+                    activities.map((activity) => {
+                        if (activity.val().owner.uid === user.uid) {
+                            myActivities.push(activity)
+                        }
+                    });
+                    const joinedActivities=[];
+                    activities.map((activity) => {
+                        if (activity.val().owner.uid !== user.uid) {
+                            joinedActivities.push(activity.val().category)
+                        }
+                    });
 
-    }
+                    this.setState({
+                        activities: {'activities':activities,'myActivities':myActivities,'joinedActivities':joinedActivities,'user':user},
+                    });
 
-
-    getMyActivity(activities) {
-
-        let myActivityList = [];
-        activities.map((activity) => {
-            console.log(activity.owner.uid);
-            if (activity.owner.uid === this.state.user.uid) {
-                myActivityList.push(activity)
-            }
-        });
-        return myActivityList;
-
-    }
-
-
-    getJoinedActivity(activities) {
-        let joinedActivityList = [];
-        activities.map((activity) => {
-            if (activity.owner.uid !== this.state.user.uid) {
-                joinedActivityList.push(activity)
-            }
-        });
-        return joinedActivityList;
+                })
+                .catch(err => {
+                    Alert.alert(err)
+                });
+        }else {
+            this.setState({
+                activities: {...this.props,'no':true},
+            });
+        }
     }
 
     render() {
         return (
-            <ScrollView>
-                <TabView activities={this.state.activities}/>
-            </ScrollView>
+                    <TabView {...this.state.activities}/>
         );
     }
 }
@@ -113,31 +88,3 @@ Schedule.navigationOptions = ({navigation}) => ({
         </View>,
 });
 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    list: {
-        backgroundColor: '#fff',
-    },
-    tabBar: {
-        backgroundColor: '#EEE',
-    },
-    tabLabelNumber: {
-        color: 'gray',
-        fontSize: 12.5,
-        textAlign: 'center',
-    },
-    tabLabelText: {
-        color: 'black',
-        fontSize: 20,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-    indicatorTab: {
-        backgroundColor: 'transparent',
-    },
-})

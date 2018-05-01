@@ -2,25 +2,20 @@ import React from 'react';
 import {
     Animated,
     StyleSheet,
-    ScrollView,
     View,
-    TouchableOpacity,
     Dimensions,
     Platform
 } from 'react-native';
-import {
-    ListItem
-} from 'react-native-elements';
 import ActivityList from './ActivityList'
 
 import {
     TabViewAnimated,
     TabBar,
-    SceneMap,
     TabViewPagerScroll,
     TabViewPagerPan,
 } from 'react-native-tab-view'
-import {firebaseRef} from '../servers/Firebase'
+import Loader from './Loader'
+import Notice from "./Notice";
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const initialLayout = {
@@ -37,9 +32,9 @@ export default class TabView extends React.Component {
             tabs: {
                 index: 0,
                 routes: [
-                    {key: 'all', title: 'all activity', count: props.activities},
-                    {key: 'my', title: 'my activity', count: props.activities},
-                    {key: 'joined', title: 'joined activity', count: props.activities},
+                    {key: 'all', title: 'all activity'},
+                    {key: 'my', title: 'my activity'},
+                    {key: 'joined', title: 'joined activity'},
                 ],
             },
         }
@@ -57,17 +52,23 @@ export default class TabView extends React.Component {
 
 
     _renderScene = ({route: {key}}) => {
-
-        switch (key) {
-            case 'all':
-                return <ActivityList list={this.props.activities}/>;
-            case 'my':
-                return <ActivityList list={this.props.activities}/>;
-            case 'joined':
-                return <ActivityList list={this.props.activities}/>;
-            default:
-                return <View/>
+        if(!this.props.no){
+            if(this.props.activities){
+                switch (key) {
+                    case 'all':
+                        return <ActivityList list={this.props.activities} user={this.props.user}/>;
+                    case 'my':
+                        return <ActivityList list={this.props.myActivities} user={this.props.user}/>;
+                    case 'joined':
+                        return <ActivityList list={this.props.joinedActivities} user={this.props.user}/>;
+                }
+            }else{
+                return <Loader/>
+            }
+        }else{
+            return <Notice/>
         }
+
     };
 
     _renderHeader = props => {

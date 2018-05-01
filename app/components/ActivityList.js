@@ -1,8 +1,14 @@
 import React from 'react';
-import {AsyncStorage, StyleSheet, View, TouchableHighlight, Text, Alert} from 'react-native';
+
+import {StyleSheet, View, TouchableHighlight, Text, ScrollView} from 'react-native';
 import {
-    ListItem
+    ListItem,
+    Button,
 } from 'react-native-elements';
+
+import Modal from 'react-native-modal'
+import Notice from './Notice'
+
 import {firebaseRef} from "../servers/Firebase";
 
 
@@ -11,152 +17,131 @@ export default class ActivityList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: '',
             activities: [],
+            activity: null,
             showDetail: false
         };
-        this._renderDetail=this._renderDetail.bind(this);
-        this.toggleCancel=this.toggleCancel.bind(this)
+        this.toggleCancel = this.toggleCancel.bind(this);
+        this.deleteActivity = this.deleteActivity.bind(this);
+        this.initiateActivity=this.initiateActivity.bind(this)
     }
-
-    componentDidMount() {
-        // AsyncStorage.getItem('user', (err, result) => {
-        //     this.setState({
-        //         user: JSON.parse(result),
-        //     });
-        //     this.getUserActivityList(this.props.type)
-        // });
-    }
-
-    getUserActivityList(type) {
-        const userActivityList = Object.values(this.state.user.activities);
-
-        const activityPromises = userActivityList.map(key => {
-            return firebaseRef.database().ref().child("activities").child(key.actId).once("value", activity => Promise.resolve(activity));
-        });
-
-        Promise.all(activityPromises)
-            .then(activities => {
-                this.setState({
-                    activities: activities
-                });
-            })
-            .catch(err => {
-                Alert.alert(err)
-            });
-
-
-        let myActivityList = [];
-        console.log(this.state.activities)
-        this.state.activities.map((activity) => {
-            console.log(activity)
-            if (activity.owner.uid === this.state.user.uid) {
-                myActivityList.push(activity)
-            }
-        });
-
-
-    }
-
-
-    getMyActivity(activities) {
-
-        let myActivityList = [];
-        activities.map((activity) => {
-            console.log(activity.owner.uid);
-            if (activity.owner.uid === this.state.user.uid) {
-                myActivityList.push(activity)
-            }
-        });
-        return myActivityList;
-
-    }
-
-
-    getJoinedActivity(activities) {
-        let joinedActivityList = [];
-        activities.map((activity) => {
-            if (activity.owner.uid !== this.state.user.uid) {
-                joinedActivityList.push(activity)
-            }
-        });
-        return joinedActivityList;
-    }
-
-
-    log() {
-        this.setState({
-            showDetail:!this.state.showDetail
-        })
-    }
-
+componentDidMount(){
+        console.log(this.props.list)
+}
     chooseAvatar(category) {
         switch (category) {
-            case 'food':
+            case 'Food':
                 return require('../../resource/images/food.png');
-            case 'sports':
+            case 'Sport':
                 return require('../../resource/images/sports.png');
-            case 'game':
+            case 'Game':
                 return require('../../resource/images/game.png');
-            case 'movie':
+            case 'Movie':
                 return require('../../resource/images/movie.png');
-            case 'pet':
+            case 'Pet':
                 return require('../../resource/images/pet.png');
-            case 'study':
+            case 'Study':
                 return require('../../resource/images/study.png');
-            case 'shopping':
+            case 'Shopping':
                 return require('../../resource/images/shopping.png');
+            default:
+                return require('../../resource/images/shopping.png')
 
         }
 
     }
 
-    _renderDetail() {
-        if (this.state.showDetail) {
-            return (
-                <TouchableHighlight>
-                    onPress={this.toggleCancel()}>
-                    <View>
-                        <Text>Cancel</Text>
-                    </View>
-                </TouchableHighlight>
-            );
-        } else {
-            return null;
-        }
-    }
 
-    toggleCancel(){
+
+    toggleCancel() {
         this.setState({
-            showDetail:!this.state.showDetail
+            showDetail: !this.state.showDetail,
         })
     }
+
+    toggle(activity) {
+        this.setState({
+            showDetail: !this.state.showDetail,
+            activity: activity
+        })
+    }
+    initiateActivity(){
+        this.props.navigation.navigate('Initiate')
+    }
+    deleteActivity() {
+        firebaseRef.database().ref('activities').remove(this.state.activity.val().uid).then(()=>{
+            console.log('success')
+        }).catch((err)=>{
+            console.log(err)
+        })
+    }
+
+    getIcon(activity) {
+        if(activity.val().owner.uid===this.props.user.uid){
+            return 'person'
+        }
+
+    }
+
     render() {
         return (
-            <View>
-                <View style={styles.list}>
-                    {this.props.list.map((activity, i) => (
-                        <ListItem
-                            leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
-                            key={i}
-                            onPress={this.log}
-                            title={activity.val().title}
-                            subtitle={activity.val().title}
-                            chevron
-                            bottomDivider
-                            topDivider
-                        />
-                    ))}
-                </View>
-                {this._renderDetail()}
-            </View>
+            <ScrollView>
+                {this.props.list.length>0 ?
+                    <View style={styles.list}>
+                        {this.props.list.map((activity, i) => (
+                            <ListItem
+                                leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
+                                rightIcon={{name:this.getIcon(activity)}}
+                                key={i}
+                                onPress={() => this.toggle(activity)}
+                                title={activity.val().title}
+                                subtitle={activity.val().time.date}
+                                titleStyle={{fontWeight: 'bold'}}
+                                subtitleStyle={{color: 'grey', fontSize: 15}}
+                                chevron
+                                bottomDivider
+                                topDivider
+                            />
+                        ))}
+
+                        {this.state.activity ?
+                            <Modal
+                                isVisible={this.state.showDetail}
+                                animationIn='slideInLeft'
+                                animationOut='slideOutRight'
+                            >
+                                <View style={{flex: 1}}>
+                                    <Text style={{
+                                        color: '#000',
+                                        fontSize: 30
+                                    }}>Hello {this.state.activity.val().category}!</Text>
+                                    <Button
+                                        title="Close"
+                                        onPress={this.toggleCancel}
+                                    />
+                                    {this.state.activity.val().owner.uid === this.props.user.uid ?
+                                        <Button
+                                            title="Delete"
+                                            onPress={this.deleteActivity}
+                                        /> : <View/>}
+                                </View>
+                            </Modal> :
+                            <View/>}
+                    </View> :
+                    <Notice/>
+                }
+            </ScrollView>
+
         );
     }
 }
 
 
 const styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        alignItems:'center'
+    },
     list: {
         backgroundColor: '#fff',
     }

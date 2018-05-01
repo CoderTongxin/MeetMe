@@ -23,7 +23,7 @@
 //             }}
 //         />
 //     }
-//
+//logo
 //     const usersMarks = props.actPlaces.map(actPlaces => (
 //         <MapView.Marker coordinate={actPlaces} key={actPlaces.id} title={actPlaces.title}
 //                         description={actPlaces.description}/>

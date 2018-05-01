@@ -143,7 +143,7 @@ export default class Login extends React.Component {
                         <View style={styles.loginView}>
                             <View style={styles.loginTitle}>
                                 <View style={{flexDirection: 'row'}}>
-                                    <Text style={styles.travelText}>Meet Me</Text>
+                                    <Text style={styles.travelText}>Seya</Text>
                                 </View>
                             </View>
                             <View style={styles.loginInput}>

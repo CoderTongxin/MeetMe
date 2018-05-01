@@ -10,9 +10,8 @@ export default class Logo extends Component {
     render(){
         return(
             <View style={styles.container}>
-                <Image  style={{width:60, height: 60}}
-                        source={require('../../resource/images/MeetMe.png')}/>
-                <Text style={styles.logoText}>Join Meet</Text>
+                <Image  style={{width:80, height: 80}}
+                        source={require('../../resource/images/logo.png')}/>
             </View>
         )
     }
@@ -21,7 +20,8 @@ export default class Logo extends Component {
 const styles = StyleSheet.create({
     container : {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginVertical:10
     },
     logoText : {
         marginVertical: 15,

@@ -13,6 +13,7 @@ import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 import InitiateStep2 from '../screens/InitiateStep2';
 import InitiateStep3 from '../screens/InitiateStep3';
+import ActivityList from '../components/ActivityList'
 // import Welcome from '../screens/Welcome';
 
 export const InitiateStack = StackNavigator({
@@ -25,7 +26,7 @@ export const InitiateStack = StackNavigator({
     InitiateStep3: {
         screen: InitiateStep3,
     },
-},{
+}, {
     navigationOptions: {
         gesturesEnabled: false,
     },
@@ -58,7 +59,6 @@ export const Tabs = TabNavigator({
         }
 
     },
-
     Activities: {
         screen: ActivitiesStack,
         navigationOptions: {
