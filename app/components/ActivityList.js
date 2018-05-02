@@ -26,7 +26,7 @@ export default class ActivityList extends React.Component {
         this.initiateActivity=this.initiateActivity.bind(this)
     }
 componentDidMount(){
-        console.log(this.props.list)
+
 }
     chooseAvatar(category) {
         switch (category) {
@@ -69,8 +69,10 @@ componentDidMount(){
         this.props.navigation.navigate('Initiate')
     }
     deleteActivity() {
-        firebaseRef.database().ref('activities').remove(this.state.activity.val().uid).then(()=>{
-            console.log('success')
+        firebaseRef.database().ref('activities/').remove(this.state.activity.key).then(()=>{
+            firebaseRef.database().ref('users/'+this.props.user.uid+'/activities').remove(this.state.activity.key).then(()=>{
+                console.log('success')
+            })
         }).catch((err)=>{
             console.log(err)
         })

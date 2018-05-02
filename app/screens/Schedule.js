@@ -57,6 +57,7 @@ export default class Schedule extends React.Component {
 
                     this.setState({
                         activities: {
+                            ...this.props,
                             'activities': activities,
                             'myActivities': myActivities,
                             'joinedActivities': joinedActivities,
