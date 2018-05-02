@@ -151,7 +151,7 @@ export default class Activities extends React.Component {
                     description: activities[key].description,
                     id: key,
                     time: {
-                        date: dateFormat(activities[key].time.date, "mediumDate"),
+                        date: dateFormat(activities[key].time.date, "d mmm yyyy"),
                         time: activities[key].time.time,
                     },
                     owner: {
@@ -306,10 +306,10 @@ export default class Activities extends React.Component {
                                         </Text>
                                         <Divider/>
                                         <Text numberOfLines={1} style={styles.cardDescription}>
-                                            {act.time.date}
+                                            {act.time.time}
                                         </Text>
                                         <Text numberOfLines={1} style={styles.cardDescription}>
-                                            {act.time.time}
+                                            {act.time.date}
                                         </Text>
 
                                     </View>
