@@ -25,11 +25,10 @@ export default class InitiateStep2 extends React.Component {
     componentDidMount() {
 
         AsyncStorage.getItem('user', (err, result) => {
-            firebaseRef.database().ref('users/'+result).once('value').then((user)=>{
+            const user=JSON.parse(result);
                 this.setState({
-                    user: user.val()
+                    user: user
                 });
-            })
         });
 
 

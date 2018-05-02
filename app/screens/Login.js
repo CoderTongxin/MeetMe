@@ -98,11 +98,11 @@ export default class Login extends React.Component {
 
             const credential= firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser)=>{
-                const facebookUser=this.getUserInfo(loggedInUser.uid);
+                const facebookUser=this.getUserInfo(loggedInUser);
                 if(facebookUser){
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(facebookUser).then( ()=>{
                         this.changeLoadingStatus();
-                        storeUserInfo(user);
+                        storeUserInfo(loggedInUser);
                         this.props.navigation.navigate('HomeScreenRoot');
                     })
                 }else {
@@ -115,7 +115,7 @@ export default class Login extends React.Component {
                     };
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then( ()=>{
                         this.changeLoadingStatus();
-                        storeUserInfo(user.uid);
+                        storeUserInfo(user);
                         this.props.navigation.navigate('HomeScreenRoot');
                     })
                 }
@@ -127,9 +127,9 @@ export default class Login extends React.Component {
     }
 
     getUserInfo(userUID){
-        firebaseRef.database().ref('users/' + userUID).once('value').then(function() {
+        firebaseRef.database().ref('users/' + userUID).once('value').then(function(userInfo) {
             this.changeLoadingStatus();
-            storeUserInfo(userUID);
+            storeUserInfo(userInfo);
             this.props.navigation.navigate('HomeScreenRoot');
         }.bind(this)).catch((error)=>{
             Alert.alert(error.message)

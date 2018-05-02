@@ -65,9 +65,11 @@ export default class SignUp extends React.Component {
         this.state = {
             loading: false,
             isAuthenticated: false,
+            formValue:null
         };
         this.signup = this.signup.bind(this);
         this._goBack = this._goBack.bind(this);
+        this.onChange=this.onChange.bind(this)
     }
 
     signup = () => {
@@ -84,7 +86,7 @@ export default class SignUp extends React.Component {
                         avatar: this.defaultAvatar(userInfo.gender)
                     };
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then(() => {
-                            this.storeUserInfo(user.uid)
+                            this.storeUserInfo(user);
                         }
                     );
                 }).catch(function (error) {
@@ -104,9 +106,15 @@ export default class SignUp extends React.Component {
                 return 'https://freeiconshop.com/wp-content/uploads/edd/bulb-curvy-flat.png'
         }
     }
-    storeUserInfo(userUID) {
+    onChange(value){
+        this.setState({
+            formValue:value
+        })
+    }
+
+    storeUserInfo(user) {
         this.setState({loading: false});
-        storeUserInfo(userUID);
+        storeUserInfo(user);
         this.props.navigation.navigate('HomeScreenRoot');
     }
 
@@ -125,6 +133,8 @@ export default class SignUp extends React.Component {
                         ref='form'
                         type={UserInfo}
                         options={Options}
+                        value={this.state.formValue}
+                        onChange={this.onChange}
                     />
                     <Button
                         title="Submit"

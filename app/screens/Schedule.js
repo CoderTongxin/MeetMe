@@ -10,9 +10,7 @@ import {
 } from 'react-native-elements';
 import TabView from '../components/TabView';
 import {firebaseRef} from '../servers/Firebase';
-
 const userRef = firebaseRef.database().ref('users');
-const ScrollableTabView = require('react-native-scrollable-tab-view');
 
 export default class Schedule extends React.Component {
 
@@ -25,14 +23,14 @@ export default class Schedule extends React.Component {
 
     componentDidMount() {
         AsyncStorage.getItem('user', (err, result) => {
-            userRef.child(result).on('value', (userInfo) => {
+            const user=JSON.parse(result);
+            userRef.child(user.uid).on('value', (userInfo) => {
                 this.getUserActivityList(userInfo.val())
             })
         });
     }
 
     getUserActivityList(user) {
-
         if (user.activities) {
             const userActivityList = Object.values(user.activities);
             const activityPromises = userActivityList.map(key => {
@@ -57,7 +55,6 @@ export default class Schedule extends React.Component {
 
                     this.setState({
                         activities: {
-                            ...this.props,
                             'activities': activities,
                             'myActivities': myActivities,
                             'joinedActivities': joinedActivities,
@@ -71,7 +68,7 @@ export default class Schedule extends React.Component {
                 });
         } else {
             this.setState({
-                activities: {...this.props, 'no': true},
+                activities: {...this.props, 'noActivities': true},
             });
         }
     }

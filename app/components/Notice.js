@@ -1,12 +1,6 @@
 import React from 'react';
 
 import {StyleSheet, View, Text} from 'react-native';
-import {
-    Button,
-} from 'react-native-elements';
-
-
-import {firebaseRef} from "../servers/Firebase";
 
 
 export default class Notice extends React.Component {
@@ -18,10 +12,11 @@ export default class Notice extends React.Component {
             activity: null,
             showDetail: false
         };
+        this.initiateActivity=this.initiateActivity.bind(this)
     }
 
     initiateActivity() {
-
+        this.props.navigation.navigate('HomeScreenRoot')
     }
 
 
@@ -41,6 +36,7 @@ export default class Notice extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent:'center'
     }
 })

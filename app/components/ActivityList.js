@@ -1,9 +1,10 @@
 import React from 'react';
 
-import {StyleSheet, View, TouchableHighlight, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import {
     ListItem,
     Button,
+    Avatar
 } from 'react-native-elements';
 
 import Modal from 'react-native-modal'
@@ -23,11 +24,12 @@ export default class ActivityList extends React.Component {
         };
         this.toggleCancel = this.toggleCancel.bind(this);
         this.deleteActivity = this.deleteActivity.bind(this);
-        this.initiateActivity=this.initiateActivity.bind(this)
     }
-componentDidMount(){
 
-}
+    componentDidMount() {
+
+    }
+
     chooseAvatar(category) {
         switch (category) {
             case 'Food':
@@ -52,7 +54,6 @@ componentDidMount(){
     }
 
 
-
     toggleCancel() {
         this.setState({
             showDetail: !this.state.showDetail,
@@ -61,25 +62,38 @@ componentDidMount(){
 
     toggle(activity) {
         this.setState({
-            showDetail: !this.state.showDetail,
-            activity: activity
+            activity: activity,
+            showDetail: !this.state.showDetail
         })
     }
-    initiateActivity(){
-        this.props.navigation.navigate('Initiate')
-    }
+
+
     deleteActivity() {
-        firebaseRef.database().ref('activities/').remove(this.state.activity.key).then(()=>{
-            firebaseRef.database().ref('users/'+this.props.user.uid+'/activities').remove(this.state.activity.key).then(()=>{
-                console.log('success')
+        firebaseRef.database().ref('activities/' + this.state.activity.key).remove().then(() => {
+            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activity.key).remove().then(() => {
+                this.setState({
+                    showDetail: !this.state.showDetail,
+                    activity: null
+                })
             })
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err)
         })
     }
 
+    quitActivity() {
+        firebaseRef.database().ref('activities/' + this.state.activity.key + '/participants/' + this.state.activity.key).remove().then(() => {
+            // firebaseRef.database().ref('users/'+this.props.user.uid+'/activities/'+this.state.activity.key).remove().then(()=>{
+            this.setState({
+                showDetail: !this.state.showDetail,
+                activity: null
+            })
+            // })
+        })
+    }
+
     getIcon(activity) {
-        if(activity.val().owner.uid===this.props.user.uid){
+        if (activity.val().owner.uid === this.props.user.uid) {
             return 'person'
         }
 
@@ -88,12 +102,12 @@ componentDidMount(){
     render() {
         return (
             <ScrollView>
-                {this.props.list.length>0 ?
+                {this.props.list.length > 0 ?
                     <View style={styles.list}>
                         {this.props.list.map((activity, i) => (
                             <ListItem
                                 leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
-                                rightIcon={{name:this.getIcon(activity)}}
+                                rightIcon={{name: this.getIcon(activity)}}
                                 key={i}
                                 onPress={() => this.toggle(activity)}
                                 title={activity.val().title}
@@ -112,21 +126,35 @@ componentDidMount(){
                                 animationIn='slideInLeft'
                                 animationOut='slideOutRight'
                             >
-                                <View style={{flex: 1}}>
-                                    <Text style={{
-                                        color: '#000',
-                                        fontSize: 30
-                                    }}>Hello {this.state.activity.val().category}!</Text>
+                                <View style={styles.container}>
+                                    <View style={styles.avatarContainer}>
+                                        <Avatar
+                                            xlarge
+                                            rounded
+                                            source={this.chooseAvatar(this.state.activity.val().category)}
+                                            onPress={() => console.log("Works!")}
+                                            activeOpacity={0.7}
+                                        />
+                                    </View>
+                                    <Text>{this.state.activity.val().category}</Text>
+                                    <Text>{this.state.activity.val().title}</Text>
+                                    <Text>{this.state.activity.val().description}</Text>
+                                    <Text>{this.state.activity.val().owner.username}</Text>
                                     <Button
                                         title="Close"
                                         onPress={this.toggleCancel}
                                     />
-                                    {this.state.activity.val().owner.uid === this.props.user.uid ?
-                                        <Button
-                                            title="Delete"
-                                            onPress={this.deleteActivity}
-                                        /> : <View/>}
                                 </View>
+                                {this.state.activity.val().owner.uid === this.props.user.uid ?
+                                    <Button
+                                        title="Delete"
+                                        onPress={this.deleteActivity}
+                                    /> :
+                                    <Button
+                                        title="Quit"
+                                        onPress={this.quitActivity}
+                                    />
+                                }
                             </Modal> :
                             <View/>}
                     </View> :
@@ -142,7 +170,14 @@ componentDidMount(){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems:'center'
+        flexDirection: 'column',
+        backgroundColor: "#fff",
+        width: 'auto',
+        height: 'auto',
+        alignItems: 'center'
+    },
+    avatarContainer: {
+        alignItems: 'center'
     },
     list: {
         backgroundColor: '#fff',
