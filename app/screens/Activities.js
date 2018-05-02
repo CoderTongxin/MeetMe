@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     },
 
     scrollView: {
-        height: CARD_HEIGHT * 1.5,
+        height: CARD_HEIGHT * 1.6,
         position: "absolute",
         bottom: 30,
         left: 0,
