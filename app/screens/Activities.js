@@ -23,7 +23,7 @@ const actRef = db.ref("activities");
 const dateFormat = require('dateformat');
 
 const {width, height} = Dimensions.get("window");
-const heightFactor = 5;
+const heightFactor = 6;
 const widthFactor = 4;
 const CARD_HEIGHT = height / heightFactor;
 const CARD_WIDTH = width / widthFactor;
@@ -420,6 +420,7 @@ const styles = StyleSheet.create({
     },
     textContent: {
         flex: 1,
+        justifyContent: 'space-between'
     },
     cardTitle: {
         fontSize: 12,
