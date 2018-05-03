@@ -4,10 +4,9 @@ import {
     View,
     ScrollView,
     TouchableOpacity,
-    AsyncStorage,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
-import { Button } from 'react-native-elements'
+import {Button} from 'react-native-elements'
 import t from 'tcomb-form-native';
 
 const _ = require('lodash');
@@ -39,7 +38,7 @@ const options = {
             mode: 'date',
             error: 'Invalid date',
             config: {
-                format: ((date) => dateFormat(date, "fullDate")),
+                format: ((date) => dateFormat(date, "dddd, mmmm d, yyyy")),
             },
         },
         time: {
@@ -73,37 +72,31 @@ const Activity = t.struct({
 
 
 export default class Initiate extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            userLocation: null,
-        }
-    }
 
     handleSubmit = () => {
         const value = this._form.getValue();
-        if(value){
-            this.props.navigation.navigate(("InitiateStep2"),
-                {
-                    actInfo: value,
-                });
+        if (value) {
+            this.props.navigation.navigate(("InitiateStep2"), {actInfo: value});
         }
     };
 
     render() {
         return (
-            <ScrollView style={styles.container}>
-                <Form
-                    ref={c => this._form = c}
-                    type={Activity}
-                    options={options}
-                />
-                <Button
-                    large
-                    title="Next"
-                    onPress={this.handleSubmit}
-                />
-            </ScrollView>
+            <View style={styles.container}>
+                <ScrollView>
+                    <Form
+                        ref={c => this._form = c}
+                        type={Activity}
+                        options={options}
+                    />
+                    <Button
+                        style={styles.button}
+                        large
+                        title="Next"
+                        onPress={this.handleSubmit}
+                    />
+                </ScrollView>
+            </View>
 
         );
     }
@@ -111,12 +104,18 @@ export default class Initiate extends React.Component {
 
 Initiate.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
+    headerStyle: {
+        elevation: 2,
+        shadowOpacity: 1,
+        backgroundColor: '#2E3347',
+    },
     headerTitleStyle: {textAlign: "center", flex: 1},
+    headerTintColor: '#fff',
     headerLeft: (<View></View>),
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="#808080"/>
+                <Icon name="account-circle" size={25} color="white"/>
             </TouchableOpacity>
         </View>,
 });
@@ -125,6 +124,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#ffffff',
+        elevation: 2,
+        backgroundColor: "#FFF",
+        margin: 15,
+        shadowColor: "#000",
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
     },
+    button:{
+        elevation: 2,
+        backgroundColor: "#FFF",
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    }
 });

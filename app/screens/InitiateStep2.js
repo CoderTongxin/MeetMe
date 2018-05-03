@@ -36,8 +36,8 @@ export default class InitiateStep2 extends React.Component {
                     userLocation: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
+                        latitudeDelta: 0.03,
+                        longitudeDelta: 0.01,
                     }
                 });
             },
@@ -79,7 +79,18 @@ export default class InitiateStep2 extends React.Component {
             actId : postId
         };
 
+        let partInfo = {
+            uid : this.state.user.uid,
+            username: this.state.user.username
+        };
+
         newActPostRef.set(createInfo).then(() => {
+            //console.log('adding location');
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        firebaseRef.database().ref('activities/' + postId + '/participants/' + this.state.user.uid).set(partInfo).then(() => {
             //console.log('adding location');
         }).catch((error) => {
             console.log(error);
@@ -138,7 +149,13 @@ export default class InitiateStep2 extends React.Component {
 
 InitiateStep2.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
+    headerStyle: {
+        elevation: 2,
+        shadowOpacity: 1,
+        backgroundColor: '#2E3347',
+    },
     headerTitleStyle: {textAlign: "center", flex: 1},
+    headerTintColor: '#fff',
     headerLeft:
         <View style={{paddingLeft: 10}}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -148,7 +165,7 @@ InitiateStep2.navigationOptions = ({navigation}) => ({
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="#808080"/>
+                <Icon name="account-circle" size={25} color="white"/>
             </TouchableOpacity>
         </View>,
 });

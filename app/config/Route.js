@@ -51,29 +51,29 @@ export const ScheduleStack = StackNavigator({
 });
 
 export const Tabs = TabNavigator({
-    Initiate: {
-        screen: InitiateStack,
-        navigationOptions: {
-            tabBarLabel: 'Initiate',
-            tabBarIcon: ({tintColor}) => <Icon name="add-circle" size={25} color={tintColor}/>
-        }
-
-    },
-
     Activities: {
         screen: ActivitiesStack,
         navigationOptions: {
             tabBarLabel: 'Activities',
-            tabBarIcon: ({tintColor}) => <Icon name="local-activity" size={25} color={tintColor}/>
+            tabBarIcon: ({tintColor}) => <Icon name="local-activity" color='white' size={32} />
         }
-
     },
+
+    Initiate: {
+        screen: InitiateStack,
+        navigationOptions: {
+            tabBarLabel: 'Initiate',
+            tabBarIcon: ({tintColor}) => <Icon name="add-circle" size={32} color='white'/>
+        }
+    },
+
+
     Schedule: {
         screen: ScheduleStack,
         navigationOptions: {
             tabBarLabel: 'Schedule',
-            tabBarIcon: ({tintColor}) => <Icon name="view-list" size={25} color={tintColor}/>
-        }
+            tabBarIcon: ({tintColor}) => <Icon name="view-list" size={32} color='white'/>
+        },
     },
 
 }, {
@@ -81,6 +81,14 @@ export const Tabs = TabNavigator({
     tabBarPosition: 'bottom',
     animationEnabled: false,
     swipeEnabled: false,
+    tabBarOptions: {
+        showLabel: false,
+        style: {
+            elevation: 2,
+            shadowOpacity: 0.1,
+            backgroundColor: '#2E3347',
+        },
+    }
 });
 
 export const HomeScreenRoot = StackNavigator({
