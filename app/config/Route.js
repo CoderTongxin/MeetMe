@@ -53,7 +53,7 @@ export const Tabs = TabNavigator({
         screen: ActivitiesStack,
         navigationOptions: {
             tabBarLabel: 'Activities',
-            tabBarIcon: ({tintColor}) => <Icon name="local-activity" color='white' size={32} />
+            tabBarIcon: ({tintColor})=><Icon name='home' type='simple-line-icon' color={tintColor}/>
         }
     },
 
@@ -61,7 +61,7 @@ export const Tabs = TabNavigator({
         screen: InitiateStack,
         navigationOptions: {
             tabBarLabel: 'Initiate',
-            tabBarIcon: ({tintColor}) => <Icon name="add-circle" size={32} color='white'/>
+            tabBarIcon: ({tintColor})=><Icon name='plus' type='simple-line-icon' color={tintColor}/>
         }
     },
 
@@ -70,7 +70,7 @@ export const Tabs = TabNavigator({
         screen: ScheduleStack,
         navigationOptions: {
             tabBarLabel: 'Schedule',
-            tabBarIcon: ({tintColor}) => <Icon name="view-list" size={32} color='white'/>
+            tabBarIcon:  ({tintColor})=> <Icon name='calendar' type='simple-line-icon' color={tintColor}/>
         },
     },
 
@@ -80,11 +80,14 @@ export const Tabs = TabNavigator({
     animationEnabled: false,
     swipeEnabled: false,
     tabBarOptions: {
+        inactiveTintColor: '#2E3347',
+
         showLabel: false,
         style: {
-            elevation: 2,
+            elevation: 8,
             shadowOpacity: 0.1,
-            backgroundColor: '#2E3347',
+
+
         },
     }
 });

@@ -37,7 +37,7 @@ InitiateStep3.navigationOptions = ({navigation}) => ({
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="white"/>
+                <Icon name='user' type='evilicon' size={28} color='#fff'/>
             </TouchableOpacity>
         </View>,
 });

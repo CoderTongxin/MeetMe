@@ -4,6 +4,7 @@ import {
     View,
     ScrollView,
     TouchableOpacity,
+    ImageBackground,
 } from 'react-native';
 import {Icon} from 'react-native-elements';
 import {Button} from 'react-native-elements'
@@ -84,20 +85,29 @@ export default class Initiate extends React.Component {
         return (
             <View style={styles.container}>
                 <ScrollView>
-                    <Form
-                        ref={c => this._form = c}
-                        type={Activity}
-                        options={options}
-                    />
-                    <Button
-                        style={styles.button}
-                        large
-                        title="Next"
-                        onPress={this.handleSubmit}
-                    />
+                    <View style={styles.formContainer}>
+
+                        <Form
+                            ref={c => this._form = c}
+                            type={Activity}
+                            options={options}
+                        />
+                        <Button
+                            icon={
+                                <Icon
+                                    name='sign-out'
+                                    size={18}
+                                    color='white'
+                                />}
+                            style={styles.button}
+                            large
+                            title="Next"
+                            onPress={this.handleSubmit}
+                        />
+
+                    </View>
                 </ScrollView>
             </View>
-
         );
     }
 }
@@ -115,13 +125,17 @@ Initiate.navigationOptions = ({navigation}) => ({
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="white"/>
+                <Icon name='user' type='evilicon' size={28} color='#fff'/>
             </TouchableOpacity>
         </View>,
 });
 
 const styles = StyleSheet.create({
-    container: {
+    container:{
+        flex: 1,
+        backgroundColor:'#A6A6A6',
+    },
+    formContainer: {
         flex: 1,
         padding: 20,
         elevation: 2,
@@ -132,7 +146,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowOffset: {x: 2, y: -2},
     },
-    button:{
+    button: {
         elevation: 2,
         backgroundColor: "#FFF",
         shadowColor: "#000",

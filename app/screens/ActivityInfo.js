@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity, Image, Dimensions, ScrollView, AsyncStorage} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity, Image, Dimensions, ScrollView, AsyncStorage, ImageBackground} from 'react-native';
 import Header from 'react-navigation/src/views/Header/Header';
 import {Icon, Card, ListItem, Button, Divider} from 'react-native-elements';
 import MapView from 'react-native-maps';
@@ -150,7 +150,7 @@ const
     styles = StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor:'#F1ECE9',
+            backgroundColor:'#A6A6A6',
         },
 
         image: {
