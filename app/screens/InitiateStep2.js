@@ -147,7 +147,7 @@ export default class InitiateStep2 extends React.Component {
         );
     }
 }
-
+let load=true;
 InitiateStep2.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
     headerStyle: {
@@ -165,7 +165,15 @@ InitiateStep2.navigationOptions = ({navigation}) => ({
         </View>,
     headerRight:
         <View style={{paddingRight: 10}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity onPress={() => {
+                if(load){
+                    load=false;
+                    navigation.navigate('Profile');
+                    setTimeout(() => {
+                        load = true;
+                    }, 700);
+                }
+            }}>
                 <Icon name='user' type='evilicon' size={28} color='#fff'/>
             </TouchableOpacity>
         </View>,

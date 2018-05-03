@@ -24,6 +24,7 @@ export default class InitiateStep3 extends React.Component {
     }
 }
 
+let load=true;
 InitiateStep3.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
     headerStyle: {
@@ -36,7 +37,15 @@ InitiateStep3.navigationOptions = ({navigation}) => ({
     headerLeft: (<View></View>),
     headerRight:
         <View style={{paddingRight: 10}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity onPress={() => {
+                if(load){
+                    load=false;
+                    navigation.navigate('Profile');
+                    setTimeout(() => {
+                        load = true;
+                    }, 700);
+                }
+            }}>
                 <Icon name='user' type='evilicon' size={28} color='#fff'/>
             </TouchableOpacity>
         </View>,

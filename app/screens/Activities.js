@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import {Icon,Divider} from 'react-native-elements';
+import {preventMutipleClick} from '../common/js/basic'
 
 
 import MapView from "react-native-maps";
@@ -327,7 +328,7 @@ export default class Activities extends React.Component {
     }
 }
 
-
+let load=true;
 Activities.navigationOptions = ({navigation}) => ({
     title: 'Activities',
     headerStyle: {
@@ -341,7 +342,15 @@ Activities.navigationOptions = ({navigation}) => ({
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity
-                onPress={() => navigation.navigate({ key: 'MyScreen', routeName: 'Profile', params: {...}})}>
+                onPress={() => {
+                    if(load){
+                        load=false;
+                        navigation.navigate('Profile');
+                        setTimeout(() => {
+                            load = true;
+                        }, 700);
+                    }
+                }}>
                 <Icon name='user' type='evilicon' size={28} color='#fff'/>
             </TouchableOpacity>
         </View>,
