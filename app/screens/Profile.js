@@ -29,9 +29,8 @@ export default class Profile extends React.Component {
 
     componentDidMount() {
         AsyncStorage.getItem('user', (err, result) => {
-            const user=JSON.parse(result);
                this.setState({
-                   user: user
+                   user: JSON.parse(result)
                });
         });
     }
@@ -50,27 +49,33 @@ export default class Profile extends React.Component {
     render() {
         return (
             <ScrollView>
-                <View style={styles.container}>
-                    {/*The key part to rewrite Header and make a icon to close the modal screen*/}
-                    <Header
-                        scene={{index: 0}}
-                        scenes={[{index: 0, isActive: true}]}
-                        navigation={{state: {index: 0}}}
-                        getScreenDetails={() => ({
-                            options: {
-                                headerTitleStyle: {textAlign: "center", flex: 1},
-                                title: 'Profile',
-                                headerRight: (
-                                    <View style={{paddingRight: 10}}>
-                                        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                                            <Icon name="close" size={25} color="#808080"/>
-                                        </TouchableOpacity>
-                                    </View>
-                                )
-
-                            }
-                        })}
-                    />
+            <View style={styles.container}>
+                {/*The key part to rewrite Header and make a icon to close the modal screen*/}
+                <Header
+                    scene={{index: 0}}
+                    scenes={[{index: 0, isActive: true}]}
+                    navigation={{state: {index: 0}}}
+                    getScreenDetails={() => ({
+                        options: {
+                            headerStyle: {
+                                elevation: 2,
+                                shadowOpacity: 1,
+                                backgroundColor: '#2E3347',
+                            },
+                            headerTitleStyle: {textAlign: "center", flex: 1},
+                            headerTintColor: '#fff',
+                            title: 'Profile',
+                            headerLeft: (<View></View>),
+                            headerRight: (
+                                <View style={{paddingRight: 10}}>
+                                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                                        <Icon name="close" size={25} color="white"/>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }
+                    })}
+                />
 
                     {/*Edit here to add any functions*/}
                     <View style={styles.contentContainer}>

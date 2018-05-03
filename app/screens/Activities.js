@@ -4,16 +4,14 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Button,
-    ScrollView,
     Animated,
     Image,
     Dimensions,
+    StatusBar,
 } from 'react-native';
 
-import {Icon} from 'react-native-elements';
+import {Icon,Divider} from 'react-native-elements';
 
-import {Divider} from 'react-native-elements';
 
 import MapView from "react-native-maps";
 import {firebaseRef} from "../servers/Firebase";
@@ -62,7 +60,7 @@ export default class Activities extends React.Component {
     listenForAnimation() {
         this.animation.addListener(({value}) => {
             let index = Math.floor(value / (CARD_WIDTH + 2 * CARD_MARGIN) + 0.3);
-            CARD_INDEX  = index;
+            CARD_INDEX = index;
             if (index >= this.state.actPlaces.length) {
                 index = this.state.actPlaces.length - 1;
             }
@@ -91,14 +89,16 @@ export default class Activities extends React.Component {
 
     getUserLocation() {
         navigator.geolocation.getCurrentPosition(position => {
-                this.setState({
-                    region: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        latitudeDelta: 0.03,
-                        longitudeDelta: 0.01,
-                    }
-                });
+                if (position.coords.latitude) {
+                    this.setState({
+                        region: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            latitudeDelta: 0.03,
+                            longitudeDelta: 0.01,
+                        }
+                    });
+                }
             },
             err => console.log(err)
         );
@@ -107,7 +107,6 @@ export default class Activities extends React.Component {
     listenForAct() {
         actRef.on('value', (snap) => {
             const activities = snap.val();
-
             this.setState({
                 activities: activities
             });
@@ -148,10 +147,11 @@ export default class Activities extends React.Component {
                         longitude: activities[key].location.longitude,
                     },
                     title: activities[key].title,
+                    category: activities[key].category,
                     description: activities[key].description,
                     id: key,
                     time: {
-                        date: dateFormat(activities[key].time.date, "mediumDate"),
+                        date: activities[key].time.date,
                         time: activities[key].time.time,
                     },
                     owner: {
@@ -173,9 +173,9 @@ export default class Activities extends React.Component {
     }
 
     ListenForClick(act) {
-        let actNum = act.actNum;
+        const actNum = act.actNum;
         if (actNum !== CARD_INDEX) {
-            let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
+            const value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
             this.props.navigation.navigate(("ActivityInfo"), {actInfo: act})
@@ -218,8 +218,12 @@ export default class Activities extends React.Component {
         let cardIndex;
 
         return (
-            <View style={styles.container}>
 
+            <View style={styles.container}>
+                <StatusBar
+                    backgroundColor="white"
+                    barStyle="light-content"
+                />
                 <MapView
                     ref={map => this.map = map}
                     initialRegion={this.state.region}
@@ -306,10 +310,10 @@ export default class Activities extends React.Component {
                                         </Text>
                                         <Divider/>
                                         <Text numberOfLines={1} style={styles.cardDescription}>
-                                            {act.time.date}
+                                            {act.time.time}
                                         </Text>
                                         <Text numberOfLines={1} style={styles.cardDescription}>
-                                            {act.time.time}
+                                            {dateFormat(act.time.date, "d mmm yyyy")}
                                         </Text>
 
                                     </View>
@@ -326,12 +330,18 @@ export default class Activities extends React.Component {
 
 Activities.navigationOptions = ({navigation}) => ({
     title: 'Activities',
-    headerTitleStyle: {textAlign: "center", flex: 1},
+    headerStyle: {
+        elevation: 2,
+        shadowOpacity: 1,
+        backgroundColor: '#2E3347',
+    },
+    headerTitleStyle: {textAlign: "center", flex: 1,},
+    headerTintColor: '#fff',
     headerLeft: (<View></View>),
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="#808080"/>
+                <Icon name="account-circle" size={25} color="white"/>
             </TouchableOpacity>
         </View>,
 });
@@ -399,7 +409,6 @@ const styles = StyleSheet.create({
         paddingRight: (width - (CARD_WIDTH + 2 * CARD_MARGIN)) / 2,
     },
     card: {
-        padding: 10,
         elevation: 2,
         backgroundColor: "#FFF",
         marginHorizontal: CARD_MARGIN,
@@ -407,10 +416,9 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
-        shadowOffset: {x: 2, y: -2},
+        shadowOffset: { x: 2, y: -2 },
         height: CARD_HEIGHT,
         width: CARD_WIDTH,
-        overflow: "hidden",
     },
     cardImage: {
         flex: 1,
@@ -420,11 +428,11 @@ const styles = StyleSheet.create({
     },
     textContent: {
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-around',
+        padding: 5,
     },
     cardTitle: {
         fontSize: 12,
-        marginTop: 5,
         fontWeight: "bold",
     },
     cardDescription: {

@@ -82,12 +82,18 @@ export default class Schedule extends React.Component {
 
 Schedule.navigationOptions = ({navigation}) => ({
     title: 'Schedule',
+    headerStyle: {
+        elevation: 2,
+        shadowOpacity: 1,
+        backgroundColor: '#2E3347',
+    },
     headerTitleStyle: {textAlign: "center", flex: 1},
+    headerTintColor: '#fff',
     headerLeft: (<View></View>),
     headerRight:
         <View style={{paddingRight: 10}}>
             <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-                <Icon name="account-circle" size={25} color="#808080"/>
+                <Icon name="account-circle" size={25} color="white" />
             </TouchableOpacity>
         </View>,
 });
