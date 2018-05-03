@@ -14,6 +14,16 @@ import InitiateStep2 from '../screens/InitiateStep2';
 import InitiateStep3 from '../screens/InitiateStep3';
 // import Welcome from '../screens/Welcome';
 
+
+export function routerReducer(state, action) {
+    if (action.type.startsWith('Navigation/')) {
+        const { type, routeName } = action;
+        const lastRoute = state.routes[state.routes.length - 1];
+        if (type == lastRoute.type && routeName == lastRoute.routeName) return state
+    }
+    return AppNavigator.router.getStateForAction(action, state)
+}
+
 export const InitiateStack = StackNavigator({
     Initiate: {
         screen: Initiate,

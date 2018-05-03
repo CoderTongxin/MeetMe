@@ -6,8 +6,7 @@ import {
     TouchableOpacity,
     ImageBackground,
 } from 'react-native';
-import {Icon} from 'react-native-elements';
-import {Button} from 'react-native-elements'
+import {Button,Icon} from 'react-native-elements'
 import t from 'tcomb-form-native';
 
 const _ = require('lodash');
@@ -93,12 +92,6 @@ export default class Initiate extends React.Component {
                             options={options}
                         />
                         <Button
-                            icon={
-                                <Icon
-                                    name='sign-out'
-                                    size={18}
-                                    color='white'
-                                />}
                             style={styles.button}
                             large
                             title="Next"

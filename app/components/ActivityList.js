@@ -61,10 +61,13 @@ export default class ActivityList extends React.Component {
     }
 
     toggle(activity) {
-        this.setState({
-            activity: activity,
-            showDetail: !this.state.showDetail
+        firebaseRef.database().ref('activities/'+activity.uid).on('value',()=>{
+            this.setState({
+                activity: activity,
+                showDetail: !this.state.showDetail
+            })
         })
+
     }
 
 
@@ -93,10 +96,10 @@ export default class ActivityList extends React.Component {
     }
 
     getIcon(activity) {
-        if (activity.val().owner.uid === this.props.user.uid) {
+        if (activity.owner.uid === this.props.user.uid) {
             return 'person'
         }
-
+        return '';
     }
 
     render() {
@@ -107,9 +110,9 @@ export default class ActivityList extends React.Component {
                         {this.props.list.map((activity, i) => (
                             <ListItem
                                 leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
-                                rightIcon={{name: this.getIcon(activity)}}
+                                rightIcon={{name: this.getIcon(activity.val())}}
                                 key={i}
-                                onPress={() => this.toggle(activity)}
+                                onPress={() => this.toggle(activity.val())}
                                 title={activity.val().title}
                                 subtitle={activity.val().time.date}
                                 titleStyle={{fontWeight: 'bold'}}
@@ -123,29 +126,29 @@ export default class ActivityList extends React.Component {
                         {this.state.activity ?
                             <Modal
                                 isVisible={this.state.showDetail}
-                                animationIn='slideInLeft'
-                                animationOut='slideOutRight'
+                                animationIn='slideInRight'
+                                animationOut='slideOutLeft'
                             >
                                 <View style={styles.container}>
                                     <View style={styles.avatarContainer}>
                                         <Avatar
                                             xlarge
                                             rounded
-                                            source={this.chooseAvatar(this.state.activity.val().category)}
+                                            source={this.chooseAvatar(this.state.activity.category)}
                                             onPress={() => console.log("Works!")}
                                             activeOpacity={0.7}
                                         />
                                     </View>
-                                    <Text>{this.state.activity.val().category}</Text>
-                                    <Text>{this.state.activity.val().title}</Text>
-                                    <Text>{this.state.activity.val().description}</Text>
-                                    <Text>{this.state.activity.val().owner.username}</Text>
+                                    <Text>{this.state.activity.category}</Text>
+                                    <Text>{this.state.activity.title}</Text>
+                                    <Text>{this.state.activity.description}</Text>
+                                    <Text>{this.state.activity.owner.username}</Text>
                                     <Button
                                         title="Close"
                                         onPress={this.toggleCancel}
                                     />
                                 </View>
-                                {this.state.activity.val().owner.uid === this.props.user.uid ?
+                                {this.state.activity.owner.uid === this.props.user.uid ?
                                     <Button
                                         title="Delete"
                                         onPress={this.deleteActivity}
@@ -174,7 +177,11 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         width: 'auto',
         height: 'auto',
-        alignItems: 'center'
+        alignItems: 'center',
+        elevation:2,
+        shadowColor:'#000',
+        shadowOpacity:0.3,
+        shadowOffset:{width:2,height:-2}
     },
     avatarContainer: {
         alignItems: 'center'

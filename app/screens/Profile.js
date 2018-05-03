@@ -111,7 +111,6 @@ export default class Profile extends React.Component {
                                     </View> :
                                     <View/>
                                 }
-                                {/*<View style={styles.divider}/>*/}
                                 <Image style={{width:SCREEN_WIDTH*0.8,height:200}}
                                        source={{uri: 'https://www.eurogif.com/files/uploads/2018/04/mCYny9f2c.gif'}}/>
                             </View>

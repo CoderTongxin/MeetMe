@@ -340,7 +340,8 @@ Activities.navigationOptions = ({navigation}) => ({
     headerLeft: (<View></View>),
     headerRight:
         <View style={{paddingRight: 10}}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+            <TouchableOpacity
+                onPress={() => navigation.navigate({ key: 'MyScreen', routeName: 'Profile', params: {...}})}>
                 <Icon name='user' type='evilicon' size={28} color='#fff'/>
             </TouchableOpacity>
         </View>,
