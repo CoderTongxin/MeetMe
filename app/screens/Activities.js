@@ -15,7 +15,7 @@ import {Icon, Divider, Button} from 'react-native-elements';
 import Modal from "react-native-modal";
 import MapView from "react-native-maps";
 import {firebaseRef} from "../servers/Firebase";
-
+import ActivityDetail from'../components/ActivityDetail'
 const db = firebaseRef.database();
 const actRef = db.ref("activities");
 const dateFormat = require('dateformat');
@@ -67,7 +67,8 @@ export default class Activities extends React.Component {
                 participants: null
             },
         };
-        this.ListenForClick = this.ListenForClick.bind(this)
+        this.ListenForClick = this.ListenForClick.bind(this);
+        this.joinAct=this.joinAct.bind(this)
     };
 
     componentWillMount() {
@@ -364,65 +365,19 @@ export default class Activities extends React.Component {
                 </Animated.ScrollView>
 
                 <Modal isVisible={this.state.isModalVisible}
-                       onBackdropPress={() => this.setState({isModalVisible:false})}
-                       onBackButtonPress={() => this.setState({isModalVisible:false})}
+                       onBackdropPress={() => this.setState({isModalVisible: false})}
+                       onBackButtonPress={() => this.setState({isModalVisible: false})}
                        backdropColor={'#2E3347'}
                        backdropOpacity={0}
                 >
                     <View style={styles.modalContainer}>
                         <Image source={this.state.act.image} style={styles.image}/>
                         <View style={styles.closeIcon}>
-                            <TouchableOpacity onPress={() => this.setState({isModalVisible:false})}>
+                            <TouchableOpacity onPress={() => this.setState({isModalVisible: false})}>
                                 <Icon name="close" size={28} color="#2E3347"/>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.actInfo}>
-                            <Text>
-                                {this.state.act.title}
-                            </Text>
-                            <Divider/>
-                            <Text>
-                                Activity Category: {this.state.act.category}
-                            </Text>
-                            <Text>
-                                Activity Date: {this.state.act.time.date}
-                            </Text>
-                            <Text>
-                                Activity Time: {this.state.act.time.time}
-                            </Text>
-                            <Text>
-                                Activity Creator: {this.state.act.owner.username}
-                            </Text>
-                            <Text>
-                                Activity Participants: Jack Tester, Tom Tester, James Tester
-                            </Text>
-                            <Text>
-                                Activity Description: {this.state.act.description}
-                            </Text>
-                        </View>
-                        <View style={styles.mapContainer}>
-                            <MapView
-                                style={styles.map}
-                                initialRegion={{
-                                    latitude: this.state.act.location.latitude,
-                                    longitude: this.state.act.location.longitude,
-                                    latitudeDelta: 0.003,
-                                    longitudeDelta: 0.001,
-                                }}
-                            >
-                                <MapView.Marker
-                                    coordinate={{
-                                        latitude: this.state.act.location.latitude,
-                                        longitude: this.state.act.location.longitude,
-                                        latitudeDelta: 0.003,
-                                        longitudeDelta: 0.001,
-                                    }}
-                                    key={this.state.act.actNum}
-                                    actId={this.state.act.key}
-                                />
-                            </MapView>
-
-                        </View>
+                        <ActivityDetail act={this.state.act}/>
                         <Button
                             style={styles.button}
                             backgroundColor='#03A9F4'
@@ -439,7 +394,8 @@ export default class Activities extends React.Component {
     }
 }
 
-let load=true;
+let load = true;
+
 Activities.navigationOptions = ({navigation}) => ({
     title: 'Activities',
     headerStyle: {
@@ -454,8 +410,8 @@ Activities.navigationOptions = ({navigation}) => ({
         <View style={{paddingRight: 10}}>
             <TouchableOpacity
                 onPress={() => {
-                    if(load){
-                        load=false;
+                    if (load) {
+                        load = false;
                         navigation.navigate('Profile');
                         setTimeout(() => {
                             load = true;
@@ -589,25 +545,6 @@ const styles = StyleSheet.create({
         alignSelf: "center",
     },
 
-    actInfo: {
-        flex: 3,
-        margin: 10,
-    },
-    mapContainer: {
-        flex: 3,
-        margin: 10,
-        elevation: 2,
-        backgroundColor: "#FFF",
-        shadowColor: "#000",
-        shadowRadius: 5,
-        shadowOpacity: 0.3,
-        shadowOffset: {x: 2, y: -2},
-    },
-    map: {
-        width: '100%',
-        height: '100%',
-    },
-
     modalContainer: {
         height: MODAL_HEIGH,
 
@@ -620,10 +557,10 @@ const styles = StyleSheet.create({
         shadowOffset: {x: 2, y: -2},
     },
 
-    closeIcon:{
+    closeIcon: {
         position: "absolute",
-        right:5,
-        top:5,
+        right: 5,
+        top: 5,
     },
 
     button: {

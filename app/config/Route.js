@@ -4,7 +4,6 @@ import {Icon} from 'react-native-elements';
 import Activities from '../screens/Activities';
 import Initiate from '../screens/Initiate';
 import Schedule from '../screens/Schedule';
-import ActivityDetail from '../screens/ActivityDetail';
 import Settings from '../screens/Settings';
 import ActivityInfo from '../screens/ActivityInfo';
 import Profile from '../screens/Profile';
@@ -35,19 +34,13 @@ export const ActivitiesStack = StackNavigator({
     Activities: {
         screen: Activities,
     },
-    ActivityDetail: {
-        screen: ActivityDetail,
-    }
 });
-
 export const ScheduleStack = StackNavigator({
     Schedule: {
         screen: Schedule,
     },
-    ActivityDetail: {
-        screen: ActivityDetail,
-    }
 });
+
 
 export const Tabs = TabNavigator({
     Activities: {

@@ -105,6 +105,7 @@ export default class Initiate extends React.Component {
     }
 }
 let load=true;
+
 Initiate.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
     headerStyle: {

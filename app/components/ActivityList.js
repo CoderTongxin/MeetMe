@@ -1,17 +1,18 @@
 import React from 'react';
 
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
 import {
     ListItem,
     Button,
-    Avatar
+    Icon
 } from 'react-native-elements';
-
 import Modal from 'react-native-modal'
 import Notice from './Notice'
-
+import ActivityDetail from './ActivityDetail'
 import {firebaseRef} from "../servers/Firebase";
-
+const {width, height} = Dimensions.get("window");
+const MODAL_HEIGH = height * 0.8;
+const MODAL_WIDTH = width * 0.8;
 
 export default class ActivityList extends React.Component {
 
@@ -127,40 +128,41 @@ export default class ActivityList extends React.Component {
                             ))}
 
                             {this.state.activity ?
-                                <Modal
-                                    isVisible={this.state.showDetail}
-                                    animationIn='slideInRight'
-                                    animationOut='slideOutLeft'
+                                <Modal isVisible={this.state.showDetail}
+                                       onBackdropPress={this.toggleCancel}
+                                       onBackButtonPress={this.toggleCancel}
+                                       animationIn='slideInRight'
+                                       animationOut='slideOutLeft'
+                                       backdropColor={'#2E3347'}
+                                       backdropOpacity={0}
                                 >
-                                    <View style={styles.container}>
-                                        <View style={styles.avatarContainer}>
-                                            <Avatar
-                                                xlarge
-                                                rounded
-                                                source={this.chooseAvatar(this.state.activity.category)}
-                                                onPress={() => console.log("Works!")}
-                                                activeOpacity={0.7}
-                                            />
+                                    <View style={styles.modalContainer}>
+                                        <Image source={this.chooseAvatar(this.state.activity.category)} style={styles.image}/>
+                                        <View style={styles.closeIcon}>
+                                            <TouchableOpacity onPress={this.toggleCancel}>
+                                                <Icon name="close" size={28} color="#2E3347"/>
+                                            </TouchableOpacity>
                                         </View>
-                                        <Text>{this.state.activity.category}</Text>
-                                        <Text>{this.state.activity.title}</Text>
-                                        <Text>{this.state.activity.description}</Text>
-                                        <Text>{this.state.activity.owner.username}</Text>
-                                        <Button
-                                            title="Close"
-                                            onPress={this.toggleCancel}
-                                        />
+                                        <ActivityDetail act={this.state.activity}/>
+                                        {this.state.activity.owner.uid === this.props.user.uid ?
+                                            <Button
+                                                style={styles.button}
+                                                backgroundColor='#03A9F4'
+                                                fontFamily='Lato'
+                                                buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                                title="Delete"
+                                                onPress={this.deleteActivity}
+                                            /> :
+                                            <Button
+                                                style={styles.button}
+                                                backgroundColor='#03A9F4'
+                                                fontFamily='Lato'
+                                                buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                                title="Quit"
+                                                onPress={this.quitActivity}
+                                            />
+                                        }
                                     </View>
-                                    {this.state.activity.owner.uid === this.props.user.uid ?
-                                        <Button
-                                            title="Delete"
-                                            onPress={this.deleteActivity}
-                                        /> :
-                                        <Button
-                                            title="Quit"
-                                            onPress={this.quitActivity}
-                                        />
-                                    }
                                 </Modal> :
                                 <View/>}
                         </View>
@@ -193,5 +195,40 @@ const styles = StyleSheet.create({
     },
     list: {
         backgroundColor: '#fff',
+    },
+    image: {
+        flex: 2,
+        width: "100%",
+        height: "100%",
+        alignSelf: "center",
+    },
+
+    modalContainer: {
+        height: MODAL_HEIGH,
+        width:'auto',
+        elevation: 2,
+        backgroundColor: "#FFF",
+        margin: 15,
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    },
+
+    closeIcon: {
+        position: "absolute",
+        right: 5,
+        top: 5,
+    },
+
+    button: {
+        marginHorizontal: 10,
+        marginBottom: 10,
+        elevation: 2,
+        backgroundColor: "#FFF",
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
     }
 })
