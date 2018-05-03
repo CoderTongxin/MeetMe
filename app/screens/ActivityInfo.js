@@ -47,11 +47,7 @@ export default class ActivityInfo extends React.Component {
 
         const {params} = this.props.navigation.state;
         const actInfo = params ? params.actInfo : null;
-        // const participants = actInfo.participants.Map((participant)=>{
-        //         return(
-        //             participant.username + ', '
-        //         )
-        //     });
+
         return (
             <View style={styles.container}>
 
@@ -83,7 +79,7 @@ export default class ActivityInfo extends React.Component {
                 />
 
                 {/*Edit here to add any functions*/}
-                <View style={styles.cardContainer}>
+                <View style={styles.modalContainer}>
                     <Image source={actInfo.image} style={styles.image}/>
                     <View style={styles.actInfo}>
                         <Text >
@@ -179,7 +175,7 @@ const
             height: '100%',
         },
 
-        cardContainer: {
+        modalContainer: {
             flex: 1,
             elevation: 2,
             backgroundColor: "#FFF",
@@ -190,7 +186,7 @@ const
             shadowOffset: { x: 2, y: -2 },
         },
 
-        cardContent: {
+        modalContent: {
             flex: 1,
             justifyContent: 'space-between'
         },

@@ -10,9 +10,9 @@ import {
     StatusBar,
 } from 'react-native';
 
-import {Icon,Divider} from 'react-native-elements';
+import {Icon, Divider, Button} from 'react-native-elements';
 
-
+import Modal from "react-native-modal";
 import MapView from "react-native-maps";
 import {firebaseRef} from "../servers/Firebase";
 
@@ -26,6 +26,8 @@ const widthFactor = 4;
 const CARD_HEIGHT = height / heightFactor;
 const CARD_WIDTH = width / widthFactor;
 const CARD_MARGIN = CARD_WIDTH / ((widthFactor - 1) * 2);
+const MODAL_HEIGH = height * 0.8;
+const MODAL_WIDTH = width * 0.8;
 let CARD_INDEX = 0;
 
 export default class Activities extends React.Component {
@@ -41,7 +43,29 @@ export default class Activities extends React.Component {
                 latitudeDelta: 0.03,
                 longitudeDelta: 0.01,
             },
-            cardIndex: 0,
+            isModalVisible: false,
+            act: {
+                actNum: null,
+                location: {
+                    latitude: null,
+                    longitude: null,
+                },
+                title: null,
+                category: null,
+                description: null,
+                id: null,
+                time: {
+                    date: null,
+                    time: null,
+                },
+                owner: {
+                    uid: null,
+                    username: null,
+                },
+                status: null,
+                image: {uri: "https://static.boredpanda.com/blog/wp-content/uploads/2015/05/food-cubes-raw-lernert-sander-volkskrant-6.jpg"},
+                participants: null
+            },
         };
         this.ListenForClick = this.ListenForClick.bind(this)
     };
@@ -178,7 +202,10 @@ export default class Activities extends React.Component {
             const value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
-            this.props.navigation.navigate(("ActivityInfo"), {actInfo: act})
+            this.setState({
+                act: act,
+            });
+            this.state.isModalVisible = true
         }
     }
 
@@ -187,6 +214,19 @@ export default class Activities extends React.Component {
         let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
         this.scrollView.getNode().scrollTo({x: value, y: 0, animated: false})
     }
+
+    joinAct(act) {
+        const partInfo = {
+            uid: this.state.user.uid,
+            username: this.state.user.username
+        };
+
+        firebaseRef.database().ref('activities/' + act.id + '/participants/' + this.state.user.uid).set(partInfo).then(() => {
+        }).catch((error) => {
+            console.log(error);
+        });
+    };
+
 
     render() {
         const interpolations = this.state.actPlaces.map((act, index) => {
@@ -322,7 +362,79 @@ export default class Activities extends React.Component {
                         );
                     })}
                 </Animated.ScrollView>
+
+                <Modal isVisible={this.state.isModalVisible}
+                       onBackdropPress={() => this.setState({isModalVisible:false})}
+                       onBackButtonPress={() => this.setState({isModalVisible:false})}
+                       backdropColor={'#2E3347'}
+                       backdropOpacity={0}
+                >
+                    <View style={styles.modalContainer}>
+                        <Image source={this.state.act.image} style={styles.image}/>
+                        <View style={styles.closeIcon}>
+                            <TouchableOpacity onPress={() => this.setState({isModalVisible:false})}>
+                                <Icon name="close" size={28} color="#2E3347"/>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.actInfo}>
+                            <Text>
+                                {this.state.act.title}
+                            </Text>
+                            <Divider/>
+                            <Text>
+                                Activity Category: {this.state.act.category}
+                            </Text>
+                            <Text>
+                                Activity Date: {this.state.act.time.date}
+                            </Text>
+                            <Text>
+                                Activity Time: {this.state.act.time.time}
+                            </Text>
+                            <Text>
+                                Activity Creator: {this.state.act.owner.username}
+                            </Text>
+                            <Text>
+                                Activity Participants: Jack Tester, Tom Tester, James Tester
+                            </Text>
+                            <Text>
+                                Activity Description: {this.state.act.description}
+                            </Text>
+                        </View>
+                        <View style={styles.mapContainer}>
+                            <MapView
+                                style={styles.map}
+                                initialRegion={{
+                                    latitude: this.state.act.location.latitude,
+                                    longitude: this.state.act.location.longitude,
+                                    latitudeDelta: 0.003,
+                                    longitudeDelta: 0.001,
+                                }}
+                            >
+                                <MapView.Marker
+                                    coordinate={{
+                                        latitude: this.state.act.location.latitude,
+                                        longitude: this.state.act.location.longitude,
+                                        latitudeDelta: 0.003,
+                                        longitudeDelta: 0.001,
+                                    }}
+                                    key={this.state.act.actNum}
+                                    actId={this.state.act.key}
+                                />
+                            </MapView>
+
+                        </View>
+                        <Button
+                            style={styles.button}
+                            backgroundColor='#03A9F4'
+                            fontFamily='Lato'
+                            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                            title='Join Now'
+                            onPress={() => this.joinAct(this.state.act)}
+                        />
+                    </View>
+                </Modal>
             </View>
+
         );
     }
 }
@@ -416,7 +528,7 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
-        shadowOffset: { x: 2, y: -2 },
+        shadowOffset: {x: 2, y: -2},
         height: CARD_HEIGHT,
         width: CARD_WIDTH,
     },
@@ -460,4 +572,59 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "rgba(130,4,150, 0.5)",
     },
+
+    image: {
+        flex: 2,
+        width: "100%",
+        height: "100%",
+        alignSelf: "center",
+    },
+
+    actInfo: {
+        flex: 3,
+        margin: 10,
+    },
+    mapContainer: {
+        flex: 3,
+        margin: 10,
+        elevation: 2,
+        backgroundColor: "#FFF",
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    },
+    map: {
+        width: '100%',
+        height: '100%',
+    },
+
+    modalContainer: {
+        height: MODAL_HEIGH,
+
+        elevation: 2,
+        backgroundColor: "#FFF",
+        margin: 15,
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    },
+
+    closeIcon:{
+        position: "absolute",
+        right:5,
+        top:5,
+    },
+
+    button: {
+        marginHorizontal: 10,
+        marginBottom: 10,
+        elevation: 2,
+        backgroundColor: "#FFF",
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    }
 });
