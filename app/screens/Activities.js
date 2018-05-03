@@ -11,9 +11,6 @@ import {
 } from 'react-native';
 
 import {Icon,Divider} from 'react-native-elements';
-import {preventMutipleClick} from '../common/js/basic'
-
-
 import MapView from "react-native-maps";
 import {firebaseRef} from "../servers/Firebase";
 

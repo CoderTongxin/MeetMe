@@ -1,5 +1,4 @@
 import React from 'react';
-import {Icon} from 'react-native-elements';
 
 import {StyleSheet, View, Text} from 'react-native';
 
@@ -8,24 +7,14 @@ export default class Notice extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            activities: [],
-            activity: null,
-            showDetail: false
-        };
-        this.initiateActivity=this.initiateActivity.bind(this)
-    }
-
-    initiateActivity() {
-        this.props.navigation.navigate('HomeScreenRoot')
     }
 
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>Do not have any activities</Text>
-                <Text>Click <Icon name='plus' type='simple-line-icon'/> to create a new activity!</Text>
+                <Text style={styles.text}>Do not have any activities!</Text>
+                <Text style={styles.text}>Create or Join an activity!</Text>
             </View>
 
 
@@ -37,7 +26,11 @@ export default class Notice extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex:1,
+        justifyContent:'center',
         alignItems: 'center',
-        justifyContent:'center'
+    },
+    text:{
+        marginVertical:5,
+        justifyContent:'center',
     }
 })

@@ -61,9 +61,10 @@ export default class ActivityList extends React.Component {
     }
 
     toggle(activity) {
-        firebaseRef.database().ref('activities/'+activity.uid).on('value',()=>{
+        firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
             this.setState({
-                activity: activity,
+                activity: activityInfo.val(),
+                activityKey: activityInfo.key,
                 showDetail: !this.state.showDetail
             })
         })
@@ -72,8 +73,8 @@ export default class ActivityList extends React.Component {
 
 
     deleteActivity() {
-        firebaseRef.database().ref('activities/' + this.state.activity.key).remove().then(() => {
-            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activity.key).remove().then(() => {
+        firebaseRef.database().ref('activities/' + this.state.activityKey).remove().then(() => {
+            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove().then(() => {
                 this.setState({
                     showDetail: !this.state.showDetail,
                     activity: null
@@ -85,7 +86,7 @@ export default class ActivityList extends React.Component {
     }
 
     quitActivity() {
-        firebaseRef.database().ref('activities/' + this.state.activity.key + '/participants/' + this.state.activity.key).remove().then(() => {
+        firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.state.user.uid).remove().then(() => {
             // firebaseRef.database().ref('users/'+this.props.user.uid+'/activities/'+this.state.activity.key).remove().then(()=>{
             this.setState({
                 showDetail: !this.state.showDetail,
@@ -104,66 +105,70 @@ export default class ActivityList extends React.Component {
 
     render() {
         return (
-            <ScrollView>
-                {this.props.list.length > 0 ?
-                    <View style={styles.list}>
-                        {this.props.list.map((activity, i) => (
-                            <ListItem
-                                leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
-                                rightIcon={{name: this.getIcon(activity.val())}}
-                                key={i}
-                                onPress={() => this.toggle(activity.val())}
-                                title={activity.val().title}
-                                subtitle={activity.val().time.date}
-                                titleStyle={{fontWeight: 'bold'}}
-                                subtitleStyle={{color: 'grey', fontSize: 15}}
-                                chevron
-                                bottomDivider
-                                topDivider
-                            />
-                        ))}
+            <View style={{flex:1}}>
 
-                        {this.state.activity ?
-                            <Modal
-                                isVisible={this.state.showDetail}
-                                animationIn='slideInRight'
-                                animationOut='slideOutLeft'
-                            >
-                                <View style={styles.container}>
-                                    <View style={styles.avatarContainer}>
-                                        <Avatar
-                                            xlarge
-                                            rounded
-                                            source={this.chooseAvatar(this.state.activity.category)}
-                                            onPress={() => console.log("Works!")}
-                                            activeOpacity={0.7}
+                {this.props.list.length > 0 ?
+                    <ScrollView>
+                        <View style={styles.list}>
+                            {this.props.list.map((activity, i) => (
+                                <ListItem
+                                    leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
+                                    rightIcon={{name: this.getIcon(activity.val())}}
+                                    key={i}
+                                    onPress={() => this.toggle(activity)}
+                                    title={activity.val().title}
+                                    subtitle={activity.val().time.date}
+                                    titleStyle={{fontWeight: 'bold'}}
+                                    subtitleStyle={{color: 'grey', fontSize: 15}}
+                                    chevron
+                                    bottomDivider
+                                    topDivider
+                                />
+                            ))}
+
+                            {this.state.activity ?
+                                <Modal
+                                    isVisible={this.state.showDetail}
+                                    animationIn='slideInRight'
+                                    animationOut='slideOutLeft'
+                                >
+                                    <View style={styles.container}>
+                                        <View style={styles.avatarContainer}>
+                                            <Avatar
+                                                xlarge
+                                                rounded
+                                                source={this.chooseAvatar(this.state.activity.category)}
+                                                onPress={() => console.log("Works!")}
+                                                activeOpacity={0.7}
+                                            />
+                                        </View>
+                                        <Text>{this.state.activity.category}</Text>
+                                        <Text>{this.state.activity.title}</Text>
+                                        <Text>{this.state.activity.description}</Text>
+                                        <Text>{this.state.activity.owner.username}</Text>
+                                        <Button
+                                            title="Close"
+                                            onPress={this.toggleCancel}
                                         />
                                     </View>
-                                    <Text>{this.state.activity.category}</Text>
-                                    <Text>{this.state.activity.title}</Text>
-                                    <Text>{this.state.activity.description}</Text>
-                                    <Text>{this.state.activity.owner.username}</Text>
-                                    <Button
-                                        title="Close"
-                                        onPress={this.toggleCancel}
-                                    />
-                                </View>
-                                {this.state.activity.owner.uid === this.props.user.uid ?
-                                    <Button
-                                        title="Delete"
-                                        onPress={this.deleteActivity}
-                                    /> :
-                                    <Button
-                                        title="Quit"
-                                        onPress={this.quitActivity}
-                                    />
-                                }
-                            </Modal> :
-                            <View/>}
-                    </View> :
+                                    {this.state.activity.owner.uid === this.props.user.uid ?
+                                        <Button
+                                            title="Delete"
+                                            onPress={this.deleteActivity}
+                                        /> :
+                                        <Button
+                                            title="Quit"
+                                            onPress={this.quitActivity}
+                                        />
+                                    }
+                                </Modal> :
+                                <View/>}
+                        </View>
+                    </ScrollView> :
+
                     <Notice/>
                 }
-            </ScrollView>
+            </View>
 
         );
     }
@@ -178,10 +183,10 @@ const styles = StyleSheet.create({
         width: 'auto',
         height: 'auto',
         alignItems: 'center',
-        elevation:2,
-        shadowColor:'#000',
-        shadowOpacity:0.3,
-        shadowOffset:{width:2,height:-2}
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOpacity: 0.3,
+        shadowOffset: {width: 2, height: -2}
     },
     avatarContainer: {
         alignItems: 'center'
