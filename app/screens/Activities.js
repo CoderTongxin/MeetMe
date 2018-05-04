@@ -184,7 +184,7 @@ export default class Activities extends React.Component {
         } else {
             this.state.isModalVisible = true;
             this.state.isJoined = false;
-            actRef.child(act.uid).on('value', (activity) => {
+            actRef.child(act.id).on('value', (activity) => {
                 this.setState({
                     act: activity.val(),
                 });
@@ -226,7 +226,9 @@ export default class Activities extends React.Component {
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
+
         for (const key in participants) {
+
             if (participants.uid === this.state.user.id) {
                 this.setState({isJoined: true})
             }
@@ -241,7 +243,6 @@ export default class Activities extends React.Component {
         this.setState({
             participantsNames: names
         });
-        console.log(this.state.participantsNames)
     }
 
     hideActDetail() {
