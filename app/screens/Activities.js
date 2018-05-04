@@ -68,7 +68,8 @@ export default class Activities extends React.Component {
             },
         };
         this.ListenForClick = this.ListenForClick.bind(this);
-        this.joinAct=this.joinAct.bind(this)
+        this.joinAct=this.joinAct.bind(this);
+        this.hideActDetail=this.hideActDetail.bind(this)
     };
 
     componentWillMount() {
@@ -131,7 +132,10 @@ export default class Activities extends React.Component {
 
     listenForAct() {
         actRef.on('value', (snap) => {
+
             const activities = snap.val();
+
+
             this.setState({
                 activities: activities
             });
@@ -148,11 +152,11 @@ export default class Activities extends React.Component {
                 let image = null;
 
                 if (activities[key].category === 'Food') {
-                    image = {uri: "https://static.boredpanda.com/blog/wp-content/uploads/2015/05/food-cubes-raw-lernert-sander-volkskrant-6.jpg"};
+                    image = {uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzmmlMO4bU3-nVBI7QJQ0qgx9BAqgSGr2BCnL7chiu3n2Rbxw5"};
                 } else if (activities[key].category === 'Sport') {
                     image = {uri: "http://www.youthvillage.co.za/wp-content/uploads/2014/10/football-fiesta-salisbury.jpg"};
                 } else if (activities[key].category === 'Shopping') {
-                    image = {uri: "http://freedesignfile.com/upload/2016/12/Happy-shopping-woman-HD-picture.jpg"};
+                    image = {uri: "https://optinmonster.com/wp-content/uploads/2016/03/Reduce-Shopping-Cart-Abandonment.png"};
                 } else if (activities[key].category === 'Movie') {
                     image = {uri: "https://st.depositphotos.com/2185383/4533/v/950/depositphotos_45330093-stock-illustration-cinema-concept.jpg"};
                 } else if (activities[key].category === 'Study') {
@@ -166,6 +170,7 @@ export default class Activities extends React.Component {
                 }
 
                 placesArray.push({
+                    uid:key,
                     actNum: count,
                     location: {
                         latitude: activities[key].location.latitude,
@@ -203,10 +208,13 @@ export default class Activities extends React.Component {
             const value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
-            this.setState({
-                act: act,
+            this.state.isModalVisible = true;
+            actRef.child(act.uid).on('value',(activity)=>{
+                this.setState({
+                    act: activity.val(),
+                });
             });
-            this.state.isModalVisible = true
+
         }
     }
 
@@ -228,6 +236,9 @@ export default class Activities extends React.Component {
         });
     };
 
+hideActDetail(){
+    this.setState({isModalVisible: false})
+}
 
     render() {
         const interpolations = this.state.actPlaces.map((act, index) => {
@@ -365,15 +376,15 @@ export default class Activities extends React.Component {
                 </Animated.ScrollView>
 
                 <Modal isVisible={this.state.isModalVisible}
-                       onBackdropPress={() => this.setState({isModalVisible: false})}
-                       onBackButtonPress={() => this.setState({isModalVisible: false})}
+                       onBackdropPress={this.hideActDetail}
+                       onBackButtonPress={this.hideActDetail}
                        backdropColor={'#2E3347'}
                        backdropOpacity={0}
                 >
                     <View style={styles.modalContainer}>
                         <Image source={this.state.act.image} style={styles.image}/>
                         <View style={styles.closeIcon}>
-                            <TouchableOpacity onPress={() => this.setState({isModalVisible: false})}>
+                            <TouchableOpacity onPress={this.hideActDetail}>
                                 <Icon name="close" size={28} color="#2E3347"/>
                             </TouchableOpacity>
                         </View>
