@@ -10,6 +10,7 @@ import Modal from 'react-native-modal'
 import Notice from './Notice'
 import ActivityDetail from './ActivityDetail'
 import {firebaseRef} from "../servers/Firebase";
+
 const {width, height} = Dimensions.get("window");
 const MODAL_HEIGH = height * 0.8;
 const MODAL_WIDTH = width * 0.8;
@@ -108,8 +109,7 @@ export default class ActivityList extends React.Component {
 
     render() {
         return (
-            <View style={{flex:1}}>
-
+            <View style={{flex: 1}}>
                 {this.props.list.length > 0 ?
                     <ScrollView>
                         <View style={styles.list}>
@@ -139,7 +139,8 @@ export default class ActivityList extends React.Component {
                                        backdropOpacity={0}
                                 >
                                     <View style={styles.modalContainer}>
-                                        <Image source={this.chooseAvatar(this.state.activity.category)} style={styles.image}/>
+                                        <Image source={this.chooseAvatar(this.state.activity.category)}
+                                               style={styles.image}/>
                                         <View style={styles.closeIcon}>
                                             <TouchableOpacity onPress={this.toggleCancel}>
                                                 <Icon name="close" size={28} color="#2E3347"/>
@@ -151,7 +152,12 @@ export default class ActivityList extends React.Component {
                                                 style={styles.button}
                                                 backgroundColor='#03A9F4'
                                                 fontFamily='Lato'
-                                                buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                                buttonStyle={{
+                                                    borderRadius: 0,
+                                                    marginLeft: 0,
+                                                    marginRight: 0,
+                                                    marginBottom: 0
+                                                }}
                                                 title="Delete"
                                                 onPress={this.deleteActivity}
                                             /> :
@@ -159,7 +165,12 @@ export default class ActivityList extends React.Component {
                                                 style={styles.button}
                                                 backgroundColor='#03A9F4'
                                                 fontFamily='Lato'
-                                                buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                                buttonStyle={{
+                                                    borderRadius: 0,
+                                                    marginLeft: 0,
+                                                    marginRight: 0,
+                                                    marginBottom: 0
+                                                }}
                                                 title="Quit"
                                                 onPress={this.quitActivity}
                                             />
@@ -207,7 +218,7 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         height: MODAL_HEIGH,
-        width:'auto',
+        width: 'auto',
         elevation: 2,
         backgroundColor: "#FFF",
         margin: 15,

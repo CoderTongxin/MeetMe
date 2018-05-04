@@ -11,8 +11,7 @@ import {
     Image
 } from 'react-native';
 import Header from 'react-navigation/src/views/Header/Header';
-import {Avatar, Button} from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Avatar, Button,Icon} from 'react-native-elements';
 import {firebaseRef} from "../servers/Firebase";
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -100,8 +99,8 @@ export default class Profile extends React.Component {
                                 {this.state.user.email ?
                                     <View style={styles.textContainer}>
                                         <Icon
-                                            name='envelope'
-                                            size={15}
+                                            name='mail-outline'
+                                            size={17}
                                             color='#000'
                                         />
                                         <Text style={styles.emailText}>
@@ -121,8 +120,8 @@ export default class Profile extends React.Component {
                                         title='Log out'
                                         icon={
                                             <Icon
-                                                name='sign-out'
-                                                size={18}
+                                                name='exit-to-app'
+                                                size={20}
                                                 color='white'
                                             />}
                                         buttonStyle={{
@@ -180,7 +179,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     emailText: {
-        marginLeft: 10,
+        marginLeft: 5,
         fontSize: 16,
         color: '#000',
     },

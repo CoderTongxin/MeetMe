@@ -152,7 +152,7 @@ export default class Activities extends React.Component {
                 let image = null;
 
                 if (activities[key].category === 'Food') {
-                    image = {uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzmmlMO4bU3-nVBI7QJQ0qgx9BAqgSGr2BCnL7chiu3n2Rbxw5"};
+                    image = {uri: "https://thumbs.dreamstime.com/b/breakfast-food-square-icon-set-sixteen-isolated-decorative-icons-meal-symbols-different-background-colour-shadows-80495704.jpg"};
                 } else if (activities[key].category === 'Sport') {
                     image = {uri: "http://www.youthvillage.co.za/wp-content/uploads/2014/10/football-fiesta-salisbury.jpg"};
                 } else if (activities[key].category === 'Shopping') {

@@ -23,6 +23,7 @@ const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
 stylesheet.pickerTouchable.normal.height = 36;
 stylesheet.pickerTouchable.error.height = 36;
 import t from 'tcomb-form-native';
+import {Font} from "expo";
 
 const Form = t.form.Form;
 const Options = {
@@ -71,7 +72,11 @@ export default class SignUp extends React.Component {
         this._goBack = this._goBack.bind(this);
         this.onChange=this.onChange.bind(this)
     }
-
+    async componentDidMount() {
+        await Font.loadAsync({
+            'bold': require('../../assets/fonts/Montserrat-Bold.ttf'),
+        });
+    }
     signup = () => {
         let userInfo = this.refs.form.getValue();
         if (userInfo) {
@@ -128,7 +133,9 @@ export default class SignUp extends React.Component {
             <KeyboardAwareScrollView>
                 <Loader loading={this.state.loading}/>
                 <View style={styles.container}>
-                    <Logo/>
+                    <View style={styles.title}>
+                        <Text style={styles.travelText}>Seya</Text>
+                    </View>
                     <Form
                         ref='form'
                         type={UserInfo}
@@ -136,10 +143,14 @@ export default class SignUp extends React.Component {
                         value={this.state.formValue}
                         onChange={this.onChange}
                     />
+                    <View style={{marginTop:10}}>
                     <Button
                         title="Submit"
                         onPress={this.signup}
+                        buttonStyle={styles.buttonStyle}
+                        titleStyle={styles.buttonTitle}
                     />
+                    </View>
                     <View style={styles.footerContainer}>
                         <View style={styles.footerView}>
                             <Text style={{color: '#000000'}}>
@@ -170,11 +181,22 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#ffffff'
     },
+    title: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    travelText: {
+        color: '#2E3347',
+        fontSize: 30,
+        fontFamily: 'bold'
+    },
     formContainer: {
         flex: 1,
     },
     footerContainer: {
         flex: 1,
+        marginBottom:-8,
         justifyContent: 'flex-end'
     },
     footerView: {
@@ -182,4 +204,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    buttonStyle:{
+        elevation: 2,
+        shadowColor: "#000",
+        shadowRadius: 5,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    },
+    buttonTitle:{
+        fontWeight: 'bold',
+        color: '#fff',
+        fontSize: 18
+    }
 })

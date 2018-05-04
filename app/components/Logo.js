@@ -3,29 +3,30 @@ import {
     StyleSheet,
     Text,
     View,
-    Image
 } from 'react-native';
 
 export default class Logo extends Component {
+    constructor(props){
+        super(props)
+    }
     render(){
         return(
-            <View style={styles.container}>
-                <Image  style={{width:80, height: 80}}
-                        source={require('../../resource/images/logo.png')}/>
+            <View style={styles.title}>
+                <Text style={styles.travelText}>Seya</Text>
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container : {
+    title: {
         flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        marginVertical:10
     },
-    logoText : {
-        marginVertical: 15,
-        fontSize:20,
-        color:'#000000'
-    }
+    travelText: {
+        color: '#2E3347',
+        fontSize: 30,
+        fontWeight:'bold'
+    },
 });
