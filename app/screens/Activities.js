@@ -15,7 +15,8 @@ import {Icon, Divider, Button} from 'react-native-elements';
 import Modal from "react-native-modal";
 import MapView from "react-native-maps";
 import {firebaseRef} from "../servers/Firebase";
-import ActivityDetail from'../components/ActivityDetail'
+import ActivityDetail from '../components/ActivityDetail'
+
 const db = firebaseRef.database();
 const actRef = db.ref("activities");
 const dateFormat = require('dateformat');
@@ -68,8 +69,8 @@ export default class Activities extends React.Component {
             },
         };
         this.ListenForClick = this.ListenForClick.bind(this);
-        this.joinAct=this.joinAct.bind(this);
-        this.hideActDetail=this.hideActDetail.bind(this)
+        this.joinAct = this.joinAct.bind(this);
+        this.hideActDetail = this.hideActDetail.bind(this)
     };
 
     componentWillMount() {
@@ -170,7 +171,7 @@ export default class Activities extends React.Component {
                 }
 
                 placesArray.push({
-                    uid:key,
+                    uid: key,
                     actNum: count,
                     location: {
                         latitude: activities[key].location.latitude,
@@ -198,8 +199,6 @@ export default class Activities extends React.Component {
                 actPlaces: placesArray
             });
         });
-
-
     }
 
     ListenForClick(act) {
@@ -209,7 +208,7 @@ export default class Activities extends React.Component {
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
             this.state.isModalVisible = true;
-            actRef.child(act.uid).on('value',(activity)=>{
+            actRef.child(act.uid).on('value', (activity) => {
                 this.setState({
                     act: activity.val(),
                 });
@@ -236,9 +235,9 @@ export default class Activities extends React.Component {
         });
     };
 
-hideActDetail(){
-    this.setState({isModalVisible: false})
-}
+    hideActDetail() {
+        this.setState({isModalVisible: false})
+    }
 
     render() {
         const interpolations = this.state.actPlaces.map((act, index) => {

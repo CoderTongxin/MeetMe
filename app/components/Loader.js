@@ -6,7 +6,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-export default class SubmitButton extends Component {
+export default class Loader extends Component {
     constructor(props) {
         super(props);
     }

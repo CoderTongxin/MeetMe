@@ -47,7 +47,6 @@ export default class Login extends React.Component {
     }
 
     checkLogin() {
-        console.log("check");
         firebaseRef.auth().onAuthStateChanged(function (user) {
             if (user) {
                 this.setState({
@@ -143,14 +142,11 @@ export default class Login extends React.Component {
 
         return (
             <View style={styles.container}>
-
-
                 <Loader loading={this.state.showLoading}/>
-
                 {this.state.fontLoaded ?
                     <View style={styles.loginView}>
                         <View style={styles.title}>
-                                <Text style={styles.travelText}>Seya</Text>
+                            <Text style={styles.travelText}>Seya</Text>
                         </View>
                         <View style={styles.loginInput}>
                             <Input
