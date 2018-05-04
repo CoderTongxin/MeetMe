@@ -8,6 +8,7 @@ import {
     Image,
     Dimensions,
     StatusBar,
+    AsyncStorage,
 } from 'react-native';
 
 import {Icon, Divider, Button} from 'react-native-elements';
@@ -36,8 +37,9 @@ export default class Activities extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            user: null,
             activities: null,
-            actPlaces: [],
+            actCards: [],
             region: {
                 latitude: -36.84705474575118,
                 longitude: 174.76480531990111,
@@ -45,28 +47,10 @@ export default class Activities extends React.Component {
                 longitudeDelta: 0.01,
             },
             isModalVisible: false,
-            act: {
-                actNum: null,
-                location: {
-                    latitude: null,
-                    longitude: null,
-                },
-                title: null,
-                category: null,
-                description: null,
-                id: null,
-                time: {
-                    date: null,
-                    time: null,
-                },
-                owner: {
-                    uid: null,
-                    username: null,
-                },
-                status: null,
-                image: {uri: "https://static.boredpanda.com/blog/wp-content/uploads/2015/05/food-cubes-raw-lernert-sander-volkskrant-6.jpg"},
-                participants: null
-            },
+            act: null,
+            participantsNames: '',
+            isJoined: null,
+
         };
         this.ListenForClick = this.ListenForClick.bind(this);
         this.joinAct = this.joinAct.bind(this);
@@ -82,14 +66,23 @@ export default class Activities extends React.Component {
         this.getUserLocation();
         this.listenForAct();
         this.listenForAnimation();
+        this.getUserInfo();
     };
+
+    getUserInfo() {
+        AsyncStorage.getItem('user', (err, result) => {
+            this.setState({
+                user: JSON.parse(result)
+            });
+        })
+    }
 
     listenForAnimation() {
         this.animation.addListener(({value}) => {
             let index = Math.floor(value / (CARD_WIDTH + 2 * CARD_MARGIN) + 0.3);
             CARD_INDEX = index;
-            if (index >= this.state.actPlaces.length) {
-                index = this.state.actPlaces.length - 1;
+            if (index >= this.state.actCards.length) {
+                index = this.state.actCards.length - 1;
             }
             if (index <= 0) {
                 index = 0;
@@ -99,7 +92,7 @@ export default class Activities extends React.Component {
             this.regionTimeout = setTimeout(() => {
                 if (this.index !== index) {
                     this.index = index;
-                    const {location} = this.state.actPlaces[index];
+                    const {location} = this.state.actCards[index];
                     this.map.animateToRegion(
                         {
                             ...location,
@@ -140,7 +133,7 @@ export default class Activities extends React.Component {
             this.setState({
                 activities: activities
             });
-            const placesArray = [];
+            const cardsArray = [];
             let count = 0;
             for (const key in activities) {
                 const participantsArray = [];
@@ -150,29 +143,10 @@ export default class Activities extends React.Component {
                         username: activities[key].participants[keyB].username,
                     });
                 }
-                let image = null;
 
-                if (activities[key].category === 'Food') {
-                    image = {uri: "https://thumbs.dreamstime.com/b/breakfast-food-square-icon-set-sixteen-isolated-decorative-icons-meal-symbols-different-background-colour-shadows-80495704.jpg"};
-                } else if (activities[key].category === 'Sport') {
-                    image = {uri: "http://www.youthvillage.co.za/wp-content/uploads/2014/10/football-fiesta-salisbury.jpg"};
-                } else if (activities[key].category === 'Shopping') {
-                    image = {uri: "https://optinmonster.com/wp-content/uploads/2016/03/Reduce-Shopping-Cart-Abandonment.png"};
-                } else if (activities[key].category === 'Movie') {
-                    image = {uri: "https://st.depositphotos.com/2185383/4533/v/950/depositphotos_45330093-stock-illustration-cinema-concept.jpg"};
-                } else if (activities[key].category === 'Study') {
-                    image = {uri: "http://www.nebrija.com/medios/actualidadnebrija/wp-content/uploads/sites/2/2016/11/bbva-educacion-1920x0-c-f-787x459.jpg"};
-                } else if (activities[key].category === 'Game') {
-                    image = {uri: "https://images.unsplash.com/10/wii.jpg?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=592b3b24ffafc20dbe8b0a1df97ef5c6&w=1000&q=80"};
-                } else if (activities[key].category === 'Pet') {
-                    image = {uri: "http://yourdost-blog-images.s3-ap-southeast-1.amazonaws.com/wp-content/uploads/2016/01/03170233/cute-cat.jpg"};
-                } else {
-                    image = {uri: "https://static1.squarespace.com/static/51277219e4b08376dc025505/t/55f17df3e4b0d3922cc4c416/1441889779581/?format=300w"};
-                }
-
-                placesArray.push({
-                    uid: key,
+                cardsArray.push({
                     actNum: count,
+                    id: activities[key].id,
                     location: {
                         latitude: activities[key].location.latitude,
                         longitude: activities[key].location.longitude,
@@ -180,7 +154,6 @@ export default class Activities extends React.Component {
                     title: activities[key].title,
                     category: activities[key].category,
                     description: activities[key].description,
-                    id: key,
                     time: {
                         date: activities[key].time.date,
                         time: activities[key].time.time,
@@ -190,15 +163,17 @@ export default class Activities extends React.Component {
                         username: activities[key].owner.username,
                     },
                     status: activities[key].status,
-                    image: image,
-                    participants: {participantsArray}
+                    image: activities[key].image,
+                    participants: participantsArray
                 });
                 count++;
             }
             this.setState({
-                actPlaces: placesArray
+                actCards: cardsArray
             });
         });
+
+
     }
 
     ListenForClick(act) {
@@ -208,11 +183,14 @@ export default class Activities extends React.Component {
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
             this.state.isModalVisible = true;
+            this.state.isJoined = false;
             actRef.child(act.uid).on('value', (activity) => {
                 this.setState({
                     act: activity.val(),
                 });
+                this.getParticipantsUsername(activity.val().participants)
             });
+
 
         }
     }
@@ -235,12 +213,43 @@ export default class Activities extends React.Component {
         });
     };
 
+    quitAct(act) {
+        firebaseRef.database().ref('activities/' + act.id + '/participants/' + this.state.user.uid).remove().then(() => {
+            firebaseRef.database().ref('users/' + this.state.user.uid + '/activities/' + act.id).remove().then(() => {
+                this.setState({
+                    isJoined: false
+                })
+            })
+        })
+    };
+
+    getParticipantsUsername(participants) {
+        let count = 0;
+        let names = '';
+        for (const key in participants) {
+            if (participants.uid === this.state.user.id) {
+                this.setState({isJoined: true})
+            }
+
+            if (count === 0) {
+                names += participants[key].username;
+            } else {
+                names += ', ' + participants[key].username;
+            }
+            count++
+        }
+        this.setState({
+            participantsNames: names
+        });
+        console.log(this.state.participantsNames)
+    }
+
     hideActDetail() {
         this.setState({isModalVisible: false})
     }
 
     render() {
-        const interpolations = this.state.actPlaces.map((act, index) => {
+        const interpolations = this.state.actCards.map((act, index) => {
             const inputRange = [
                 (index - 1) * (CARD_WIDTH + 2 * CARD_MARGIN),
                 index * (CARD_WIDTH + 2 * CARD_MARGIN),
@@ -280,7 +289,7 @@ export default class Activities extends React.Component {
                     initialRegion={this.state.region}
                     style={styles.container}
                 >
-                    {this.state.actPlaces.map((act, index) => {
+                    {this.state.actCards.map((act, index) => {
                         const scaleStyle = {
                             transform: [
                                 {
@@ -331,7 +340,7 @@ export default class Activities extends React.Component {
                     style={styles.scrollView}
                     contentContainerStyle={styles.endPadding}
                 >
-                    {this.state.actPlaces.map((act, index) => {
+                    {this.state.actCards.map((act, index) => {
                         cardIndex = index;
                         const cardScale = {
                             transform: [
@@ -374,30 +383,47 @@ export default class Activities extends React.Component {
                     })}
                 </Animated.ScrollView>
 
-                <Modal isVisible={this.state.isModalVisible}
-                       onBackdropPress={this.hideActDetail}
-                       onBackButtonPress={this.hideActDetail}
-                       backdropColor={'#2E3347'}
-                       backdropOpacity={0}
-                >
-                    <View style={styles.modalContainer}>
-                        <Image source={this.state.act.image} style={styles.image}/>
-                        <View style={styles.closeIcon}>
-                            <TouchableOpacity onPress={this.hideActDetail}>
-                                <Icon name="close" size={28} color="#2E3347"/>
-                            </TouchableOpacity>
+                {this.state.act ?
+                    <Modal isVisible={this.state.isModalVisible}
+                           onBackdropPress={this.hideActDetail}
+                           onBackButtonPress={this.hideActDetail}
+                           backdropColor={'#2E3347'}
+                           backdropOpacity={0}
+                    >
+                        <View style={styles.modalContainer}>
+
+                            <Image source={this.state.act.image} style={styles.image}/>
+
+                            <View style={styles.closeIcon}>
+                                <TouchableOpacity onPress={this.hideActDetail}>
+                                    <Icon name="close" size={28} color="#2E3347"/>
+                                </TouchableOpacity>
+                            </View>
+                            {/*<ActivityDetail act={this.state.act} names={this.getParticipantsUsername(this.state.participantsNames)}/>*/}
+                            {this.state.isJoined === false ?
+                                <Button
+                                    style={styles.button}
+                                    backgroundColor='#03A9F4'
+                                    fontFamily='Lato'
+                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                    title='Join Now'
+                                    onPress={() => this.joinAct(this.state.act)}
+                                />
+                                :
+                                <Button
+                                    style={styles.button}
+                                    backgroundColor='red'
+                                    fontFamily='Lato'
+                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                    title='Quit'
+                                    onPress={() => this.quitAct(this.state.act)}
+                                />
+                            }
                         </View>
-                        <ActivityDetail act={this.state.act}/>
-                        <Button
-                            style={styles.button}
-                            backgroundColor='#03A9F4'
-                            fontFamily='Lato'
-                            buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-                            title='Join Now'
-                            onPress={() => this.joinAct(this.state.act)}
-                        />
-                    </View>
-                </Modal>
+                    </Modal>
+                    :
+                    <View/>
+                }
             </View>
 
         );

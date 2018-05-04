@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text, ScrollView} from 'react-native';
-import {Divider} from 'react-native-elements';
+import {StyleSheet, View, ScrollView} from 'react-native';
+import { Text, Divider } from 'react-native-elements';
 import MapView from "react-native-maps";
 
 
@@ -9,35 +9,67 @@ export default class ActivitiesDetail extends React.Component {
         super(props)
     }
 
+    // getParticipantsUsername(participants) {
+    //     let count = 0;
+    //     let names = '';
+    //     for (const key in participants) {
+    //         if (participants.uid===this.state.user.id){
+    //             this.setState({isJoined:true})
+    //         }
+    //
+    //         if (count === 0) {
+    //             names += participants[key].username;
+    //         } else {
+    //             names += ', ' + participants[key].username;
+    //         }
+    //         count++
+    //     }
+    //     return names;
+    // }
+
     render() {
         return (
             <View style={{flex: 6}}>
-                <ScrollView>
-                    <View style={styles.actInfo}>
-                        <Text>
+
+                <View style={styles.actInfo}>
+                    <View style={styles.actInfoLine}>
+                        <Text style={styles.actInfoTitle}>
                             {this.props.act.title}
                         </Text>
-                        <Divider/>
-                        <Text>
-                            Activity Category: {this.props.act.category}
-                        </Text>
-                        <Text>
-                            Activity Date: {this.props.act.time.date}
-                        </Text>
-                        <Text>
-                            Activity Time: {this.props.act.time.time}
-                        </Text>
-                        <Text>
-                            Activity Creator: {this.props.act.owner.username}
-                        </Text>
-                        <Text>
-                            Activity Participants: Jack Tester, Tom Tester, James Tester
-                        </Text>
-                        <Text>
-                            Activity Description: {this.props.act.description}
+                    </View>
+                    <Divider/>
+                    <View style={styles.actInfoLine}>
+                        <Text style={styles.actInfoDetail}>
+                            Category: {this.props.act.category}
                         </Text>
                     </View>
-                </ScrollView>
+                    <View style={styles.actInfoLine}>
+                        <Text style={styles.actInfoDetail}>
+                            Date: {this.props.act.time.date}
+                        </Text>
+                    </View>
+                    <View style={styles.actInfoLine}>
+                        <Text style={styles.actInfoDetail}>
+                            Time: {this.props.act.time.time}
+                        </Text>
+                    </View>
+                    <View style={styles.actInfoLine}>
+                        <Text style={styles.actInfoDetail}>
+                            Creator: {this.props.act.owner.username}
+                        </Text>
+                    </View>
+                    <View style={styles.actInfoLine}>
+                        <Text style={styles.actInfoDetail}>
+                            Participants:this.props.names
+                        </Text>
+                    </View>
+                    <View style={{flex:2}}>
+                        <Text style={styles.actInfoDetail}>
+                            Description: {this.props.act.description}
+                        </Text>
+                    </View>
+                </View>
+
                 <View style={styles.mapContainer}>
                     <MapView
                         style={styles.map}
@@ -69,13 +101,14 @@ export default class ActivitiesDetail extends React.Component {
 const styles = StyleSheet.create({
     actInfo: {
         flex: 3,
-        margin:10,
-        marginBottom:0
+        margin: 10,
+        marginBottom: 0,
+        justifyContent: 'space-around',
     },
     mapContainer: {
-        flex: 4,
-        margin:10,
-        marginTop:0,
+        flex: 3,
+        margin: 10,
+        marginTop: 0,
         elevation: 2,
         backgroundColor: "#FFF",
         shadowColor: "#000",
@@ -86,6 +119,24 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: '100%',
+    },
+
+    actInfoLine: {
+        flex: 1
+    },
+
+    actInfoTitle: {
+        fontSize: 24,
+        fontWeight: "bold",
+        textAlign:'center',
+        // fontFamily: 'Lato',
+    },
+
+    actInfoDetail: {
+        fontSize: 18,
+        color: "#444",
+        textAlign: "justify",
+        // fontFamily: 'Lato',
     },
 
 });
