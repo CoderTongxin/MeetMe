@@ -190,8 +190,6 @@ export default class Activities extends React.Component {
                 });
                 this.getParticipantsUsername(activity.val().participants)
             });
-
-
         }
     }
 
@@ -365,7 +363,6 @@ export default class Activities extends React.Component {
                                         resizeMode="cover"
                                     />
                                     <View style={styles.textContent} key={index}>
-
                                         <Text numberOfLines={1} style={styles.cardTitle}>
                                             {act.title}
                                         </Text>
@@ -376,7 +373,6 @@ export default class Activities extends React.Component {
                                         <Text numberOfLines={1} style={styles.cardDescription}>
                                             {dateFormat(act.time.date, "d mmm yyyy")}
                                         </Text>
-
                                     </View>
                                 </TouchableOpacity>
                             </Animated.View>
@@ -400,7 +396,7 @@ export default class Activities extends React.Component {
                                     <Icon name="close" size={28} color="#2E3347"/>
                                 </TouchableOpacity>
                             </View>
-                            {/*<ActivityDetail act={this.state.act} names={this.getParticipantsUsername(this.state.participantsNames)}/>*/}
+                            <ActivityDetail act={this.state.act} names={this.state.participantsNames}/>
                             {this.state.isJoined === false ?
                                 <Button
                                     style={styles.button}

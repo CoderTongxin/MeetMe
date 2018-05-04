@@ -9,24 +9,6 @@ export default class ActivitiesDetail extends React.Component {
         super(props)
     }
 
-    // getParticipantsUsername(participants) {
-    //     let count = 0;
-    //     let names = '';
-    //     for (const key in participants) {
-    //         if (participants.uid===this.state.user.id){
-    //             this.setState({isJoined:true})
-    //         }
-    //
-    //         if (count === 0) {
-    //             names += participants[key].username;
-    //         } else {
-    //             names += ', ' + participants[key].username;
-    //         }
-    //         count++
-    //     }
-    //     return names;
-    // }
-
     render() {
         return (
             <View style={{flex: 6}}>
@@ -60,7 +42,7 @@ export default class ActivitiesDetail extends React.Component {
                     </View>
                     <View style={styles.actInfoLine}>
                         <Text style={styles.actInfoDetail}>
-                            Participants:this.props.names
+                            Participants:{this.props.names}
                         </Text>
                     </View>
                     <View style={{flex:2}}>
