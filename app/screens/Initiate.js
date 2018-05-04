@@ -135,7 +135,6 @@ Initiate.navigationOptions = ({navigation}) => ({
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor:'#A6A6A6',
     },
     formContainer: {
         flex: 1,

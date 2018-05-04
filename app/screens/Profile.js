@@ -48,7 +48,6 @@ export default class Profile extends React.Component {
 
     render() {
         return (
-            <ScrollView>
             <View style={styles.container}>
                 {/*The key part to rewrite Header and make a icon to close the modal screen*/}
                 <Header
@@ -139,7 +138,6 @@ export default class Profile extends React.Component {
                         </View>
                     </View>
                 </View>
-            </ScrollView>
         );
     }
 }
