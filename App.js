@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Root} from './app/config/Route';
 
