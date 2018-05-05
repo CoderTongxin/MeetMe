@@ -7,15 +7,10 @@ import {
     Dimensions
 } from 'react-native';
 import {Button} from 'react-native-elements';
-import Logo from '../components/Logo';
 import {firebaseRef} from '../servers/Firebase'
-import SubmitButton from '../components/SubmitButton';
 import Loader from '../components/Loader';
-import {HomeScreenRoot} from "../config/Route";
 import {storeUserInfo} from '../common/js/userInfo';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-
-
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const _ = require('lodash');
@@ -91,7 +86,7 @@ export default class SignUp extends React.Component {
                         avatar: this.defaultAvatar(userInfo.gender)
                     };
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then(() => {
-                            this.storeUserInfo(user);
+                            this.storeUser(user);
                         }
                     );
                 }).catch(function (error) {
@@ -117,10 +112,9 @@ export default class SignUp extends React.Component {
         })
     }
 
-    storeUserInfo(user) {
-        this.setState({loading: false});
+    storeUser(user) {
         storeUserInfo(user);
-        this.props.navigation.navigate('HomeScreenRoot');
+        this.setState({loading: false});
     }
 
     _goBack() {

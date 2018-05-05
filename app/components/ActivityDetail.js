@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
 
     inlineInfo: {
         flexDirection: 'row',
-        color: "#808080",
         marginTop: 5
     },
 

@@ -50,7 +50,7 @@ export default class Schedule extends React.Component {
                     const joinedActivities = [];
                     activities.map((activity) => {
                         if (activity.val().owner.uid !== user.uid) {
-                            joinedActivities.push(activity.val().category)
+                            joinedActivities.push(activity)
                         }
                     });
 

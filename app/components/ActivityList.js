@@ -22,37 +22,13 @@ export default class ActivityList extends React.Component {
         this.state = {
             activities: [],
             activity: null,
-            showDetail: false
+            showDetail: false,
+            participantsNum: 0,
+            participantsNames: '',
+            activityKey:''
         };
+        this.toggle=this.toggle.bind(this);
         this.toggleCancel = this.toggleCancel.bind(this);
-        this.deleteActivity = this.deleteActivity.bind(this);
-    }
-
-    componentDidMount() {
-
-    }
-
-    chooseAvatar(category) {
-        switch (category) {
-            case 'Food':
-                return require('../../resource/images/food.png');
-            case 'Sport':
-                return require('../../resource/images/sports.png');
-            case 'Game':
-                return require('../../resource/images/game.png');
-            case 'Movie':
-                return require('../../resource/images/movie.png');
-            case 'Pet':
-                return require('../../resource/images/pet.png');
-            case 'Study':
-                return require('../../resource/images/study.png');
-            case 'Shopping':
-                return require('../../resource/images/shopping.png');
-            default:
-                return require('../../resource/images/shopping.png')
-
-        }
-
     }
 
 
@@ -63,15 +39,13 @@ export default class ActivityList extends React.Component {
     }
 
     toggle(activity) {
-        this.setState({
-            showDetail: !this.state.showDetail,
-            activityKey: activity.key,
-        });
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
             this.setState({
                 activity: activityInfo.val(),
+                showDetail: !this.state.showDetail,
+                activityKey: activity.key,
             });
-
+            this.getParticipantsUsername(activityInfo.val().participants)
         })
 
     }
@@ -79,13 +53,7 @@ export default class ActivityList extends React.Component {
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
-
         for (const key in participants) {
-
-            if (participants.uid === this.state.user.id) {
-                this.setState({isJoined: true})
-            }
-
             if (count === 0) {
                 names += participants[key].username;
             } else {
@@ -94,8 +62,10 @@ export default class ActivityList extends React.Component {
             count++
         }
         this.setState({
-            participantsNames: names
+            participantsNames: names,
+            participantNum: count,
         });
+
     }
 
     deleteActivity() {
@@ -112,7 +82,8 @@ export default class ActivityList extends React.Component {
     }
 
     quitActivity() {
-        firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.state.user.uid).remove().then(() => {
+        console.log('quit');
+        firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
             firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove().then(() => {
                 this.setState({
                     showDetail: !this.state.showDetail,
@@ -122,11 +93,11 @@ export default class ActivityList extends React.Component {
         })
     }
 
-    getIcon(activity) {
-        if (activity.owner.uid === this.props.user.uid) {
+    getIcon(uid) {
+        if (uid === this.props.user.uid) {
             return 'person'
         }
-        return '';
+        return null;
     }
 
     render() {
@@ -137,8 +108,8 @@ export default class ActivityList extends React.Component {
                         <View style={styles.list}>
                             {this.props.list.map((activity, i) => (
                                 <ListItem
-                                    leftAvatar={{rounded: true, source: this.chooseAvatar(activity.val().category)}}
-                                    rightIcon={{name: this.getIcon(activity.val())}}
+                                    leftAvatar={{rounded: true, source: activity.val().image}}
+                                    rightIcon={{name: this.getIcon(activity.val().owner.uid)}}
                                     key={i}
                                     onPress={() => this.toggle(activity)}
                                     title={activity.val().title}
@@ -161,7 +132,7 @@ export default class ActivityList extends React.Component {
                                        backdropOpacity={0}
                                 >
                                     <View style={styles.modalContainer}>
-                                        <Image source={this.chooseAvatar(this.state.activity.category)}
+                                        <Image source={this.state.activity.image}
                                                style={styles.image}/>
                                         <View style={styles.closeIcon}>
                                             <TouchableOpacity onPress={this.toggleCancel}>
@@ -169,33 +140,33 @@ export default class ActivityList extends React.Component {
                                             </TouchableOpacity>
                                         </View>
                                         <ActivityDetail act={this.state.activity}
-                                                        names={this.getParticipantsUsername(this.state.activity.participants)}/>
+                                                        names={this.state.participantsNames}
+                                                        num={this.state.participantNum}/>
                                         {this.state.activity.owner.uid === this.props.user.uid ?
                                             <Button
                                                 style={styles.button}
-                                                backgroundColor='#03A9F4'
-                                                fontFamily='Lato'
                                                 buttonStyle={{
                                                     borderRadius: 0,
                                                     marginLeft: 0,
                                                     marginRight: 0,
-                                                    marginBottom: 0
+                                                    marginBottom: 0,
+                                                    backgroundColor: "#FF4A11"
                                                 }}
                                                 title="Delete"
-                                                onPress={this.deleteActivity}
+                                                onPress={()=>this.deleteActivity()}
                                             /> :
+
                                             <Button
                                                 style={styles.button}
-                                                backgroundColor='#03A9F4'
-                                                fontFamily='Lato'
                                                 buttonStyle={{
                                                     borderRadius: 0,
                                                     marginLeft: 0,
                                                     marginRight: 0,
-                                                    marginBottom: 0
+                                                    marginBottom: 0,
+                                                    backgroundColor: "#FF4A11"
                                                 }}
                                                 title="Quit"
-                                                onPress={this.quitActivity}
+                                                onPress={()=>this.quitActivity()}
                                             />
                                         }
                                     </View>
@@ -233,7 +204,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     image: {
-        flex: 2,
+        flex: 1.2,
         width: "100%",
         height: "100%",
         alignSelf: "center",

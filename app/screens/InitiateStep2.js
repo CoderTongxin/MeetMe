@@ -108,7 +108,7 @@ export default class InitiateStep2 extends React.Component {
             image: image,
         };
 
-        let userInfo = {
+        let activityInfo = {
             actId : postId
         };
 
@@ -129,8 +129,8 @@ export default class InitiateStep2 extends React.Component {
             console.log(error);
         });
 
-        firebaseRef.database().ref('users/' + this.state.user.uid + '/activities/' + postId).set(userInfo).then(() => {
-            //console.log('adding location');
+        firebaseRef.database().ref('users/' + this.state.user.uid + '/activities/' + postId).set(activityInfo).then(() => {
+            //console.log('adding activity to users');
         }).catch((error) => {
             console.log(error);
         });

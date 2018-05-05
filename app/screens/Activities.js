@@ -204,12 +204,15 @@ export default class Activities extends React.Component {
             uid: this.state.user.uid,
             username: this.state.user.username
         };
-
+        let actInfo = {
+            actId : act.id
+        };
         firebaseRef.database().ref('activities/' + act.id + '/participants/' + this.state.user.uid).set(partInfo).then(() => {
-            this.setState({
-                isJoined: true
+            firebaseRef.database().ref('users/' + this.state.user.uid + '/activities/' + act.id).set(actInfo).then(() => {
+                this.setState({
+                    isJoined: true
+                })
             })
-
         }).catch((error) => {
             console.log(error);
         });
@@ -406,14 +409,14 @@ export default class Activities extends React.Component {
                             <ActivityDetail act={this.state.act} names={this.state.participantsNames} num={this.state.participantNum}/>
                             {this.state.isJoined === false ?
                                 <Button
-                                    // style={styles.button}
+                                    style={styles.button}
                                     buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor: "#1DA3F2",}}
                                     title='Join Now'
                                     onPress={() => this.joinAct(this.state.act)}
                                 />
                                 :
                                 <Button
-                                    // style={styles.button}
+                                    style={styles.button}
                                     buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor: "#FF4A11",}}
                                     title='Quit'
                                     onPress={() => this.quitAct(this.state.act)}
@@ -575,7 +578,7 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        flex: 1,
+        flex: 1.2,
         width: "100%",
         height: "100%",
         alignSelf: "center",
@@ -583,7 +586,6 @@ const styles = StyleSheet.create({
 
     modalContainer: {
         height: MODAL_HEIGH,
-
         elevation: 2,
         backgroundColor: "#FFF",
         margin: 15,
