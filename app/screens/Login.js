@@ -1,6 +1,5 @@
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {Input, Button} from 'react-native-elements';
+import {Input, Button, Icon} from 'react-native-elements';
 import {Font} from 'expo';
 import {
     Text,
@@ -140,6 +139,7 @@ export default class Login extends React.Component {
                                 leftIcon={
                                     <Icon
                                         name='user-o'
+                                        type='font-awesome'
                                         size={25}
                                     />
                                 }
@@ -166,6 +166,7 @@ export default class Login extends React.Component {
                                 leftIcon={
                                     <Icon
                                         name='lock'
+                                        type='font-awesome'
                                         size={25}
                                     />
                                 }
@@ -204,6 +205,7 @@ export default class Login extends React.Component {
                                 icon={
                                     <Icon
                                         name='facebook-square'
+                                        type='font-awesome'
                                         size={22}
                                         color='#fff'
                                     />

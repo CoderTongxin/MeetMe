@@ -19,7 +19,10 @@
     "test": "node node_modules/jest/bin/jest.js"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-navigation|dateformat|expo|firebase|lodash|react|react-native-elements|react-native-keyboard-aware-scroll-view|react-native-modalreact-native-tab-view|react-native-vector-icons|react-navigation|tcomb-form-native)"
+    ]
   },
   "dependencies": {
     "dateformat": "^3.0.3",

@@ -2,64 +2,79 @@ import React from 'react';
 import {
     StyleSheet,
     View,
-    ScrollView,
     TouchableOpacity,
     ImageBackground,
 } from 'react-native';
 import {Button, Icon} from 'react-native-elements'
 import t from 'tcomb-form-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 
-const dateFormat = require('dateformat');
+const _ = require('lodash');
+const stylesheet = _.cloneDeep(t.form.Form.stylesheet);
+
+stylesheet.pickerTouchable.normal.height = 36;
+stylesheet.pickerTouchable.error.height = 36;
+stylesheet.textbox.normal.height = 108;
+stylesheet.textbox.error.height = 108;
 
 const Form = t.form.Form;
 
 const options = {
-    order: ['date', 'time'],
+    order: ['category', 'title', 'description'],
     fields: {
-        date: {
-            mode: 'date',
-            error: 'Invalid date',
-            config: {
-                format: ((date) => dateFormat(date, "dddd, mmmm d, yyyy")),
-            },
+        category: {
+            nullOption: {value: '', text: 'Please select activity type'},
+            error: 'Please tell others what kind of activity you are initiating',
+            stylesheet: stylesheet,
         },
-        time: {
-            mode: 'time',
-            error: 'Invalid time',
-            config: {
-                format: ((time) => dateFormat(time, "shortTime")),
-            },
-        }
+        title: {
+            placeholder: 'Please write an activity title',
+            error: 'A beautiful title can attract people to join your activity',
+        },
+        description: {
+            type: 'textarea',
+            placeholder: 'Please write a brief activity description',
+            multiline: true,
+            stylesheet: stylesheet,
+        },
     },
 };
 
+const Category = t.enums({
+    Food: 'Food',
+    Sport: 'Sport',
+    Shopping: 'Shopping',
+    Movie: 'Movie',
+    Study: 'Study',
+    Game: 'Game',
+    Pet: 'Pet',
+    Other: 'Other',
+});
 
 const Activity = t.struct({
-    date: t.Date,
-    time: t.Date,
+    category: Category,
+    title: t.String,
+    description: t.maybe(t.String),
 });
 
 
 export default class Initiate extends React.Component {
 
-    handleClick(actInfo) {
+    handleClick = () => {
         const value = this._form.getValue();
         if (value) {
-            this.props.navigation.navigate(("InitiateStep3"), {actInfo: actInfo, actTime: value});
+            this.props.navigation.navigate(("InitiateStep2"), {actInfo: value});
         }
     };
 
     render() {
-        const {params} = this.props.navigation.state;
-        const actInfo = params ? params.actInfo : null;
         return (
             <ImageBackground
                 source={require('../assert/image/colorful.jpg')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>
-                    <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}>
+                    <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1,justifyContent : 'center'}}>
 
                         <View style={styles.formContainer}>
 
@@ -68,7 +83,6 @@ export default class Initiate extends React.Component {
                                 type={Activity}
                                 options={options}
                             />
-
 
                             <Button
                                 style={styles.button}
@@ -80,7 +94,7 @@ export default class Initiate extends React.Component {
                                     backgroundColor: "#1DA1F2"
                                 }}
                                 title='Next'
-                                onPress={() => this.handleClick(actInfo)}
+                                onPress={this.handleClick}
                             />
 
                         </View>

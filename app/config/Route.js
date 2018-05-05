@@ -8,19 +8,28 @@ import Settings from '../screens/Settings';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
+import InitiateIntro from '../screens/InitiateIntro';
+import InitiateStep1 from '../screens/InitiateStep1';
 import InitiateStep2 from '../screens/InitiateStep2';
 import InitiateStep3 from '../screens/InitiateStep3';
+import InitiateStepEnd from '../screens/InitiateStepEnd';
 
 
 export const InitiateStack = StackNavigator({
-    Initiate: {
-        screen: Initiate,
+    InitiateIntro: {
+        screen: InitiateIntro,
+    },
+    InitiateStep1: {
+        screen: InitiateStep1,
     },
     InitiateStep2: {
         screen: InitiateStep2,
     },
     InitiateStep3: {
         screen: InitiateStep3,
+    },
+    InitiateStepEnd: {
+        screen: InitiateStepEnd,
     },
 }, {
     navigationOptions: {
@@ -45,7 +54,7 @@ export const Tabs = TabNavigator({
         screen: ActivitiesStack,
         navigationOptions: {
             tabBarLabel: 'Activities',
-            tabBarIcon: ({tintColor})=><Icon name='home' type='simple-line-icon' color={tintColor}/>
+            tabBarIcon: ({tintColor}) => <Icon name='home' type='simple-line-icon' color={tintColor}/>
         }
     },
 
@@ -53,7 +62,7 @@ export const Tabs = TabNavigator({
         screen: InitiateStack,
         navigationOptions: {
             tabBarLabel: 'Initiate',
-            tabBarIcon: ({tintColor})=><Icon name='plus' type='simple-line-icon' color={tintColor}/>
+            tabBarIcon: ({tintColor}) => <Icon name='plus' type='simple-line-icon' color={tintColor}/>
         }
     },
 
@@ -62,7 +71,7 @@ export const Tabs = TabNavigator({
         screen: ScheduleStack,
         navigationOptions: {
             tabBarLabel: 'Schedule',
-            tabBarIcon:  ({tintColor})=> <Icon name='calendar' type='simple-line-icon' color={tintColor}/>
+            tabBarIcon: ({tintColor}) => <Icon name='calendar' type='simple-line-icon' color={tintColor}/>
         },
     },
 
@@ -73,7 +82,7 @@ export const Tabs = TabNavigator({
     swipeEnabled: false,
     tabBarOptions: {
         // inactiveTintColor: '#1DA1F2',
-        activeTintColor:'#1DA1F2',
+        activeTintColor: '#1DA1F2',
 
         showLabel: false,
         style: {
