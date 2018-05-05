@@ -329,6 +329,7 @@ export default class Activities extends React.Component {
                         );
                     })}
                 </MapView>
+
                 <Animated.ScrollView
                     ref={c => this.scrollView = c}
                     horizontal
