@@ -24,14 +24,14 @@ export default class Login extends React.Component {
             email: '',
             email_valid: true,
             password: '',
-            login_failed: false,
             showLoading: false,
             password_valid: true,
-            loggedIn: false
+
         };
         this.login = this.login.bind(this);
         this.loginWithFacebook = this.loginWithFacebook.bind(this);
-        this.getUserInfo = this.getUserInfo.bind(this)
+        this.getUserInfo = this.getUserInfo.bind(this);
+        this.checkLogin();
     }
 
     async componentDidMount() {
@@ -41,16 +41,14 @@ export default class Login extends React.Component {
             'bold': require('../../assets/fonts/Montserrat-Bold.ttf'),
         });
         this.setState({fontLoaded: true});
-        if (!this.state.loggedIn) {
-            this.checkLogin();
-        }
+
     }
 
     checkLogin() {
         firebaseRef.auth().onAuthStateChanged(function (user) {
-            if (user) {
+            if (user&&!this.state.user) {
                 this.setState({
-                    loggedIn: true
+                    user:user
                 });
                 this.changeLoadingStatus();
                 this.getUserInfo(user.uid)
@@ -76,7 +74,7 @@ export default class Login extends React.Component {
         this.changeLoadingStatus();
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
             .then((loggedInUser) => {
-                this.getUserInfo(loggedInUser.uid)
+                this.changeLoadingStatus();
             })
             .catch(function (error) {
                 this.changeLoadingStatus();

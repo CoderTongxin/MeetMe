@@ -5,7 +5,6 @@ import Activities from '../screens/Activities';
 import Initiate from '../screens/Initiate';
 import Schedule from '../screens/Schedule';
 import Settings from '../screens/Settings';
-import ActivityInfo from '../screens/ActivityInfo';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
@@ -89,12 +88,6 @@ export const Tabs = TabNavigator({
 export const HomeScreenRoot = StackNavigator({
     Tabs: {
         screen: Tabs,
-    },
-    // MapView: {
-    //     screen: MapView,
-    // },
-    ActivityInfo:{
-        screen: ActivityInfo,
     },
     Profile: {
         screen: Profile,
