@@ -73,7 +73,7 @@ export default class Login extends React.Component {
     login() {
         this.changeLoadingStatus();
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-            .then((loggedInUser) => {
+            .then(() => {
                 this.changeLoadingStatus();
             })
             .catch(function (error) {
@@ -94,14 +94,6 @@ export default class Login extends React.Component {
 
             const credential = firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser) => {
-                const facebookUser = this.getUserInfo(loggedInUser);
-                if (facebookUser) {
-                    firebaseRef.database().ref('users/' + loggedInUser.uid).set(facebookUser).then(() => {
-                        this.changeLoadingStatus();
-                        storeUserInfo(loggedInUser);
-                        this.props.navigation.navigate('HomeScreenRoot');
-                    })
-                } else {
                     const user = {
                         username: loggedInUser.displayName,
                         email: loggedInUser.email,
@@ -109,14 +101,11 @@ export default class Login extends React.Component {
                         avatar: loggedInUser.photoURL,
                         uid: loggedInUser.uid
                     };
+                    this.changeLoadingStatus();
                     firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then(() => {
-                        this.changeLoadingStatus();
                         storeUserInfo(user);
-                        this.props.navigation.navigate('HomeScreenRoot');
                     })
-                }
             }).catch((error) => {
-                this.changeLoadingStatus();
                 Alert.alert(error.message)
             })
         }
