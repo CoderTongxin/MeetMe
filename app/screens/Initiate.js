@@ -111,7 +111,7 @@ Initiate.navigationOptions = ({navigation}) => ({
     headerStyle: {
         elevation: 2,
         shadowOpacity: 1,
-        backgroundColor: '#2E3347',
+        backgroundColor: '#1DA1F2',
     },
     headerTitleStyle: {textAlign: "center", flex: 1},
     headerTintColor: '#fff',
@@ -135,7 +135,6 @@ Initiate.navigationOptions = ({navigation}) => ({
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor:'#A6A6A6',
     },
     formContainer: {
         flex: 1,

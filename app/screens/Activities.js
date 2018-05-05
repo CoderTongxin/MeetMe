@@ -49,10 +49,12 @@ export default class Activities extends React.Component {
             isModalVisible: false,
             act: null,
             participantsNames: '',
+            participantsNum: 0,
             isJoined: false,
 
+
         };
-        this.ListenForClick = this.ListenForClick.bind(this);
+        this.listenForClick = this.listenForClick.bind(this);
         this.joinAct = this.joinAct.bind(this);
         this.hideActDetail = this.hideActDetail.bind(this)
     };
@@ -172,28 +174,26 @@ export default class Activities extends React.Component {
                 actCards: cardsArray
             });
         });
-
-
     }
 
-    ListenForClick(act) {
+    listenForClick(act) {
         const actNum = act.actNum;
         if (actNum !== CARD_INDEX) {
             const value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
             this.state.isModalVisible = true;
-            this.state.isJoined = false;
             actRef.child(act.id).on('value', (activity) => {
                 this.setState({
                     act: activity.val(),
+                    isJoined: false,
                 });
                 this.getParticipantsUsername(activity.val().participants)
             });
         }
     }
 
-    ListenForMarkerClick(act) {
+    listenForMarkerClick(act) {
         let actNum = act.actNum;
         let value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
         this.scrollView.getNode().scrollTo({x: value, y: 0, animated: false})
@@ -206,6 +206,10 @@ export default class Activities extends React.Component {
         };
 
         firebaseRef.database().ref('activities/' + act.id + '/participants/' + this.state.user.uid).set(partInfo).then(() => {
+            this.setState({
+                isJoined: true
+            })
+
         }).catch((error) => {
             console.log(error);
         });
@@ -224,11 +228,11 @@ export default class Activities extends React.Component {
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
-
         for (const key in participants) {
-
-            if (participants.uid === this.state.user.id) {
-                this.setState({isJoined: true})
+            if (participants[key].uid === this.state.user.uid) {
+                this.setState({
+                    isJoined: true
+                });
             }
 
             if (count === 0) {
@@ -239,8 +243,11 @@ export default class Activities extends React.Component {
             count++
         }
         this.setState({
-            participantsNames: names
+            participantsNames: names,
+            participantNum: count,
         });
+
+
     }
 
     hideActDetail() {
@@ -304,11 +311,11 @@ export default class Activities extends React.Component {
                                             key={index}
                                             actId={act.key}
                                             onSelect={() => {
-                                                this.ListenForMarkerClick(act)
+                                                this.listenForMarkerClick(act)
                                             }}
                                             onPress={(event) => {
                                                 event.stopPropagation();
-                                                this.ListenForMarkerClick(act)
+                                                this.listenForMarkerClick(act)
                                             }}
                             >
                                 <Animated.View style={[styles.markerWrap, opacityStyle]}>
@@ -356,7 +363,7 @@ export default class Activities extends React.Component {
                                 actId={act.key}
                             >
                                 <TouchableOpacity style={styles.container} id={index}
-                                                  onPress={() => this.ListenForClick(act)}>
+                                                  onPress={() => this.listenForClick(act)}>
                                     <Image
                                         source={act.image}
                                         style={styles.cardImage}
@@ -384,8 +391,8 @@ export default class Activities extends React.Component {
                     <Modal isVisible={this.state.isModalVisible}
                            onBackdropPress={this.hideActDetail}
                            onBackButtonPress={this.hideActDetail}
-                           backdropColor={'#2E3347'}
-                           backdropOpacity={0}
+                           backdropColor={'#FFFFFF'}
+                           backdropOpacity={0.5}
                     >
                         <View style={styles.modalContainer}>
 
@@ -393,25 +400,21 @@ export default class Activities extends React.Component {
 
                             <View style={styles.closeIcon}>
                                 <TouchableOpacity onPress={this.hideActDetail}>
-                                    <Icon name="close" size={28} color="#2E3347"/>
+                                    <Icon name="close" size={28} color="#FFFFFF"/>
                                 </TouchableOpacity>
                             </View>
-                            <ActivityDetail act={this.state.act} names={this.state.participantsNames}/>
+                            <ActivityDetail act={this.state.act} names={this.state.participantsNames} num={this.state.participantNum}/>
                             {this.state.isJoined === false ?
                                 <Button
-                                    style={styles.button}
-                                    backgroundColor='#03A9F4'
-                                    fontFamily='Lato'
-                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                    // style={styles.button}
+                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor: "#1DA3F2",}}
                                     title='Join Now'
                                     onPress={() => this.joinAct(this.state.act)}
                                 />
                                 :
                                 <Button
-                                    style={styles.button}
-                                    backgroundColor='red'
-                                    fontFamily='Lato'
-                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+                                    // style={styles.button}
+                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor: "#FF4A11",}}
                                     title='Quit'
                                     onPress={() => this.quitAct(this.state.act)}
                                 />
@@ -434,7 +437,7 @@ Activities.navigationOptions = ({navigation}) => ({
     headerStyle: {
         elevation: 2,
         shadowOpacity: 1,
-        backgroundColor: '#2E3347',
+        backgroundColor: '#1DA1F2',
     },
     headerTitleStyle: {textAlign: "center", flex: 1,},
     headerTintColor: '#fff',
@@ -572,7 +575,7 @@ const styles = StyleSheet.create({
     },
 
     image: {
-        flex: 2,
+        flex: 1,
         width: "100%",
         height: "100%",
         alignSelf: "center",

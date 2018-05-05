@@ -1,8 +1,12 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
-import { Text, Divider } from 'react-native-elements';
+import {StyleSheet, View, ScrollView, Text, Dimensions} from 'react-native';
+import {Divider, Icon} from 'react-native-elements';
 import MapView from "react-native-maps";
 
+const dateFormat = require('dateformat');
+const {width, height} = Dimensions.get("window");
+const MODAL_HEIGH = height * 0.8;
+const MODAL_WIDTH = width * 0.8;
 
 export default class ActivitiesDetail extends React.Component {
     constructor(props) {
@@ -11,111 +15,161 @@ export default class ActivitiesDetail extends React.Component {
 
     render() {
         return (
-            <View style={{flex: 6}}>
+            <View style={{flex: 4, margin: 10}}>
+                <View style={{flex:3}}>
+                    <ScrollView>
+                        <View style={styles.actInfoLine}>
+                            <Text style={styles.actInfoTitle}>
+                                {this.props.act.title}
+                            </Text>
+                            <Divider/>
+                            <View style={[styles.inlineInfo]}>
+                                <View style={styles.inlineComponent}>
+                                    <Icon name='grade' color='#808080' size={16} style={styles.inlineIcon}/>
+                                    <Text style={styles.inlineText}>
+                                        {this.props.act.category}
+                                    </Text>
+                                </View>
 
-                <View style={styles.actInfo}>
-                    <View style={styles.actInfoLine}>
-                        <Text style={styles.actInfoTitle}>
-                            {this.props.act.title}
-                        </Text>
-                    </View>
-                    <Divider/>
-                    <View style={styles.actInfoLine}>
-                        <Text style={styles.actInfoDetail}>
-                            Category: {this.props.act.category}
-                        </Text>
-                    </View>
-                    <View style={styles.actInfoLine}>
-                        <Text style={styles.actInfoDetail}>
-                            Date: {this.props.act.time.date}
-                        </Text>
-                    </View>
-                    <View style={styles.actInfoLine}>
-                        <Text style={styles.actInfoDetail}>
-                            Time: {this.props.act.time.time}
-                        </Text>
-                    </View>
-                    <View style={styles.actInfoLine}>
-                        <Text style={styles.actInfoDetail}>
-                            Creator: {this.props.act.owner.username}
-                        </Text>
-                    </View>
-                    <View style={styles.actInfoLine}>
-                        <Text style={styles.actInfoDetail}>
-                            Participants:{this.props.names}
-                        </Text>
-                    </View>
-                    <View style={{flex:2}}>
-                        <Text style={styles.actInfoDetail}>
-                            Description: {this.props.act.description}
-                        </Text>
-                    </View>
+                            </View>
+                            <View style={styles.inlineInfo}>
+                                <View style={styles.inlineComponent}>
+                                    <Icon name='date-range' color='#808080' size={16} style={styles.inlineIcon}/>
+                                    <Text style={styles.inlineText}>
+                                        {dateFormat(this.props.act.time.date, "shortDate")}
+                                    </Text>
+                                </View>
+                                <View style={styles.inlineComponent}>
+                                    <Icon name='access-time' color='#808080' size={16} style={styles.inlineIcon}/>
+                                    <Text style={styles.inlineText}>
+                                        {this.props.act.time.time}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.inlineInfo}>
+                                <View style={styles.inlineComponent}>
+                                    <Icon name='person' color='#808080' size={16} style={styles.inlineIcon}/>
+                                    <Text style={styles.inlineText}>
+                                        {this.props.act.owner.username}
+                                    </Text>
+                                </View>
+                                <View style={styles.inlineComponent}>
+                                    <Icon name='people' color='#808080' size={16} style={styles.inlineIcon}/>
+                                    <Text style={styles.inlineText}>
+                                        {this.props.num}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={styles.actInfoLine}>
+                            <Text style={styles.actInfoTitle}>
+                                Participants
+                            </Text>
+                            <Divider/>
+                            <Text style={styles.inlineInfo}>
+                                {this.props.names}
+                            </Text>
+                        </View>
+                        <View style={styles.actInfoLine}>
+                            <Text style={styles.actInfoTitle}>
+                                Description
+                            </Text>
+                            <Divider/>
+                            <Text style={styles.inlineInfo}>
+                                {this.props.act.description}
+                            </Text>
+                        </View>
+                    </ScrollView>
                 </View>
-
-                <View style={styles.mapContainer}>
-                    <MapView
-                        style={styles.map}
-                        initialRegion={{
-                            latitude: this.props.act.location.latitude,
-                            longitude: this.props.act.location.longitude,
-                            latitudeDelta: 0.003,
-                            longitudeDelta: 0.001,
-                        }}
-                    >
-                        <MapView.Marker
-                            coordinate={{
+                <View style={styles.mapLine}>
+                    <Text style={styles.actInfoTitle}>
+                        Location
+                    </Text>
+                    <Divider/>
+                    <View style={styles.mapContainer}>
+                        <MapView
+                            style={styles.map}
+                            initialRegion={{
                                 latitude: this.props.act.location.latitude,
                                 longitude: this.props.act.location.longitude,
                                 latitudeDelta: 0.003,
                                 longitudeDelta: 0.001,
                             }}
-                            key={this.props.act.actNum}
-                            actId={this.props.act.key}
-                        />
-                    </MapView>
+                        >
+                            <MapView.Marker
+                                coordinate={{
+                                    latitude: this.props.act.location.latitude,
+                                    longitude: this.props.act.location.longitude,
+                                    latitudeDelta: 0.003,
+                                    longitudeDelta: 0.001,
+                                }}
+                                key={this.props.act.actNum}
+                                actId={this.props.act.key}
+                            />
+                        </MapView>
+                    </View>
                 </View>
+
             </View>
+
+
         );
     }
 }
 
 
 const styles = StyleSheet.create({
-    actInfo: {
-        flex: 3,
-        margin: 10,
-        marginBottom: 0,
-        justifyContent: 'space-around',
-    },
+
     mapContainer: {
-        flex: 3,
-        margin: 10,
-        marginTop: 0,
+        marginVertical: 10,
         elevation: 2,
         backgroundColor: "#FFF",
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
         shadowOffset: {x: 2, y: -2},
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     map: {
         width: '100%',
         height: '100%',
     },
 
-    actInfoLine: {
-        flex: 1
+    inlineIcon: {},
+
+
+    inlineText: {
+        fontSize: 16,
+        color: "#808080",
     },
 
+    inlineInfo: {
+        flexDirection: 'row',
+        color: "#808080",
+        marginTop: 5
+    },
+
+    mapLine: {
+        flex: 2,
+        marginBottom: 10,
+    },
+    inlineComponent: {
+        flexDirection: 'row',
+        marginRight: 10,
+    },
+
+    actInfoLine: {
+        marginBottom: 10,
+    },
     actInfoTitle: {
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: "bold",
-        textAlign:'center',
-        // fontFamily: 'Lato',
+        color: '#2E3347',
     },
 
     actInfoDetail: {
-        fontSize: 18,
+        fontSize: 16,
         color: "#444",
         textAlign: "justify",
         // fontFamily: 'Lato',

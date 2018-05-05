@@ -18,7 +18,7 @@ export default class Settings extends React.Component {
                             headerStyle: {
                                 elevation: 2,
                                 shadowOpacity: 1,
-                                backgroundColor: '#2E3347',
+                                backgroundColor: '#1DA1F2',
                             },
                             headerTitleStyle: {textAlign: "center", flex: 1},
                             headerTintColor: '#fff',

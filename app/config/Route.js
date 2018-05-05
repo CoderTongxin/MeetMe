@@ -73,7 +73,8 @@ export const Tabs = TabNavigator({
     animationEnabled: false,
     swipeEnabled: false,
     tabBarOptions: {
-        inactiveTintColor: '#2E3347',
+        // inactiveTintColor: '#1DA1F2',
+        activeTintColor:'#1DA1F2',
 
         showLabel: false,
         style: {
