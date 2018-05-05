@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Loader from '../app/components/Loader';
+import Loader from '../app/components/Loader'
 import renderer from 'react-test-renderer';
 
 test('renders correctly', () => {

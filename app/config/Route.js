@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {TabNavigator, TabBarBottom, StackNavigator} from 'react-navigation'
 import {Icon} from 'react-native-elements';
 import Activities from '../screens/Activities';
@@ -11,7 +11,6 @@ import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
 import InitiateStep2 from '../screens/InitiateStep2';
 import InitiateStep3 from '../screens/InitiateStep3';
-// import Welcome from '../screens/Welcome';
 
 
 export const InitiateStack = StackNavigator({

@@ -49,7 +49,7 @@ export default class Activities extends React.Component {
             isModalVisible: false,
             act: null,
             participantsNames: '',
-            isJoined: null,
+            isJoined: false,
 
         };
         this.ListenForClick = this.ListenForClick.bind(this);

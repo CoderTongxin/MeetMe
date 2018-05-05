@@ -1,4 +1,3 @@
-import React, {Component} from 'react';
 import {
     StyleSheet,
     View,
@@ -6,7 +5,10 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-export default class Loader extends Component {
+import React from 'react';
+
+
+export default class Loader extends React.Component {
     constructor(props) {
         super(props);
     }

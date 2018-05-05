@@ -70,11 +70,33 @@ export default class ActivityList extends React.Component {
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
             this.setState({
                 activity: activityInfo.val(),
-            })
+            });
+
         })
 
     }
 
+    getParticipantsUsername(participants) {
+        let count = 0;
+        let names = '';
+
+        for (const key in participants) {
+
+            if (participants.uid === this.state.user.id) {
+                this.setState({isJoined: true})
+            }
+
+            if (count === 0) {
+                names += participants[key].username;
+            } else {
+                names += ', ' + participants[key].username;
+            }
+            count++
+        }
+        this.setState({
+            participantsNames: names
+        });
+    }
 
     deleteActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey).remove().then(() => {
@@ -91,12 +113,12 @@ export default class ActivityList extends React.Component {
 
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.state.user.uid).remove().then(() => {
-            // firebaseRef.database().ref('users/'+this.props.user.uid+'/activities/'+this.state.activity.key).remove().then(()=>{
-            this.setState({
-                showDetail: !this.state.showDetail,
-                activity: null
+            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove().then(() => {
+                this.setState({
+                    showDetail: !this.state.showDetail,
+                    activity: null
+                })
             })
-            // })
         })
     }
 
@@ -146,7 +168,8 @@ export default class ActivityList extends React.Component {
                                                 <Icon name="close" size={28} color="#2E3347"/>
                                             </TouchableOpacity>
                                         </View>
-                                        <ActivityDetail act={this.state.activity}/>
+                                        <ActivityDetail act={this.state.activity}
+                                                        names={this.getParticipantsUsername(this.state.activity.participants)}/>
                                         {this.state.activity.owner.uid === this.props.user.uid ?
                                             <Button
                                                 style={styles.button}
