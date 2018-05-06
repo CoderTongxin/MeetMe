@@ -455,6 +455,7 @@ export default class Activities extends React.Component {
                                         backgroundColor: "#FFC011",
                                     }}
                                     title='Activity is Deleted'
+                                    onPress={() => this.hideActDetail()}
                                 />
                                 : this.state.isOwner === true ?
                                     <Button
