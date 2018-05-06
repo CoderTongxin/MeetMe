@@ -4,6 +4,7 @@ import {
     View,
     TouchableOpacity,
     ImageBackground,
+    Text
 } from 'react-native';
 import {Button, Icon} from 'react-native-elements'
 import t from 'tcomb-form-native';
@@ -75,6 +76,12 @@ export default class Initiate extends React.Component {
             >
                 <View style={styles.container}>
                     <KeyboardAwareScrollView contentContainerStyle={{flexGrow: 1,justifyContent : 'center'}}>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>
+                                Step 1: Describe Your Activity
+                            </Text>
+
+                        </View>
 
                         <View style={styles.formContainer}>
 
@@ -130,7 +137,7 @@ Initiate.navigationOptions = ({navigation}) => ({
                     navigation.navigate('Profile');
                     setTimeout(() => {
                         load = true;
-                    }, 700);
+                    },100);
                 }
             }}>
                 <Icon name='user' type='evilicon' size={28} color='#fff'/>
@@ -145,6 +152,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 
     },
+
+    text: {
+        fontSize: 24,
+        color: '#ffffff',
+        fontWeight: "bold",
+        textAlign: 'center',
+        fontFamily: 'regular',
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 2
+    },
+
     formContainer: {
         padding: 20,
         elevation: 2,

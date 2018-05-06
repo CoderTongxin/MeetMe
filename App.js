@@ -33,9 +33,11 @@ export default class App extends React.Component {
             "https://optinmonster.com/wp-content/uploads/2016/03/Reduce-Shopping-Cart-Abandonment.png",
             "https://www.rd.com/wp-content/uploads/2017/10/02_Fruit_Healthy-Holiday-Food-Gifts-Instead-of-Fruit-Cake_632353679-Avdeyukphoto-760x506.jpg",
             require('./assets/image/initiate.gif'),
-            require('./assets/image/profile.gif'),
+            require('./assets/image/profileSmall.gif'),
             require('./assets/image/colorful.jpg'),
-            require('./assets/image/profile-bg.jpg'),
+            require('./assets/image/square.png'),
+            require('./assets/image/walk_small.gif'),
+            require('./assets/image/finished.gif'),
         ]);
 
        await Promise.all([

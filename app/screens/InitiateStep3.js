@@ -5,7 +5,8 @@ import {
     TouchableOpacity,
     AsyncStorage,
     ImageBackground,
-    Dimensions
+    Dimensions,
+    Text
 } from 'react-native';
 import {Icon, Button} from 'react-native-elements';
 import MapView from 'react-native-maps';
@@ -169,6 +170,12 @@ export default class InitiateStep2 extends React.Component {
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.text}>
+                            Step 3: Choose a Location
+                        </Text>
+
+                    </View>
                     <View style={styles.formContainer}>
                         <View style={styles.mapContainer}>
                             <MapView style={styles.map}
@@ -208,9 +215,12 @@ let load = true;
 InitiateStep2.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
     headerStyle: {
-        elevation: 2,
-        shadowOpacity: 1,
+        elevation: 3,
         backgroundColor: '#1DA1F2',
+        shadowColor: "#000",
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
     },
     headerTitleStyle: {textAlign: "center", flex: 1},
     headerTintColor: '#fff',
@@ -248,6 +258,16 @@ const styles = StyleSheet.create({
         shadowOffset: {x: 2, y: -2},
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    text: {
+        fontSize: 24,
+        color: '#ffffff',
+        fontWeight: "bold",
+        textAlign: 'center',
+        fontFamily: 'regular',
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 2
     },
     map: {
         width: '100%',

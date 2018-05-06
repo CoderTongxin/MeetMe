@@ -16,9 +16,12 @@ export default class Settings extends React.Component {
                     getScreenDetails={() => ({
                         options: {
                             headerStyle: {
-                                elevation: 2,
-                                shadowOpacity: 1,
+                                elevation: 3,
                                 backgroundColor: '#1DA1F2',
+                                shadowColor: "#000",
+                                shadowRadius: 2,
+                                shadowOpacity: 0.3,
+                                shadowOffset: {x: 2, y: -2},
                             },
                             headerTitleStyle: {textAlign: "center", flex: 1},
                             headerTintColor: '#fff',

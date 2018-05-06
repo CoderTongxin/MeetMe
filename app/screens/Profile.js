@@ -49,38 +49,41 @@ export default class Profile extends React.Component {
     render() {
         return (
             <ImageBackground
-                source={require('../../assets/image/profile-bg.jpg')}
-                style={{flex:1,width: '100%', height: '100%'}}
+                source={require('../../assets/image/pencil.jpg')}
+                style={{width: '100%', height: '100%'}}
             >
-            <View style={styles.container}>
-                {/*The key part to rewrite Header and make a icon to close the modal screen*/}
-                <Header
-                    scene={{index: 0}}
-                    scenes={[{index: 0, isActive: true}]}
-                    navigation={{state: {index: 0}}}
-                    getScreenDetails={() => ({
-                        options: {
-                            headerStyle: {
-                                elevation: 2,
-                                shadowOpacity: 1,
-                                backgroundColor: '#1DA1F2',
-                            },
-                            headerTitleStyle: {textAlign: "center", flex: 1},
-                            headerTintColor: '#fff',
-                            title: 'Profile',
-                            headerLeft: (<View></View>),
-                            headerRight: (
-                                <View style={{paddingRight: 10}}>
-                                    <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
-                                        <Icon name="close" size={25} color="white"/>
-                                    </TouchableOpacity>
-                                </View>
-                            )
-                        }
-                    })}
-                />
+                <View style={styles.container}>
+                    {/*The key part to rewrite Header and make a icon to close the modal screen*/}
+                    <Header
+                        scene={{index: 0}}
+                        scenes={[{index: 0, isActive: true}]}
+                        navigation={{state: {index: 0}}}
+                        getScreenDetails={() => ({
+                            options: {
+                                headerStyle: {
+                                    elevation: 2,
+                                    backgroundColor: '#1DA1F2',
+                                    shadowColor: "#000",
+                                    shadowRadius: 2,
+                                    shadowOpacity: 0.3,
+                                    shadowOffset: {x: 2, y: -2},
+                                },
+                                headerTitleStyle: {textAlign: "center", flex: 1},
+                                headerTintColor: '#fff',
+                                title: 'Profile',
+                                headerLeft: (<View></View>),
+                                headerRight: (
+                                    <View style={{paddingRight: 10}}>
+                                        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                                            <Icon name="close" size={25} color="white"/>
+                                        </TouchableOpacity>
+                                    </View>
+                                )
+                            }
+                        })}
+                    />
 
-                {/*Edit here to add any functions*/}
+                    {/*Edit here to add any functions*/}
 
                     <View style={styles.contentContainer}>
                         <View style={styles.headContainer}>
@@ -117,12 +120,13 @@ export default class Profile extends React.Component {
                                 }
                                 <View style={styles.cardContainer}>
                                     <Image style={{width: SCREEN_WIDTH * 0.8, height: 200}}
-                                           source={require('../../assets/image/profile.gif')}/>
+                                           source={require('../../assets/image/finished.gif')}/>
                                 </View>
                             </View>
                             <Button
                                 style={styles.button}
                                 buttonStyle={{
+                                    width: SCREEN_WIDTH * 0.8,
                                     borderRadius: 0,
                                     marginLeft: 0,
                                     marginRight: 0,
@@ -135,7 +139,7 @@ export default class Profile extends React.Component {
 
                         </View>
                     </View>
-            </View>
+                </View>
             </ImageBackground>
         );
     }
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headContainer: {
-        marginTop:5,
+        marginTop: 5,
         flexDirection: 'column',
         alignItems: 'center',
     },
