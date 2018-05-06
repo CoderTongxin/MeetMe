@@ -10,7 +10,7 @@ import {
 import {Icon, Button} from 'react-native-elements';
 import MapView from 'react-native-maps';
 import {firebaseRef} from "../servers/Firebase";
-const {width, height} = Dimensions.get("window");
+const {width} = Dimensions.get("window");
 const CARD_HEIGHT = width;
 
 
