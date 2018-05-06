@@ -24,8 +24,7 @@ export default class ActivityList extends React.Component {
             participantsNum: 0,
             participantsNames: '',
             participantKeys: [],
-            activityKey: null,
-            quitActivity: false
+            activityKey: null
         };
     }
 
@@ -73,9 +72,13 @@ export default class ActivityList extends React.Component {
         const participantsList = this.state.participantKeys.map(key => {
             return firebaseRef.database().ref('users/' + key + '/activities/' + this.state.activityKey).remove()
         });
+        this.setState({
+            showDetail: !this.state.showDetail
+        });
         Promise.all(participantsList)
             .then(() => {
-                firebaseRef.database().ref('activities/' + this.state.activityKey).remove()
+                firebaseRef.database().ref('activities/' + this.state.activityKey).remove();
+
             })
             .catch(err => {
                 Alert.alert(err)
@@ -85,7 +88,7 @@ export default class ActivityList extends React.Component {
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
             this.setState({
-                quitActivity: true
+                showDetail: !this.state.showDetail
             });
             firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove()
         })
