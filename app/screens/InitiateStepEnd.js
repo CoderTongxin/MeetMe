@@ -9,13 +9,13 @@ import {
 import {Button, Icon} from 'react-native-elements'
 
 const {width, height} = Dimensions.get("window");
-const CARD_HEIGHT = height / 4;
+const CARD_HEIGHT = height /3.5;
 
 
 export default class Initiate extends React.Component {
 
     handleClick = () => {
-        this.props.navigation.navigate(("InitiateStep2"));
+        this.props.navigation.navigate(("InitiateStep1"));
     };
 
     render() {
@@ -37,7 +37,7 @@ export default class Initiate extends React.Component {
                         <View style={styles.imageContainer}>
                             <Image
                                 style={styles.image}
-                                source={{uri: 'https://cdn.dribbble.com/users/285475/screenshots/4550443/presto_walk.gif'}}
+                                source={require('../../assets/image/walk_small.gif')}
                             />
                         </View>
                     </View>
@@ -67,8 +67,11 @@ Initiate.navigationOptions = ({navigation}) => ({
     title: 'Initiate',
     headerStyle: {
         elevation: 3,
-        shadowOpacity: 1,
         backgroundColor: '#1DA1F2',
+        shadowColor: "#000",
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
     },
     headerTitleStyle: {textAlign: "center", flex: 1},
     headerTintColor: '#fff',
@@ -104,6 +107,10 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: "bold",
         textAlign: 'center',
+        fontFamily: 'regular',
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: {width: -1, height: 1},
+        textShadowRadius: 2
     },
 
     cardContainer: {

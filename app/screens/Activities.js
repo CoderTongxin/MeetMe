@@ -396,7 +396,7 @@ export default class Activities extends React.Component {
                            onBackdropPress={this.hideActDetail}
                            onBackButtonPress={this.hideActDetail}
                            backdropColor={'#FFFFFF'}
-                           backdropOpacity={0.5}
+                           backdropOpacity={0}
                     >
                         <View style={styles.modalContainer}>
 
@@ -439,9 +439,12 @@ let load = true;
 Activities.navigationOptions = ({navigation}) => ({
     title: 'Activities',
     headerStyle: {
-        elevation: 2,
-        shadowOpacity: 1,
+        elevation: 3,
         backgroundColor: '#1DA1F2',
+        shadowColor: "#000",
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
     },
     headerTitleStyle: {textAlign: "center", flex: 1,},
     headerTintColor: '#fff',
