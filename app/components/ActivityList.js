@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {StyleSheet, View, TouchableOpacity, Image, ScrollView, Dimensions} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image, ScrollView, Dimensions, Alert} from 'react-native';
 import {
     ListItem,
     Button,
@@ -13,8 +13,6 @@ import {firebaseRef} from "../servers/Firebase";
 
 const {width, height} = Dimensions.get("window");
 const MODAL_HEIGH = height * 0.8;
-const MODAL_WIDTH = width * 0.8;
-
 export default class ActivityList extends React.Component {
 
     constructor(props) {
@@ -25,7 +23,8 @@ export default class ActivityList extends React.Component {
             showDetail: false,
             participantsNum: 0,
             participantsNames: '',
-            activityKey:''
+            participantKeys:[],
+            activityKey:null
         };
     }
 
@@ -42,7 +41,7 @@ export default class ActivityList extends React.Component {
                 showDetail: !this.state.showDetail,
                 activityKey: activity.key,
             });
-            if(!activityInfo){
+            if(activityInfo.val()){
                 this.getParticipantsUsername(activityInfo.val().participants)
             }
         })
@@ -52,32 +51,44 @@ export default class ActivityList extends React.Component {
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
+        let keys=[];
         for (const key in participants) {
             if (count === 0) {
                 names += participants[key].username;
             } else {
                 names += ', ' + participants[key].username;
             }
-            count++
+            count++;
+            keys.push(key)
         }
         this.setState({
             participantsNames: names,
             participantNum: count,
+            participantKeys:keys,
         });
 
     }
 
     deleteActivity() {
-        firebaseRef.database().ref('activities/' + this.state.activityKey).remove().then(() => {
-            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove().then(() => {
-                this.setState({
-                    showDetail: !this.state.showDetail,
-                    activity: null
-                })
+        if(this.state.activityKey){
+            firebaseRef.database().ref('activities/' + this.state.activityKey).remove().then(() => {
+                const participantsList = this.state.participantKeys.map(key => {
+                    return firebaseRef.database().ref('users/' + key+'/activities/'+this.state.activityKey).remove()
+                });
+                Promise.all(participantsList)
+                    .then(() => {
+                        this.setState({
+                            showDetail: !this.state.showDetail,
+                            activity: null
+                        })
+                    })
+                    .catch(err => {
+                        Alert.alert(err)
+                    });
+            }).catch((err) => {
+                console.log(err)
             })
-        }).catch((err) => {
-            console.log(err)
-        })
+        }
     }
 
     quitActivity() {
