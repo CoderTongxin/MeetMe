@@ -38,7 +38,7 @@ export default class Initiate extends React.Component {
                         <View style={styles.imageContainer}>
                             <Image
                                 style={styles.image}
-                                source={require('../../assets/image/initiate.gif')}
+                                source={require('../../assets/image/initiateSmall.gif')}
                             />
                         </View>
                     </View>
