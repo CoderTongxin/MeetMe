@@ -22,6 +22,9 @@ export default class App extends React.Component {
 
     async _loadResourcesAsync ()  {
         const imageAssets = cacheImages([
+            'https://cdn4.iconfinder.com/data/icons/business-conceptual-part1-1/513/business-woman-512.png',
+            'https://tiraerasdereggaeton.com/wp-content/uploads/2018/03/avatar-user-boy-389cd1eb1d503149-512x512.png',
+            'https://freeiconshop.com/wp-content/uploads/edd/bulb-curvy-flat.png',
             'https://cdn.dribbble.com/users/285475/screenshots/4550443/presto_walk.gif',
             'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
             "https://static1.squarespace.com/static/51277219e4b08376dc025505/t/55f17df3e4b0d3922cc4c416/1441889779581/?format=300w",
