@@ -119,7 +119,7 @@ export default class Login extends React.Component {
             <View style={styles.container}>
                 <Loader loading={this.state.showLoading}/>
                 <ImageBackground
-                    source={require('../../assets/image/profile.jpg')}
+                    source={require('../../assets/image/9.jpg')}
                     style={{width: '100%', height: '100%'}}
                 >
                     <View style={styles.loginView}>
@@ -150,7 +150,7 @@ export default class Login extends React.Component {
                                 onBlur={() => {
                                     this.setState({email_valid: this.validateEmail(this.state.email)});
                                 }}
-                                placeholderTextColor="#373737"
+                                placeholderTextColor="#616161"
                                 errorStyle={styles.errorText}
                                 errorMessage={this.state.email_valid ? null : "Please enter a valid email address"}
                             />
@@ -175,7 +175,7 @@ export default class Login extends React.Component {
                                         password_valid: this.validatePassword(event.nativeEvent.text)
                                     });
                                 }}
-                                placeholderTextColor="grey"
+                                placeholderTextColor="#616161"
                                 errorStyle={styles.errorText}
                                 errorMessage={this.state.password_valid ? null : "Password should have at least 6 characters"}
                             />
@@ -220,7 +220,7 @@ export default class Login extends React.Component {
                                 title="Sign up"
                                 clear
                                 activeOpacity={0.5}
-                                titleStyle={{color: '#616161', fontSize: 15}}
+                                titleStyle={{color: '#fff', fontSize: 15}}
                                 containerStyle={{marginTop: -10}}
                                 onPress={() => this._goToSignUp()}
                             />
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     travelText: {
-        color: '#2E3347',
+        color: '#fff',
         fontSize: 30,
         fontFamily: 'bold'
     },
