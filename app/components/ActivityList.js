@@ -36,12 +36,12 @@ export default class ActivityList extends React.Component {
 
     toggle(activity) {
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
-            this.setState({
-                activity: activityInfo.val(),
-                showDetail: !this.state.showDetail,
-                activityKey: activity.key,
-            });
             if(activityInfo.val()){
+                this.setState({
+                    activity: activityInfo.val(),
+                    showDetail: !this.state.showDetail,
+                    activityKey: activity.key,
+                });
                 this.getParticipantsUsername(activityInfo.val().participants)
             }
         })
@@ -70,36 +70,21 @@ export default class ActivityList extends React.Component {
     }
 
     deleteActivity() {
-        if(this.state.activityKey){
-            firebaseRef.database().ref('activities/' + this.state.activityKey).remove().then(() => {
-                const participantsList = this.state.participantKeys.map(key => {
-                    return firebaseRef.database().ref('users/' + key+'/activities/'+this.state.activityKey).remove()
+            const participantsList = this.state.participantKeys.map(key => {
+                return firebaseRef.database().ref('users/'+key+'/activities/'+this.state.activityKey).remove()
+            });
+            Promise.all(participantsList)
+                .then(() => {
+                    firebaseRef.database().ref('activities/' + this.state.activityKey).remove()
+                })
+                .catch(err => {
+                    Alert.alert(err)
                 });
-                Promise.all(participantsList)
-                    .then(() => {
-                        this.setState({
-                            showDetail: !this.state.showDetail,
-                            activity: null
-                        })
-                    })
-                    .catch(err => {
-                        Alert.alert(err)
-                    });
-            }).catch((err) => {
-                console.log(err)
-            })
-        }
     }
 
     quitActivity() {
-        console.log('quit');
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
-            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove().then(() => {
-                this.setState({
-                    showDetail: !this.state.showDetail,
-                    activity: null
-                })
-            })
+            firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove()
         })
     }
 
@@ -188,7 +173,6 @@ export default class ActivityList extends React.Component {
                     <Notice/>
                 }
             </View>
-
         );
     }
 }
