@@ -42,8 +42,7 @@ export default class ActivityList extends React.Component {
                 showDetail: !this.state.showDetail,
                 activityKey: activity.key,
             });
-
-            if(activityInfo){
+            if(!activityInfo){
                 this.getParticipantsUsername(activityInfo.val().participants)
             }
         })
