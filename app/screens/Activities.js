@@ -8,7 +8,7 @@ import {
     Image,
     Dimensions,
     StatusBar,
-    AsyncStorage,
+    AsyncStorage, Alert,
 } from 'react-native';
 
 import {Icon, Divider, Button} from 'react-native-elements';
@@ -51,12 +51,13 @@ export default class Activities extends React.Component {
             participantsNames: '',
             participantsNum: 0,
             isJoined: false,
+            isOwner: false,
 
 
         };
-        this.listenForClick = this.listenForClick.bind(this);
-        this.joinAct = this.joinAct.bind(this);
-        this.hideActDetail = this.hideActDetail.bind(this)
+        // this.listenForClick = this.listenForClick.bind(this);
+        // this.joinAct = this.joinAct.bind(this);
+        // this.hideActDetail = this.hideActDetail.bind(this)
     };
 
     componentWillMount() {
@@ -184,13 +185,28 @@ export default class Activities extends React.Component {
         } else {
             this.state.isModalVisible = true;
             actRef.child(act.id).on('value', (activity) => {
+
                 this.setState({
                     act: activity.val(),
-                    isJoined: false,
                 });
-                this.getParticipantsUsername(activity.val().participants)
+                if (activity.val().owner) {
+                    this.checkOwner(activity.val().owner);
+                    this.getParticipantsUsername(activity.val().participants)
+                }
+
             });
         }
+    }
+
+    checkOwner(owner) {
+        let isOwner = false;
+
+        if (owner.uid === this.state.user.uid) {
+            isOwner = true;
+        }
+        this.setState({
+            isOwner: isOwner,
+        });
     }
 
     listenForMarkerClick(act) {
@@ -205,7 +221,7 @@ export default class Activities extends React.Component {
             username: this.state.user.username
         };
         let actInfo = {
-            actId : act.id
+            actId: act.id
         };
         firebaseRef.database().ref('activities/' + act.id + '/participants/' + this.state.user.uid).set(partInfo).then(() => {
             firebaseRef.database().ref('users/' + this.state.user.uid + '/activities/' + act.id).set(actInfo).then(() => {
@@ -228,14 +244,27 @@ export default class Activities extends React.Component {
         })
     };
 
+    deleteAct(act){
+        this.state.isModalVisible = false;
+        const participantsList = act.participants.map(key => {
+            return firebaseRef.database().ref('users/'+key+'/activities/'+act.id).remove()
+        });
+        Promise.all(participantsList)
+            .then(() => {
+                firebaseRef.database().ref('activities/' + act.id).remove()
+            })
+            .catch(err => {
+                Alert.alert(err)
+            });
+    };
+
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
+        let isJoined = false;
         for (const key in participants) {
             if (participants[key].uid === this.state.user.uid) {
-                this.setState({
-                    isJoined: true
-                });
+                isJoined = true;
             }
 
             if (count === 0) {
@@ -248,6 +277,7 @@ export default class Activities extends React.Component {
         this.setState({
             participantsNames: names,
             participantNum: count,
+            isJoined: isJoined
         });
 
 
@@ -393,8 +423,8 @@ export default class Activities extends React.Component {
 
                 {this.state.act ?
                     <Modal isVisible={this.state.isModalVisible}
-                           onBackdropPress={this.hideActDetail}
-                           onBackButtonPress={this.hideActDetail}
+                           onBackdropPress={() => this.hideActDetail}
+                           onBackButtonPress={() => this.hideActDetail}
                            backdropColor={'#FFFFFF'}
                            backdropOpacity={0}
                     >
@@ -403,25 +433,50 @@ export default class Activities extends React.Component {
                             <Image source={this.state.act.image} style={styles.image}/>
 
                             <View style={styles.closeIcon}>
-                                <TouchableOpacity onPress={this.hideActDetail}>
+                                <TouchableOpacity onPress={() => this.hideActDetail()}>
                                     <Icon name="close" size={28} color="#FFFFFF"/>
                                 </TouchableOpacity>
                             </View>
-                            <ActivityDetail act={this.state.act} names={this.state.participantsNames} num={this.state.participantNum}/>
-                            {this.state.isJoined === false ?
+                            <ActivityDetail act={this.state.act} names={this.state.participantsNames}
+                                            num={this.state.participantNum}/>
+                            {this.state.isOwner === true ?
                                 <Button
                                     style={styles.button}
-                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor: "#1DA3F2",}}
-                                    title='Join Now'
-                                    onPress={() => this.joinAct(this.state.act)}
+                                    buttonStyle={{
+                                        borderRadius: 0,
+                                        marginLeft: 0,
+                                        marginRight: 0,
+                                        marginBottom: 0,
+                                        backgroundColor: "#FF4A11",
+                                    }}
+                                    title='Delete'
+                                    onPress={() => this.deleteAct(this.state.act)}
                                 />
-                                :
-                                <Button
-                                    style={styles.button}
-                                    buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0,backgroundColor: "#FF4A11",}}
-                                    title='Quit'
-                                    onPress={() => this.quitAct(this.state.act)}
-                                />
+                                : this.state.isJoined === true ?
+                                    <Button
+                                        style={styles.button}
+                                        buttonStyle={{
+                                            borderRadius: 0,
+                                            marginLeft: 0,
+                                            marginRight: 0,
+                                            marginBottom: 0,
+                                            backgroundColor: "#FF4A11",
+                                        }}
+                                        title='Quit'
+                                        onPress={() => this.quitAct(this.state.act)}
+                                    />
+                                    : <Button
+                                        style={styles.button}
+                                        buttonStyle={{
+                                            borderRadius: 0,
+                                            marginLeft: 0,
+                                            marginRight: 0,
+                                            marginBottom: 0,
+                                            backgroundColor: "#1DA3F2",
+                                        }}
+                                        title='Join Now'
+                                        onPress={() => this.joinAct(this.state.act)}
+                                    />
                             }
                         </View>
                     </Modal>

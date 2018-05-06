@@ -100,6 +100,7 @@ export const HomeScreenRoot = StackNavigator({
     Profile: {
         screen: Profile,
     },
+
 }, {
     mode: 'modal',
     headerMode: 'none',
