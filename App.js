@@ -37,6 +37,7 @@ export default class App extends React.Component {
             require('./assets/image/square.png'),
             require('./assets/image/walk_small.gif'),
             require('./assets/image/finished.gif'),
+            require('./assets/image/login-bg.jpg'),
         ]);
 
        await Promise.all([

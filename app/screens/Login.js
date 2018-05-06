@@ -34,7 +34,6 @@ export default class Login extends React.Component {
 
     checkLogin() {
         firebaseRef.auth().onAuthStateChanged(function (user) {
-            console.log(this.state.user)
             if (user && !this.state.user) {
                 this.setState({
                     user: user
@@ -120,7 +119,7 @@ export default class Login extends React.Component {
             <View style={styles.container}>
                 <Loader loading={this.state.showLoading}/>
                 <ImageBackground
-                    source={require('../../assets/image/9.jpg')}
+                    source={require('../../assets/image/login-bg.jpg')}
                     style={{width: '100%', height: '100%'}}
                 >
                     <View style={styles.loginView}>
