@@ -55,7 +55,7 @@ export default class Initiate extends React.Component {
         const actInfo = params ? params.actInfo : null;
         return (
             <ImageBackground
-                source={require('../assert/image/colorful.jpg')}
+                source={require('../../assets/image/colorful.jpg')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>

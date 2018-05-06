@@ -7,7 +7,8 @@ import {
     Alert,
     AsyncStorage,
     Dimensions,
-    Image
+    Image,
+    ImageBackground
 } from 'react-native';
 import Header from 'react-navigation/src/views/Header/Header';
 import {Avatar, Button, Icon} from 'react-native-elements';
@@ -22,7 +23,7 @@ export default class Profile extends React.Component {
         super(props);
         this.logout = this.logout.bind(this);
         this.state = {
-            user: '',
+            user: ''
         }
     }
 
@@ -47,6 +48,10 @@ export default class Profile extends React.Component {
 
     render() {
         return (
+            <ImageBackground
+                source={require('../../assets/image/profile-bg.jpg')}
+                style={{flex:1,width: '100%', height: '100%'}}
+            >
             <View style={styles.container}>
                 {/*The key part to rewrite Header and make a icon to close the modal screen*/}
                 <Header
@@ -76,69 +81,62 @@ export default class Profile extends React.Component {
                 />
 
                 {/*Edit here to add any functions*/}
-                <View style={styles.contentContainer}>
-                    <View style={styles.headContainer}>
-                        <View style={styles.avatarContainer}>
-                            <Avatar
-                                xlarge
-                                rounded
-                                source={{
-                                    uri: this.state.user.avatar,
-                                }}
-                                activeOpacity={0.7}
-                                overlayContainerStyle={{backgroundColor: 'transparent'}}
-                            />
-                        </View>
-                        <View style={styles.infoContainer}>
-                            <View style={styles.textContainer}>
-                                <Text style={styles.usernameText}>
-                                    {this.state.user.username}
-                                </Text>
-                            </View>
-                            {this.state.user.email ?
-                                <View style={styles.textContainer}>
-                                    <Icon
-                                        name='mail-outline'
-                                        size={17}
-                                        color='#000'
-                                    />
-                                    <Text style={styles.emailText}>
-                                        {this.state.user.email}
-                                    </Text>
 
-                                </View> :
-                                <View/>
-                            }
-                            <View style={styles.cardContainer}>
-                                <Image style={{width: SCREEN_WIDTH * 0.8, height: 200}}
-                                       source={{uri: 'https://cdn.dribbble.com/users/285475/screenshots/4495430/dribbble-run.gif'}}/>
-                            </View>
-                        </View>
-                        <View style={styles.footerContainer}>
-                            <View style={styles.divider}/>
-                            <View style={styles.buttonContainer}>
-                                <Button
-                                    title='Log out'
-                                    icon={
-                                        <Icon
-                                            name='exit-to-app'
-                                            size={20}
-                                            color='white'
-                                        />}
-                                    buttonStyle={{
-                                        backgroundColor: "#c0392b",
-                                        borderRadius: 5,
-                                        shadowOffset: {width: 0, height: 2},
-                                        shadowOpacity: 0.8,
-                                        shadowColor: 'rgba(0,0,0,0.3)'
+                    <View style={styles.contentContainer}>
+                        <View style={styles.headContainer}>
+                            <View style={styles.avatarContainer}>
+                                <Avatar
+                                    xlarge
+                                    rounded
+                                    source={{
+                                        uri: this.state.user.avatar,
                                     }}
-                                    containerStyle={{height: 45}}
-                                    onPress={this.logout}/>
+                                    activeOpacity={0.7}
+                                    overlayContainerStyle={{backgroundColor: 'transparent'}}
+                                />
                             </View>
+                            <View style={styles.infoContainer}>
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.usernameText}>
+                                        {this.state.user.username}
+                                    </Text>
+                                </View>
+                                {this.state.user.email ?
+                                    <View style={styles.textContainer}>
+                                        <Icon
+                                            name='mail-outline'
+                                            size={17}
+                                            color='#000'
+                                        />
+                                        <Text style={styles.emailText}>
+                                            {this.state.user.email}
+                                        </Text>
+
+                                    </View> :
+                                    <View/>
+                                }
+                                <View style={styles.cardContainer}>
+                                    <Image style={{width: SCREEN_WIDTH * 0.8, height: 200}}
+                                           source={require('../../assets/image/profile.gif')}/>
+                                </View>
+                            </View>
+                            <Button
+                                style={styles.button}
+                                buttonStyle={{
+                                    borderRadius: 0,
+                                    marginLeft: 0,
+                                    marginRight: 0,
+                                    marginBottom: 0,
+                                    backgroundColor: "#FF4A11"
+                                }}
+                                title='Log out'
+                                onPress={this.logout}
+                            />
+
                         </View>
                     </View>
-                </View>
             </View>
+            </ImageBackground>
         );
     }
 }
@@ -146,24 +144,24 @@ export default class Profile extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'rgba(241,240,241,1)',
         height: SCREEN_HEIGHT
     },
     contentContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: 'white',
-        borderRadius: 5,
-        height: '100%',
-        alignItems: 'center',
-        paddingVertical: 5,
+        alignContent: 'center',
+        justifyContent: 'center',
     },
     headContainer: {
-        flex: 1,
+        marginTop:5,
         flexDirection: 'column',
         alignItems: 'center',
     },
     avatarContainer: {
+        elevation: 2,
+        backgroundColor: "transparent",
+        shadowColor: "#000",
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
         marginVertical: 5
     },
     infoContainer: {
@@ -172,7 +170,7 @@ const styles = StyleSheet.create({
     usernameText: {
         fontFamily: 'bold',
         fontSize: 25,
-        color: 'rgba(98,93,144,1)',
+        color: '#2E3347',
     },
     textContainer: {
         flexDirection: 'row',
@@ -181,31 +179,33 @@ const styles = StyleSheet.create({
     emailText: {
         marginLeft: 5,
         fontSize: 16,
-        color: '#000',
+        color: '#2E3347',
     },
     activityContainer: {
         marginTop: 15,
     },
-    divider: {
-        width: SCREEN_WIDTH,
-        borderWidth: 0.5,
-        borderColor: 'rgba(222, 223, 226, 1)',
-        marginVertical: 8,
-        height: 1,
-    },
+
     footerContainer: {
         flex: 1,
         justifyContent: 'flex-end'
     },
-    buttonContainer: {
-        alignItems: 'center',
-    },
+
     cardContainer: {
         elevation: 2,
+        backgroundColor: "#FFF",
+        marginVertical: 15,
+        shadowColor: "#000",
+        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowOffset: {x: 2, y: -2},
+    },
+    button: {
+        elevation: 2,
+        width: SCREEN_WIDTH * 0.8,
         backgroundColor: "#FFF",
         shadowColor: "#000",
         shadowRadius: 5,
         shadowOpacity: 0.3,
         shadowOffset: {x: 2, y: -2},
-    },
+    }
 });

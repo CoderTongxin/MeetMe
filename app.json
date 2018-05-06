@@ -1,7 +1,11 @@
 
 {
   "expo": {
-    "sdkVersion": "26.0.0"
+    "sdkVersion": "26.0.0",
+    "splash": {
+      "image": "./assets/image/colorful.jpg",
+      "resizeMode": "cover"
+    }
   },
   "android": {
     "config": {

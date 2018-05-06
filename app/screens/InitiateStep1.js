@@ -70,7 +70,7 @@ export default class Initiate extends React.Component {
     render() {
         return (
             <ImageBackground
-                source={require('../assert/image/colorful.jpg')}
+                source={require('../../assets/image/colorful.jpg')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>

@@ -3,7 +3,7 @@
 // import {HomeScreenRoot, Root} from '../config/Route';
 //
 //
-// const BG_IMAGE = require('../assert/image/sun.jpg');
+// const BG_IMAGE = require('../assets/image/sun.jpg');
 // const SCREEN_WIDTH = Dimensions.get('window').width;
 // const SCREEN_HEIGHT = Dimensions.get('window').height;
 //

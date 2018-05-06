@@ -1,11 +1,11 @@
 import React from 'react';
 import {Input, Button, Icon} from 'react-native-elements';
-import {Font} from 'expo';
 import {
     Text,
     View,
     StyleSheet,
     Alert,
+    ImageBackground
 } from 'react-native';
 import {firebaseRef} from '../servers/Firebase'
 import Loader from '../components/Loader'
@@ -19,7 +19,6 @@ export default class Login extends React.Component {
         super(props);
         this.state = {
             user: null,
-            fontLoaded: false,
             email: '',
             email_valid: true,
             password: '',
@@ -33,21 +32,11 @@ export default class Login extends React.Component {
         this.checkLogin();
     }
 
-    async componentDidMount() {
-        await Font.loadAsync({
-            'regular': require('../../assets/fonts/Montserrat-Regular.ttf'),
-            'light': require('../../assets/fonts/Montserrat-Light.ttf'),
-            'bold': require('../../assets/fonts/Montserrat-Bold.ttf'),
-        });
-        this.setState({fontLoaded: true});
-
-    }
-
     checkLogin() {
         firebaseRef.auth().onAuthStateChanged(function (user) {
-            if (user&&!this.state.user) {
+            if (user && !this.state.user) {
                 this.setState({
-                    user:user
+                    user: user
                 });
                 this.changeLoadingStatus();
                 this.getUserInfo(user.uid)
@@ -93,17 +82,17 @@ export default class Login extends React.Component {
 
             const credential = firebaseRef.auth.FacebookAuthProvider.credential(token);
             firebaseRef.auth().signInWithCredential(credential).then((loggedInUser) => {
-                    const user = {
-                        username: loggedInUser.displayName,
-                        email: loggedInUser.email,
-                        gender: user_gender,
-                        avatar: loggedInUser.photoURL,
-                        uid: loggedInUser.uid
-                    };
-                    this.changeLoadingStatus();
-                    firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then(() => {
-                        storeUserInfo(user);
-                    })
+                const user = {
+                    username: loggedInUser.displayName,
+                    email: loggedInUser.email,
+                    gender: user_gender,
+                    avatar: loggedInUser.photoURL,
+                    uid: loggedInUser.uid
+                };
+                this.changeLoadingStatus();
+                firebaseRef.database().ref('users/' + loggedInUser.uid).set(user).then(() => {
+                    storeUserInfo(user);
+                })
             }).catch((error) => {
                 Alert.alert(error.message)
             })
@@ -129,7 +118,10 @@ export default class Login extends React.Component {
         return (
             <View style={styles.container}>
                 <Loader loading={this.state.showLoading}/>
-                {this.state.fontLoaded ?
+                <ImageBackground
+                    source={require('../../assets/image/profile.jpg')}
+                    style={{width: '100%', height: '100%'}}
+                >
                     <View style={styles.loginView}>
                         <View style={styles.title}>
                             <Text style={styles.travelText}>Seya</Text>
@@ -158,7 +150,7 @@ export default class Login extends React.Component {
                                 onBlur={() => {
                                     this.setState({email_valid: this.validateEmail(this.state.email)});
                                 }}
-                                placeholderTextColor="grey"
+                                placeholderTextColor="#373737"
                                 errorStyle={styles.errorText}
                                 errorMessage={this.state.email_valid ? null : "Please enter a valid email address"}
                             />
@@ -228,14 +220,13 @@ export default class Login extends React.Component {
                                 title="Sign up"
                                 clear
                                 activeOpacity={0.5}
-                                titleStyle={{color: '#424242', fontSize: 15}}
+                                titleStyle={{color: '#616161', fontSize: 15}}
                                 containerStyle={{marginTop: -10}}
                                 onPress={() => this._goToSignUp()}
                             />
                         </View>
-                    </View> :
-                    <Text>Loading...</Text>
-                }
+                    </View>
+                </ImageBackground>
             </View>
         )
     }
@@ -246,7 +237,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white'
     },
     inputContainer: {
         marginVertical: 10,
@@ -307,7 +297,7 @@ const styles = StyleSheet.create({
         width: 240,
     },
     disabledButtonStyle: {
-        shadowColor: "#fff",
+        shadowColor: "#000",
         backgroundColor: "#388e3c",
         height: 40,
         width: 240,

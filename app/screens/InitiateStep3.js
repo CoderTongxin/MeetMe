@@ -11,7 +11,7 @@ import {Icon, Button} from 'react-native-elements';
 import MapView from 'react-native-maps';
 import {firebaseRef} from "../servers/Firebase";
 const {width, height} = Dimensions.get("window");
-const CARD_HEIGHT = width;
+const CARD_HEIGHT = height;
 
 
 const dateFormat = require('dateformat');
@@ -165,7 +165,7 @@ export default class InitiateStep2 extends React.Component {
         return (
 
             <ImageBackground
-                source={require('../assert/image/colorful.jpg')}
+                source={require('../../assets/image/colorful.jpg')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>

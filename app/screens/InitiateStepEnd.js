@@ -22,7 +22,7 @@ export default class Initiate extends React.Component {
         return (
 
             <ImageBackground
-                source={require('../assert/image/colorful.jpg')}
+                source={require('../../assets/image/colorful.jpg')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>
@@ -40,7 +40,6 @@ export default class Initiate extends React.Component {
                                 source={{uri: 'https://cdn.dribbble.com/users/285475/screenshots/4550443/presto_walk.gif'}}
                             />
                         </View>
-
                     </View>
 
 
@@ -53,7 +52,7 @@ export default class Initiate extends React.Component {
                             marginBottom: 0,
                             backgroundColor: "#1DA1F2"
                         }}
-                        title='Create Again'
+                        title='Create Another'
                         onPress={this.handleClick}
                     />
                 </View>

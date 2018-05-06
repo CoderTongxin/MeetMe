@@ -1,12 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, Text, Dimensions} from 'react-native';
+import {StyleSheet, View, ScrollView, Text} from 'react-native';
 import {Divider, Icon} from 'react-native-elements';
 import MapView from "react-native-maps";
 
 const dateFormat = require('dateformat');
-const {width, height} = Dimensions.get("window");
-const MODAL_HEIGH = height * 0.8;
-const MODAL_WIDTH = width * 0.8;
 
 export default class ActivitiesDetail extends React.Component {
     constructor(props) {

@@ -23,7 +23,7 @@ export default class Initiate extends React.Component {
         return (
 
             <ImageBackground
-                source={require('../assert/image/colorful.jpg')}
+                source={require('../../assets/image/colorful.jpg')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>
@@ -38,13 +38,10 @@ export default class Initiate extends React.Component {
                         <View style={styles.imageContainer}>
                             <Image
                                 style={styles.image}
-                                source={{uri: 'https://cdn.dribbble.com/users/40298/screenshots/1471514/icons-design-extra-extra.gif'}}
+                                source={require('../../assets/image/initiate.gif')}
                             />
                         </View>
-
                     </View>
-
-
                     <Button
                         style={styles.button}
                         buttonStyle={{
