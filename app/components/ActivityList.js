@@ -23,8 +23,9 @@ export default class ActivityList extends React.Component {
             showDetail: false,
             participantsNum: 0,
             participantsNames: '',
-            participantKeys:[],
-            activityKey:null
+            participantKeys: [],
+            activityKey: null,
+            quitActivity: false
         };
     }
 
@@ -36,7 +37,7 @@ export default class ActivityList extends React.Component {
 
     toggle(activity) {
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
-            if(activityInfo.val()){
+            if (activityInfo.val()) {
                 this.setState({
                     activity: activityInfo.val(),
                     showDetail: !this.state.showDetail,
@@ -45,13 +46,12 @@ export default class ActivityList extends React.Component {
                 this.getParticipantsUsername(activityInfo.val().participants)
             }
         })
-
     }
 
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
-        let keys=[];
+        let keys = [];
         for (const key in participants) {
             if (count === 0) {
                 names += participants[key].username;
@@ -64,27 +64,29 @@ export default class ActivityList extends React.Component {
         this.setState({
             participantsNames: names,
             participantNum: count,
-            participantKeys:keys,
+            participantKeys: keys,
         });
 
     }
 
     deleteActivity() {
-            const participantsList = this.state.participantKeys.map(key => {
-                return firebaseRef.database().ref('users/'+key+'/activities/'+this.state.activityKey).remove()
+        const participantsList = this.state.participantKeys.map(key => {
+            return firebaseRef.database().ref('users/' + key + '/activities/' + this.state.activityKey).remove()
+        });
+        Promise.all(participantsList)
+            .then(() => {
+                firebaseRef.database().ref('activities/' + this.state.activityKey).remove()
+            })
+            .catch(err => {
+                Alert.alert(err)
             });
-            Promise.all(participantsList)
-                .then(() => {
-                    firebaseRef.database().ref('activities/' + this.state.activityKey).remove()
-                })
-                .catch(err => {
-                    Alert.alert(err)
-                });
     }
 
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
-
+            this.setState({
+                quitActivity: true
+            });
             firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove()
         })
     }
@@ -120,8 +122,8 @@ export default class ActivityList extends React.Component {
 
                             {this.state.activity ?
                                 <Modal isVisible={this.state.showDetail}
-                                       onBackdropPress={()=>this.toggleCancel()}
-                                       onBackButtonPress={()=>this.toggleCancel()}
+                                       onBackdropPress={() => this.toggleCancel()}
+                                       onBackButtonPress={() => this.toggleCancel()}
                                        animationIn='slideInRight'
                                        animationOut='slideOutLeft'
                                        backdropColor={'#2E3347'}
@@ -131,7 +133,7 @@ export default class ActivityList extends React.Component {
                                         <Image source={this.state.activity.image}
                                                style={styles.image}/>
                                         <View style={styles.closeIcon}>
-                                            <TouchableOpacity onPress={()=>this.toggleCancel()}>
+                                            <TouchableOpacity onPress={() => this.toggleCancel()}>
                                                 <Icon name="close" size={28} color="#2E3347"/>
                                             </TouchableOpacity>
                                         </View>
@@ -149,7 +151,7 @@ export default class ActivityList extends React.Component {
                                                     backgroundColor: "#FF4A11"
                                                 }}
                                                 title="Delete"
-                                                onPress={()=>this.deleteActivity()}
+                                                onPress={() => this.deleteActivity()}
                                             /> :
 
                                             <Button
@@ -162,7 +164,7 @@ export default class ActivityList extends React.Component {
                                                     backgroundColor: "#FF4A11"
                                                 }}
                                                 title="Quit"
-                                                onPress={()=>this.quitActivity()}
+                                                onPress={() => this.quitActivity()}
                                             />
                                         }
                                     </View>
