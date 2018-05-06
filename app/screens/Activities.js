@@ -451,7 +451,7 @@ export default class Activities extends React.Component {
                                         marginLeft: 0,
                                         marginRight: 0,
                                         marginBottom: 0,
-                                        backgroundColor: "#FF4A11",
+                                        backgroundColor: "#FFC011",
                                     }}
                                     title='You can delete activity in schedule'
                                     onPress={() => this.deleteAct(this.state.act)}
