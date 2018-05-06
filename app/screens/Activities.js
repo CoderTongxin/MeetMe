@@ -52,8 +52,6 @@ export default class Activities extends React.Component {
             participantsNum: 0,
             isJoined: false,
             isOwner: false,
-
-
         };
         // this.listenForClick = this.listenForClick.bind(this);
         // this.joinAct = this.joinAct.bind(this);
