@@ -34,6 +34,7 @@ export default class Login extends React.Component {
 
     checkLogin() {
         firebaseRef.auth().onAuthStateChanged(function (user) {
+            console.log(this.state.user)
             if (user && !this.state.user) {
                 this.setState({
                     user: user
