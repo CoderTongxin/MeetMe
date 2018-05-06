@@ -4,7 +4,6 @@ import {Icon} from 'react-native-elements';
 import Activities from '../screens/Activities';
 import Initiate from '../screens/Initiate';
 import Schedule from '../screens/Schedule';
-import Settings from '../screens/Settings';
 import Profile from '../screens/Profile';
 import Login from '../screens/Login';
 import SignUp from '../screens/Signup';
@@ -101,9 +100,6 @@ export const HomeScreenRoot = StackNavigator({
     Profile: {
         screen: Profile,
     },
-    Settings: {
-        screen: Settings,
-    }
 
 }, {
     mode: 'modal',

@@ -8,7 +8,7 @@ import {
     Image,
     Dimensions,
     StatusBar,
-    AsyncStorage,
+    AsyncStorage, Alert,
 } from 'react-native';
 
 import {Icon, Divider, Button} from 'react-native-elements';
@@ -244,6 +244,20 @@ export default class Activities extends React.Component {
         })
     };
 
+    deleteAct(act){
+        this.state.isModalVisible = false;
+        const participantsList = act.participants.map(key => {
+            return firebaseRef.database().ref('users/'+key+'/activities/'+act.id).remove()
+        });
+        Promise.all(participantsList)
+            .then(() => {
+                firebaseRef.database().ref('activities/' + act.id).remove()
+            })
+            .catch(err => {
+                Alert.alert(err)
+            });
+    };
+
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
@@ -436,7 +450,7 @@ export default class Activities extends React.Component {
                                         backgroundColor: "#FF4A11",
                                     }}
                                     title='Delete'
-                                    // onPress={() => this.deleteAct(this.state.act)}
+                                    onPress={() => this.deleteAct(this.state.act)}
                                 />
                                 : this.state.isJoined === true ?
                                     <Button
