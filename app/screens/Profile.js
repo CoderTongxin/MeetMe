@@ -49,7 +49,7 @@ export default class Profile extends React.Component {
     render() {
         return (
             <ImageBackground
-                source={require('../../assets/image/pencil.jpg')}
+                source={require('../../assets/image/square.png')}
                 style={{width: '100%', height: '100%'}}
             >
                 <View style={styles.container}>
