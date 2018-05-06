@@ -84,6 +84,7 @@ export default class ActivityList extends React.Component {
 
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
+
             firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove()
         })
     }
