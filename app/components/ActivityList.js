@@ -74,7 +74,6 @@ export default class ActivityList extends React.Component {
         });
         this.setState({
             showDetail: !this.state.showDetail,
-            activity:null
         });
         Promise.all(participantsList)
             .then(() => {
@@ -89,8 +88,7 @@ export default class ActivityList extends React.Component {
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
             this.setState({
-                showDetail: !this.state.showDetail,
-                activity:null
+                showDetail: !this.state.showDetail
             });
             firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove()
         })
