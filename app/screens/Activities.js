@@ -52,6 +52,9 @@ export default class Activities extends React.Component {
             participantsNum: 0,
             isJoined: false,
             isOwner: false,
+            participantKeys: [],
+
+
         };
         // this.listenForClick = this.listenForClick.bind(this);
         // this.joinAct = this.joinAct.bind(this);
@@ -181,7 +184,7 @@ export default class Activities extends React.Component {
             const value = actNum * (CARD_WIDTH + 2 * CARD_MARGIN);
             this.scrollView.getNode().scrollTo({x: value, y: 0, animated: true})
         } else {
-            this.state.isModalVisible = true;
+            this.setState({isModalVisible: true});
             actRef.child(act.id).on('value', (activity) => {
 
                 this.setState({
@@ -243,23 +246,24 @@ export default class Activities extends React.Component {
     };
 
     deleteAct(act){
-        this.state.isModalVisible = false;
-        const participantsList = act.participants.map(key => {
-            return firebaseRef.database().ref('users/'+key+'/activities/'+act.id).remove()
-        });
-        Promise.all(participantsList)
-            .then(() => {
-                firebaseRef.database().ref('activities/' + act.id).remove()
-            })
-            .catch(err => {
-                Alert.alert(err)
-            });
+        // this.hideActDetail();
+        // const participantsList = this.state.participantKeys.map(key => {
+        //     return firebaseRef.database().ref('users/'+key+'/activities/'+act.id).remove()
+        // });
+        // Promise.all(participantsList)
+        //     .then(() => {
+        //         firebaseRef.database().ref('activities/' +  this.state.act.id).remove()
+        //     })
+        //     .catch(err => {
+        //         Alert.alert(err)
+        //     });
     };
 
     getParticipantsUsername(participants) {
         let count = 0;
         let names = '';
         let isJoined = false;
+        let keys=[];
         for (const key in participants) {
             if (participants[key].uid === this.state.user.uid) {
                 isJoined = true;
@@ -271,11 +275,13 @@ export default class Activities extends React.Component {
                 names += ', ' + participants[key].username;
             }
             count++
+            keys.push(key)
         }
         this.setState({
             participantsNames: names,
             participantNum: count,
-            isJoined: isJoined
+            isJoined: isJoined,
+            participantKeys:keys,
         });
 
 
@@ -447,7 +453,7 @@ export default class Activities extends React.Component {
                                         marginBottom: 0,
                                         backgroundColor: "#FF4A11",
                                     }}
-                                    title='Delete'
+                                    title='You can delete activity in schedule'
                                     onPress={() => this.deleteAct(this.state.act)}
                                 />
                                 : this.state.isJoined === true ?
