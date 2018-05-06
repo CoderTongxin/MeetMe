@@ -27,10 +27,7 @@ export default class ActivityList extends React.Component {
             participantsNames: '',
             activityKey:''
         };
-        this.toggle=this.toggle.bind(this);
-        this.toggleCancel = this.toggleCancel.bind(this);
     }
-
 
     toggleCancel() {
         this.setState({
@@ -45,7 +42,10 @@ export default class ActivityList extends React.Component {
                 showDetail: !this.state.showDetail,
                 activityKey: activity.key,
             });
-            this.getParticipantsUsername(activityInfo.val().participants)
+
+            if(activityInfo){
+                this.getParticipantsUsername(activityInfo.val().participants)
+            }
         })
 
     }
@@ -124,8 +124,8 @@ export default class ActivityList extends React.Component {
 
                             {this.state.activity ?
                                 <Modal isVisible={this.state.showDetail}
-                                       onBackdropPress={this.toggleCancel}
-                                       onBackButtonPress={this.toggleCancel}
+                                       onBackdropPress={()=>this.toggleCancel()}
+                                       onBackButtonPress={()=>this.toggleCancel()}
                                        animationIn='slideInRight'
                                        animationOut='slideOutLeft'
                                        backdropColor={'#2E3347'}
@@ -135,7 +135,7 @@ export default class ActivityList extends React.Component {
                                         <Image source={this.state.activity.image}
                                                style={styles.image}/>
                                         <View style={styles.closeIcon}>
-                                            <TouchableOpacity onPress={this.toggleCancel}>
+                                            <TouchableOpacity onPress={()=>this.toggleCancel()}>
                                                 <Icon name="close" size={28} color="#2E3347"/>
                                             </TouchableOpacity>
                                         </View>
