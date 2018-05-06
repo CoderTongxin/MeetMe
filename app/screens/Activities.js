@@ -132,8 +132,6 @@ export default class Activities extends React.Component {
         actRef.on('value', (snap) => {
 
             const activities = snap.val();
-
-
             this.setState({
                 activities: activities
             });
@@ -186,15 +184,13 @@ export default class Activities extends React.Component {
         } else {
             this.setState({isModalVisible: true});
             actRef.child(act.id).on('value', (activity) => {
-
                 this.setState({
-                    act: activity.val(),
+                    act: activity.val()
                 });
                 if (activity.val().owner) {
                     this.checkOwner(activity.val().owner);
                     this.getParticipantsUsername(activity.val().participants)
                 }
-
             });
         }
     }
@@ -427,8 +423,8 @@ export default class Activities extends React.Component {
 
                 {this.state.act ?
                     <Modal isVisible={this.state.isModalVisible}
-                           onBackdropPress={() => this.hideActDetail}
-                           onBackButtonPress={() => this.hideActDetail}
+                           onBackdropPress={() => this.hideActDetail()}
+                           onBackButtonPress={() => this.hideActDetail()}
                            backdropColor={'#FFFFFF'}
                            backdropOpacity={0}
                     >

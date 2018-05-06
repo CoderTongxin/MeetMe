@@ -32,16 +32,13 @@ export default class Schedule extends React.Component {
 
     getUserActivityList(user) {
         if (user.activities) {
-
             const userActivityList = Object.values(user.activities);
             const activityPromises = userActivityList.map(key => {
                 return firebaseRef.database().ref('activities/' + key.actId).once("value", activity => activity)
             });
-
             Promise.all(activityPromises)
                 .then(activities => {
                     let myActivities = [];
-
                     activities.map((activity) => {
                         if (activity.val().owner.uid === user.uid) {
                             myActivities.push(activity)

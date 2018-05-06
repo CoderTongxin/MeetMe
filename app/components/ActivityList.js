@@ -79,13 +79,11 @@ export default class ActivityList extends React.Component {
         Promise.all(participantsList)
             .then(() => {
                 firebaseRef.database().ref('activities/' + this.state.activityKey).remove();
-
             })
             .catch(err => {
                 Alert.alert(err)
             });
     }
-
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
             this.setState({
