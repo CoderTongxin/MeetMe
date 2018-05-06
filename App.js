@@ -3,7 +3,6 @@ import {StyleSheet, View,Image} from 'react-native';
 import {AppLoading, Asset, Font} from 'expo'
 import {Root} from './app/config/Route';
 
-
 console.disableYellowBox = true;
 function cacheImages(images) {
     return images.map(image => {
@@ -76,7 +75,6 @@ export default class App extends React.Component {
             );
         }
     }
-
 }
 
 const styles = StyleSheet.create({
