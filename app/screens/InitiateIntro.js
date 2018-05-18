@@ -31,7 +31,6 @@ export default class Initiate extends React.Component {
                         <Text style={styles.text}>
                             3 Steps To Create a New Activity
                         </Text>
-
                     </View>
 
                     <View style={styles.cardContainer}>

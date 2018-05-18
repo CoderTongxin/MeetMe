@@ -90,8 +90,9 @@ export default class SignUp extends React.Component {
                         }
                     );
                 }).catch(function (error) {
-                this.setState({loading: false});
-                Alert.alert(error.message);
+                Alert.alert("Error", error.message, [
+                    { text: "OK", onPress: () => { this.setState({ loading: false })}}
+                ])
             }.bind(this));
         }
     };

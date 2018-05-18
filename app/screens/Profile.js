@@ -118,10 +118,10 @@ export default class Profile extends React.Component {
                                     </View> :
                                     <View/>
                                 }
-                                {/*<View style={styles.cardContainer}>*/}
-                                    {/*<Image style={{width: SCREEN_WIDTH * 0.8, height: 200}}*/}
-                                           {/*source={require('../../assets/image/finished.gif')}/>*/}
-                                {/*</View>*/}
+                                <View style={styles.cardContainer}>
+                                    <Image style={{width: SCREEN_WIDTH * 0.8, height: 200}}
+                                           source={require('../../assets/image/finished.gif')}/>
+                                </View>
                             </View>
                             <Button
                                 style={styles.button}

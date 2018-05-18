@@ -54,10 +54,11 @@ export default class Login extends React.Component {
     }
 
     changeLoadingStatus() {
+        console.log("change");
         this.setState({showLoading: !this.state.showLoading});
     }
 
-
+y
     login() {
         this.changeLoadingStatus();
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -65,8 +66,9 @@ export default class Login extends React.Component {
                 this.changeLoadingStatus();
             })
             .catch(function (error) {
-                this.changeLoadingStatus();
-                Alert.alert(error.message)
+                Alert.alert("Error", error.message, [
+                    { text: "OK", onPress: () => { this.changeLoadingStatus()}}
+                ])
             }.bind(this));
     }
 

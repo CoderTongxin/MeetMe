@@ -27,6 +27,7 @@ const options = {
             nullOption: {value: '', text: 'Please select activity type'},
             error: 'Please tell others what kind of activity you are initiating',
             stylesheet: stylesheet,
+
         },
         title: {
             placeholder: 'Please write an activity title',
@@ -101,13 +102,12 @@ export default class Initiate extends React.Component {
                                     backgroundColor: "#1DA1F2"
                                 }}
                                 title='Next'
-                                onPress={this.handleClick}
+                                onPress={()=>this.handleClick()}
                             />
 
                         </View>
                     </KeyboardAwareScrollView>
                 </View>
-
             </ImageBackground>
         );
     }
