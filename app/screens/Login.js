@@ -58,7 +58,6 @@ export default class Login extends React.Component {
         this.setState({showLoading: !this.state.showLoading});
     }
 
-y
     login() {
         this.changeLoadingStatus();
         firebaseRef.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
