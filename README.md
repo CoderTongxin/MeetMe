@@ -1,10 +1,14 @@
-# Meet Me
+# Seya
 
-This project is for COMPSCI 732 Andrew's crossplatform application, which helps users find nearby like-minded people to participate in activities together.
+Seya is a crossplatform application built on React Native. Seya enables users to view, join, quit, create, delete various activities on the map. The main purpose of Seya is to help users to find nearby like-minded people to participate in activities together.
 
 ## Getting Started
 
-Download the project
+Seya supports iOS and Android. To test the application, install [Expo](https://expo.io/) on your iOS or Android phone and connect to the same wireless network as your computer. Using the Expo app, scan the QR code from your terminal to open your project. Or install Expo and Android Studio on your computer, follow the instructions to set up the development environment, here are the link:
+
+[React native Andriod development enrionment set up](https://facebook.github.io/react-native/docs/getting-started.html)
+
+Then, Download the project
 
 `git clone git@gitlab.nectar.auckland.ac.nz:the-sudden-spiders/qleetbugs.git`
 
@@ -22,7 +26,7 @@ or
 
 Start the project
 
-`npm start or yarn start
+`npm start or yarn start`
 
 
 ## Running the tests
