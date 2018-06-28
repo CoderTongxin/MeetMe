@@ -37,7 +37,7 @@ export default class ActivityList extends React.Component {
     toggle(activity) {
         this.setState({
             showDetail: !this.state.showDetail,
-        })
+        });
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
             if (activityInfo.val()) {
                 this.setState({
