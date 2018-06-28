@@ -35,11 +35,13 @@ export default class ActivityList extends React.Component {
     }
 
     toggle(activity) {
+        this.setState({
+            showDetail: !this.state.showDetail,
+        })
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
             if (activityInfo.val()) {
                 this.setState({
                     activity: activityInfo.val(),
-                    showDetail: !this.state.showDetail,
                     activityKey: activity.key,
                 });
                 this.getParticipantsUsername(activityInfo.val().participants)
