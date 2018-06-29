@@ -28,16 +28,14 @@ export default class ActivityList extends React.Component {
         };
     }
 
-    toggleCancel() {
+    modalChange() {
         this.setState({
             showDetail: !this.state.showDetail,
         })
     }
 
     toggle(activity) {
-        this.setState({
-            showDetail: !this.state.showDetail,
-        });
+        this.modalChange();
         firebaseRef.database().ref('activities/' + activity.key).on('value', (activityInfo) => {
             if (activityInfo.val()) {
                 this.setState({
@@ -127,8 +125,8 @@ export default class ActivityList extends React.Component {
 
                             {this.state.activity ?
                                 <Modal isVisible={this.state.showDetail}
-                                       onBackdropPress={() => this.toggleCancel()}
-                                       onBackButtonPress={() => this.toggleCancel()}
+                                       onBackdropPress={() => this.modalChange()}
+                                       onBackButtonPress={() => this.modalChange()}
                                        animationIn='slideInRight'
                                        animationOut='slideOutLeft'
                                        backdropColor={'#2E3347'}
@@ -138,7 +136,7 @@ export default class ActivityList extends React.Component {
                                         <Image source={this.state.activity.image}
                                                style={styles.image}/>
                                         <View style={styles.closeIcon}>
-                                            <TouchableOpacity onPress={() => this.toggleCancel()}>
+                                            <TouchableOpacity onPress={() => this.modalChange()}>
                                                 <Icon name="close" size={28} color="#2E3347"/>
                                             </TouchableOpacity>
                                         </View>
