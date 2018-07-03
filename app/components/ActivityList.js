@@ -11,7 +11,7 @@ import Notice from './Notice'
 import ActivityDetail from './ActivityDetail'
 import {firebaseRef} from "../servers/Firebase";
 
-const {width, height} = Dimensions.get("window");
+const {height} = Dimensions.get("window");
 const MODAL_HEIGH = height * 0.8;
 export default class ActivityList extends React.Component {
 
@@ -67,15 +67,18 @@ export default class ActivityList extends React.Component {
         });
 
     }
+    cleanActivity(){
+        this.setState({
+            showDetail: !this.state.showDetail,
+            activity: null
+        });
+    }
 
     deleteActivity() {
         const participantsList = this.state.participantKeys.map(key => {
             return firebaseRef.database().ref('users/' + key + '/activities/' + this.state.activityKey).remove()
         });
-        this.setState({
-            showDetail: !this.state.showDetail,
-            activity: null
-        });
+        this.cleanActivity();
         Promise.all(participantsList)
             .then(() => {
                 firebaseRef.database().ref('activities/' + this.state.activityKey).remove();
@@ -84,15 +87,15 @@ export default class ActivityList extends React.Component {
                 Alert.alert(err)
             });
     }
+
     quitActivity() {
         firebaseRef.database().ref('activities/' + this.state.activityKey + '/participants/' + this.props.user.uid).remove().then(() => {
-            this.setState({
-                showDetail: !this.state.showDetail,
-                activity: null
-            });
+            this.cleanActivity();
             firebaseRef.database().ref('users/' + this.props.user.uid + '/activities/' + this.state.activityKey).remove()
         })
     }
+
+
 
     getIcon(uid) {
         if (uid === this.props.user.uid) {
